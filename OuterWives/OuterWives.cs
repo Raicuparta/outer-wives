@@ -2,9 +2,6 @@
 using OWML.Common;
 using OWML.ModHelper;
 using UnityEngine;
-using NewHorizons;
-using NewHorizons.Builder.Props;
-using Epic.OnlineServices;
 
 namespace OuterWives;
 

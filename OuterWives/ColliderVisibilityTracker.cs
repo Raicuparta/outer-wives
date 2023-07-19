@@ -1,23 +1,19 @@
 using System;
+using System.Linq;
 using UnityEngine;
 
 namespace OuterWives;
 
 public class ColliderVisibilityTracker : MonoBehaviour
 {
-  private Collider _collider;
+  private Collider[] _colliders;
   private CharacterDialogueTree _character;
-  private Transform _transform;
-  private bool _visible;
-  private bool _visibleToProbe;
-  private float _raycastOffset = 10f;
-  private float _maxPhotoDistance = 50f;
+  private float _maxPhotoDistance = 20f;
 
   private void Awake()
   {
-    _collider = GetComponent<Collider>();
+    _colliders = transform.parent.GetComponentsInChildren<Collider>();
     _character = GetComponent<CharacterDialogueTree>();
-    _transform = transform;
   }
 
   private void Start()
@@ -41,7 +37,12 @@ public class ColliderVisibilityTracker : MonoBehaviour
 
   public bool IsVisible(OWCamera camera)
   {
-    return GeometryUtility.TestPlanesAABB(camera.GetFrustumPlanes(), _collider.bounds);
+        foreach (var collider in _colliders)
+        {
+            if (GeometryUtility.TestPlanesAABB(camera.GetFrustumPlanes(), collider.bounds))
+                return true;
+        }
+        return false;
   }
 
   private bool IsOccludedFromPosition(Vector3 worldPos)
@@ -53,7 +54,7 @@ public class ColliderVisibilityTracker : MonoBehaviour
       OuterWives.Helper.Console.WriteLine($"{_character._characterName} collides {ray.collider.name}");
     }
 
-    return hit && ray.collider != _collider;
+    return hit && !_colliders.Contains(ray.collider);
   }
 
   private Vector3 GetTargetPosition() {
