@@ -4,6 +4,7 @@ using OWML.ModHelper;
 using UnityEngine;
 using NewHorizons;
 using NewHorizons.Builder.Props;
+using Epic.OnlineServices;
 
 namespace OuterWives;
 
@@ -14,6 +15,9 @@ public class WifeMaterial
 
 public class OuterWives : ModBehaviour
 {
+
+	public static IModHelper Helper;
+
 	private readonly WifeMaterial[] wives = new[] {
 		new WifeMaterial() {
 			name = "Feldspar"
@@ -83,6 +87,8 @@ public class OuterWives : ModBehaviour
 
 	private void Start()
 	{
+		Helper = ModHelper;
+
 		// Starting here, you'll have access to OWML's mod helper.
 		ModHelper.Console.WriteLine($"My mod {nameof(OuterWives)} is loaded!", MessageType.Success);
 
@@ -102,16 +108,7 @@ public class OuterWives : ModBehaviour
 				foreach (var character in characters)
 				{
 					ModHelper.Console.WriteLine($"Character: {character._characterName} ({character.gameObject.activeInHierarchy})");
-
-
 					var visibilityTracker = character.gameObject.AddComponent<ColliderVisibilityTracker>();
-					var photoTarget = character.gameObject.AddComponent<ProbePhotoTarget>();
-					photoTarget.OnSectorOccupantAdded(Locator.GetProbe().GetSectorDetector());
-					photoTarget.OnPhotographedByProbe += (ProbePhotoTarget target, float score) =>
-					{
-						ModHelper.Console.WriteLine($"Photographed character {character._characterName} ({score})");
-						NotificationManager.SharedInstance.PostNotification(new NotificationData($"Photographed {character._characterName}"), false);
-					};
 				}
 
 				var items = Resources.FindObjectsOfTypeAll<OWItem>();

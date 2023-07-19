@@ -1,5 +1,5 @@
 ﻿<Project>
   <PropertyGroup>
-    <OutputPath>/home/rai/.local/share/OuterWildsModManager/OWML/Mods/Raicuparta.OuterWives</OutputPath>
+    <OutputPath>$(AppData)/OuterWildsModManager/OWML/Mods/Raicuparta.OuterWives</OutputPath>
   </PropertyGroup>
 </Project>

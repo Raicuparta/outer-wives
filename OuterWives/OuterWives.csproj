@@ -16,7 +16,7 @@
     <PackageReference Include="OWML" Version="2.9.0" />
     <PackageReference Include="OuterWildsGameLibs" Version="1.1.13.393" />
     <Reference Include="NewHorizons">
-      <HintPath>/home/rai/.local/share/OuterWildsModManager/OWML/Mods/xen.NewHorizons/NewHorizons.dll</HintPath>
+      <HintPath>$(AppData)/OuterWildsModManager/OWML/Mods/xen.NewHorizons/NewHorizons.dll</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>

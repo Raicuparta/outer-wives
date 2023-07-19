@@ -1,54 +1,75 @@
 using System;
 using UnityEngine;
 
-public class ColliderVisibilityTracker : VisibilityTracker
+namespace OuterWives;
+
+public class ColliderVisibilityTracker : MonoBehaviour
 {
   private Collider _collider;
+  private CharacterDialogueTree _character;
   private Transform _transform;
   private bool _visible;
   private bool _visibleToProbe;
+  private float _raycastOffset = 10f;
+  private float _maxPhotoDistance = 50f;
 
   private void Awake()
   {
     _collider = GetComponent<Collider>();
+    _character = GetComponent<CharacterDialogueTree>();
     _transform = transform;
   }
 
-  private void Update()
+  private void Start()
   {
-    this._visible = !this.IsOccludedFromPosition(Locator.GetPlayerCamera().transform.position);
-
-    if (ProbeCamera.GetLastSnapshotCamera() != null)
-    {
-      var probeCamera = ProbeCamera.GetLastSnapshotCamera();
-      this._visibleToProbe = GeometryUtility.TestPlanesAABB(probeCamera.GetFrustumPlanes(), this._collider.bounds) && !this.IsOccludedFromPosition(probeCamera.transform.position);
-    }
+    var sphere2 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+    sphere2.GetComponent<Collider>().enabled = false;
+    sphere2.transform.parent = transform;
+    sphere2.transform.position = GetTargetPosition();
+    sphere2.name = $"THING {_character._characterName} attention position";
   }
 
-  public override bool IsVisibleUsingCameraFrustum()
+  private void OnEnable()
   {
-    return GeometryUtility.TestPlanesAABB(Locator.GetActiveCamera().GetFrustumPlanes(), this._collider.bounds) && !this.IsOccludedFromPosition(Locator.GetActiveCamera().transform.position);
-
+    GlobalMessenger<ProbeCamera>.AddListener("ProbeSnapshot", new Callback<ProbeCamera>(OnProbeSnapshot));
   }
 
-  public override bool IsVisible()
+  private void OnDisable()
   {
-    return _visible;
+    GlobalMessenger<ProbeCamera>.RemoveListener("ProbeSnapshot", new Callback<ProbeCamera>(OnProbeSnapshot));
   }
 
-  public override bool IsVisibleToProbe(OWCamera camera)
+  public bool IsVisible(OWCamera camera)
   {
-    return _visibleToProbe;
-  }
-
-  public override bool IsPointInside(Vector3 worldPos)
-  {
-    return false;
+    return GeometryUtility.TestPlanesAABB(camera.GetFrustumPlanes(), _collider.bounds);
   }
 
   private bool IsOccludedFromPosition(Vector3 worldPos)
   {
-    return false;
-    // return Physics.Linecast(worldPos, _transform.position, out RaycastHit _, OWLayerMask.quantumOcclusionMask);
+    var hit = Physics.Linecast(worldPos, GetTargetPosition(), out RaycastHit ray, OWLayerMask.physicalMask);
+
+    if (hit)
+    {
+      OuterWives.Helper.Console.WriteLine($"{_character._characterName} collides {ray.collider.name}");
+    }
+
+    return hit && ray.collider != _collider;
+  }
+
+  private Vector3 GetTargetPosition() {
+    return _character._attentionPoint.position;
+  }
+
+  private void OnProbeSnapshot(ProbeCamera camera)
+  {
+    Vector3 vector = GetTargetPosition() - camera.transform.position;
+    float magnitude = vector.magnitude;
+    if (magnitude > this._maxPhotoDistance) return;
+    
+    if (!IsVisible(camera.GetOWCamera())) return;
+
+    if (IsOccludedFromPosition(camera.transform.position)) return;
+
+    NotificationManager.SharedInstance.PostNotification(new NotificationData($"Photographed {_character._characterName}"), false);
   }
 }
