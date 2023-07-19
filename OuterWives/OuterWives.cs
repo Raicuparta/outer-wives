@@ -127,21 +127,21 @@ public class OuterWives : ModBehaviour
 
                     character.LoadXml();
 
-                    var nodeName = $"WIFE_{character._characterName}_REJECTION";
+                    var requestNodeName = $"WIFE_{character._characterName}_MARRY_ME";
+                    var rejectionNodeName = $"WIFE_{character._characterName}_REJECTION";
                     foreach (var node in character._mapDialogueNodes.Values)
                     {
                         node._listDialogueOptions.Clear();
                         node._listDialogueOptions.Add(new DialogueOption()
                         {
-                            _textID = "Never mind that, will you marry me???",
-                            _text = "bautiful text",
-                            _targetName = nodeName
+                            _textID = requestNodeName,
+                            _targetName = rejectionNodeName
                         });
                     }
 
-                    character._mapDialogueNodes[nodeName] = new DialogueNode()
+                    character._mapDialogueNodes[rejectionNodeName] = new DialogueNode()
                     {
-                        _name = nodeName,
+                        _name = rejectionNodeName,
                         _displayTextData = new DialogueText(new XElement[]{ }, false)
                         {
                             _listTextBlocks = new List<DialogueText.TextBlock> {
@@ -155,8 +155,31 @@ public class OuterWives : ModBehaviour
                                         "_PART_3_VARIANT_1",
                                     }
                                 }
-                            }
+                            },
                         },
+                        _listDialogueOptions = new List<DialogueOption>()
+                        {
+                            new DialogueOption()
+                            {
+                                _textID = $"WIFE_{character._characterName}_PROPOSE_PHOTO",
+                                _targetName = rejectionNodeName
+                            },
+                            new DialogueOption()
+                            {
+                                _textID = $"WIFE_{character._characterName}_PROPOSE_STONE",
+                                _targetName = rejectionNodeName
+                            },
+                            new DialogueOption()
+                            {
+                                _textID = $"WIFE_{character._characterName}_PROPOSE_REEL",
+                                _targetName = rejectionNodeName
+                            },
+                            new DialogueOption()
+                            {
+                                _textID = $"WIFE_{character._characterName}_PROPOSE_MUSIC",
+                                _targetName = rejectionNodeName
+                            }
+                        }
                     };
                 }
 
