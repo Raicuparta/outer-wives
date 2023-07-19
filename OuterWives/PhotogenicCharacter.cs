@@ -18,11 +18,6 @@ public class PhotogenicCharacter : MonoBehaviour
 
     private void Start()
     {
-        var sphere2 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        sphere2.GetComponent<Collider>().enabled = false;
-        sphere2.transform.parent = transform;
-        sphere2.transform.position = GetTargetPosition();
-        sphere2.name = $"THING {_character._characterName} attention position";
     }
 
     private void OnEnable()

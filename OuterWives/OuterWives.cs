@@ -12,6 +12,12 @@ namespace OuterWives;
 public class WifeMaterial
 {
     public string name;
+    public WifeMaterial secretLove;
+
+    internal void Initialize()
+    {
+        secretLove = OuterWives.Wives[Random.Range(0, OuterWives.Wives.Length)];
+    }
 }
 
 public class OuterWives : ModBehaviour
@@ -19,7 +25,7 @@ public class OuterWives : ModBehaviour
 
     public static IModHelper Helper;
 
-    private readonly WifeMaterial[] wives = new[] {
+    public static readonly WifeMaterial[] Wives = new[] {
         new WifeMaterial() {
             name = "Feldspar"
         },
@@ -84,6 +90,11 @@ public class OuterWives : ModBehaviour
         // You won't be able to access OWML's mod helper in Awake.
         // So you probably don't want to do anything here.
         // Use Start() instead.
+
+        foreach (var wife in Wives)
+        {
+            wife.Initialize();
+        }
     }
 
     private void Start()
@@ -105,7 +116,7 @@ public class OuterWives : ModBehaviour
             ModHelper.Events.Unity.FireInNUpdates(() =>
             {
                 var characters = Resources.FindObjectsOfTypeAll<CharacterDialogueTree>()
-                    .Where(character => wives.Any(wife => wife.name == character._characterName));
+                    .Where(character => Wives.Any(wife => wife.name == character._characterName));
 
                 ModHelper.Console.WriteLine($"Found {characters.Count()} wife-material characters:", MessageType.Success);
 
@@ -116,6 +127,7 @@ public class OuterWives : ModBehaviour
 
                     character.LoadXml();
 
+                    var nodeName = $"WIFE_{character._characterName}_REJECTION";
                     foreach (var node in character._mapDialogueNodes.Values)
                     {
                         node._listDialogueOptions.Clear();
@@ -123,13 +135,13 @@ public class OuterWives : ModBehaviour
                         {
                             _textID = "Never mind that, will you marry me???",
                             _text = "bautiful text",
-                            _targetName = "MARRIAGE_REJECTION"
+                            _targetName = nodeName
                         });
                     }
 
-                    character._mapDialogueNodes["MARRIAGE_REJECTION"] = new DialogueNode()
+                    character._mapDialogueNodes[nodeName] = new DialogueNode()
                     {
-                        _name = "MARRIAGE_REJECTION",
+                        _name = nodeName,
                         _displayTextData = new DialogueText(new XElement[]{ }, false)
                         {
                             _listTextBlocks = new List<DialogueText.TextBlock> {
@@ -138,7 +150,9 @@ public class OuterWives : ModBehaviour
                                     condition= "DEFAULT",
                                     listPageText = new List<string>
                                     {
-                                        "_1",
+                                        "_PART_1_VARIANT_1",
+                                        "_PART_2_VARIANT_1",
+                                        "_PART_3_VARIANT_1",
                                     }
                                 }
                             }
