@@ -11,10 +11,17 @@ namespace OuterWives
     public static class TranslationPatches
     {
 
+        private static Dictionary<string, string> translations = new Dictionary<string, string>
+        {
+            {  "MARRIAGE_REJECTION_1", "No, I would really rather not marry you." }
+        };
+
         [HarmonyPrefix, HarmonyPatch(typeof(TextTranslation), nameof(TextTranslation.Translate))]
         public static bool TextTranslation_Translate(string key, ref string __result)
         {
-            OuterWives.Helper.Console.WriteLine("translate");
+            if (!key.StartsWith("MARRIAGE_")) return true;
+
+            __result = translations[key];
             return false;
         }
     }
