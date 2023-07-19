@@ -19,6 +19,7 @@
       <HintPath>$(AppData)/OuterWildsModManager/OWML/Mods/xen.NewHorizons/NewHorizons.dll</HintPath>
       <Private>false</Private>
     </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
   <ItemGroup>
     <None Include="default-config.json">
