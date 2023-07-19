@@ -7,118 +7,118 @@ namespace OuterWives;
 
 public class WifeMaterial
 {
-	public string name;
+    public string name;
 }
 
 public class OuterWives : ModBehaviour
 {
 
-	public static IModHelper Helper;
+    public static IModHelper Helper;
 
-	private readonly WifeMaterial[] wives = new[] {
-		new WifeMaterial() {
-			name = "Feldspar"
-		},
-		new WifeMaterial() {
-			name = "Hal"
-		},
-		new WifeMaterial() {
-			name = "Chert"
-		},
-		new WifeMaterial() {
-			name = "Hornfels"
-		},
-		new WifeMaterial() {
-			name = "Slate"
-		},
-		new WifeMaterial() {
-			name = "Rutile"
-		},
-		new WifeMaterial() {
-			name = "Gneiss"
-		},
-		new WifeMaterial() {
-			name = "Marl"
-		},
-		new WifeMaterial() {
-			name = "Tuff"
-		},
-		new WifeMaterial() {
-			name = "Esker"
-		},
-		new WifeMaterial() {
-			name = "Porphy"
-		},
-		new WifeMaterial() {
-			name = "the Prisoner"
-		},
-		new WifeMaterial() {
-			name = "Tektite"
-		},
-		new WifeMaterial() {
-			name = "Gossan"
-		},
-		new WifeMaterial() {
-			name = "Spinel"
-		},
-		new WifeMaterial() {
-			name = "Gabbro"
-		},
-		new WifeMaterial() {
-			name = "Riebeck"
-		},
-		new WifeMaterial() {
-			name = "Self"
-		},
-		new WifeMaterial() {
-			name = "Solanum"
-		}
-	};
+    private readonly WifeMaterial[] wives = new[] {
+        new WifeMaterial() {
+            name = "Feldspar"
+        },
+        new WifeMaterial() {
+            name = "Hal"
+        },
+        new WifeMaterial() {
+            name = "Chert"
+        },
+        new WifeMaterial() {
+            name = "Hornfels"
+        },
+        new WifeMaterial() {
+            name = "Slate"
+        },
+        new WifeMaterial() {
+            name = "Rutile"
+        },
+        new WifeMaterial() {
+            name = "Gneiss"
+        },
+        new WifeMaterial() {
+            name = "Marl"
+        },
+        new WifeMaterial() {
+            name = "Tuff"
+        },
+        new WifeMaterial() {
+            name = "Esker"
+        },
+        new WifeMaterial() {
+            name = "Porphy"
+        },
+        new WifeMaterial() {
+            name = "the Prisoner"
+        },
+        new WifeMaterial() {
+            name = "Tektite"
+        },
+        new WifeMaterial() {
+            name = "Gossan"
+        },
+        new WifeMaterial() {
+            name = "Spinel"
+        },
+        new WifeMaterial() {
+            name = "Gabbro"
+        },
+        new WifeMaterial() {
+            name = "Riebeck"
+        },
+        new WifeMaterial() {
+            name = "Self"
+        },
+        new WifeMaterial() {
+            name = "Solanum"
+        }
+    };
 
-	private void Awake()
-	{
-		// You won't be able to access OWML's mod helper in Awake.
-		// So you probably don't want to do anything here.
-		// Use Start() instead.
-	}
+    private void Awake()
+    {
+        // You won't be able to access OWML's mod helper in Awake.
+        // So you probably don't want to do anything here.
+        // Use Start() instead.
+    }
 
-	private void Start()
-	{
-		Helper = ModHelper;
+    private void Start()
+    {
+        Helper = ModHelper;
 
-		// Starting here, you'll have access to OWML's mod helper.
-		ModHelper.Console.WriteLine($"My mod {nameof(OuterWives)} is loaded!", MessageType.Success);
+        // Starting here, you'll have access to OWML's mod helper.
+        ModHelper.Console.WriteLine($"My mod {nameof(OuterWives)} is loaded!", MessageType.Success);
 
 
-		// Example of accessing game code.
-		LoadManager.OnCompleteSceneLoad += (scene, loadScene) =>
-		{
-			if (loadScene != OWScene.SolarSystem) return;
+        // Example of accessing game code.
+        LoadManager.OnCompleteSceneLoad += (scene, loadScene) =>
+        {
+            if (loadScene != OWScene.SolarSystem) return;
 
-			ModHelper.Events.Unity.FireInNUpdates(() =>
-			{
-				var characters = Resources.FindObjectsOfTypeAll<CharacterDialogueTree>()
-					.Where(character => wives.Any(wife => wife.name == character._characterName));
+            ModHelper.Events.Unity.FireInNUpdates(() =>
+            {
+                var characters = Resources.FindObjectsOfTypeAll<CharacterDialogueTree>()
+                    .Where(character => wives.Any(wife => wife.name == character._characterName));
 
-				ModHelper.Console.WriteLine($"Found {characters.Count()} wife-material characters:", MessageType.Success);
+                ModHelper.Console.WriteLine($"Found {characters.Count()} wife-material characters:", MessageType.Success);
 
-				foreach (var character in characters)
-				{
-					ModHelper.Console.WriteLine($"Character: {character._characterName} ({character.gameObject.activeInHierarchy})");
-					var visibilityTracker = character.gameObject.AddComponent<ColliderVisibilityTracker>();
-				}
+                foreach (var character in characters)
+                {
+                    ModHelper.Console.WriteLine($"Character: {character._characterName} ({character.gameObject.activeInHierarchy})");
+                    var visibilityTracker = character.gameObject.AddComponent<PhotogenicCharacter>();
+                }
 
-				var items = Resources.FindObjectsOfTypeAll<OWItem>();
-				ModHelper.Console.WriteLine($"Found {items.Count()} items:", MessageType.Success);
-				foreach (var item in items)
-				{
-					ModHelper.Console.WriteLine($"Item: {item.GetDisplayName()} (interactable: {item._interactable})");
-				}
+                var items = Resources.FindObjectsOfTypeAll<OWItem>();
+                ModHelper.Console.WriteLine($"Found {items.Count()} items:", MessageType.Success);
+                foreach (var item in items)
+                {
+                    ModHelper.Console.WriteLine($"Item: {item.GetDisplayName()} (interactable: {item._interactable})");
+                }
 
-			}, 100);
+            }, 100);
 
-		};
-	}
+        };
+    }
 }
 
 
