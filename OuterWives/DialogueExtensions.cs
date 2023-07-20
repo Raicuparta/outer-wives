@@ -55,6 +55,12 @@ public static class DialogueExtensions
         return option;
     }
 
+    public static DialogueOption RejectCondition(this DialogueOption option, string conditionId, CharacterDialogueTree character)
+    {
+        option.CancelledRequirement = $"{Constants.Global.Prefix}/{character._characterName}_{conditionId}";
+        return option;
+    }
+
     public static DialogueOption GiveCondition(this DialogueOption option, string conditionId, CharacterDialogueTree character)
     {
         option.ConditionToSet = $"{Constants.Global.Prefix}/{character._characterName}_{conditionId}";

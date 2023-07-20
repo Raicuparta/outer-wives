@@ -43,7 +43,8 @@ public class WifeMaterial
         var requestStoneNode = Character.AddNode(Constants.Nodes.RequestStone);
         var requestMusicNode = Character.AddNode(Constants.Nodes.RequestMusic);
 
-        var proposePhotoOption = rejectionNode.AddOption(Constants.Options.ProposePhoto, requestPhotoNode);
+        var proposePhotoOption = rejectionNode.AddOption(Constants.Options.ProposePhoto, requestPhotoNode)
+            .RejectCondition(Constants.Conditions.WifeAcceptedPhoto, Character);
         var proposeStoneOption = rejectionNode.AddOption(Constants.Options.ProposeStone, requestStoneNode);
         var proposeMusicOption = rejectionNode.AddOption(Constants.Options.ProposeMusic, requestMusicNode);
 
@@ -65,7 +66,8 @@ public class WifeMaterial
             if (node == acceptPhotoNode) continue;
             node.AddOption(Constants.Options.GivePhoto, acceptPhotoNode)
                 .RequireCondition(Constants.Conditions.PlayerBroughtPhoto, Character)
-                .GiveCondition(Constants.Conditions.WifeAcceptedPhoto, Character);
+                .GiveCondition(Constants.Conditions.WifeAcceptedPhoto, Character)
+                .RejectCondition(Constants.Conditions.WifeAcceptedPhoto, Character);
         }
     }
 
