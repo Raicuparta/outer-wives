@@ -27,13 +27,13 @@ public class WifeMaterial
         Character.LoadXml();
 
 
-        var rejectionNode = Character.AddNode("REJECTION", 2);
+        var rejectionNode = Character.AddNode(Constants.Nodes.Rejection, 2);
         foreach (var node in Character._mapDialogueNodes.Values)
         {
             if (node == rejectionNode) continue;
 
             node._listDialogueOptions.Clear();
-            node.AddOption("MARRY_ME", rejectionNode);
+            node.AddOption(Constants.Options.MarryMe, rejectionNode);
             node.AddOption(Constants.Options.Accept);
         }
 
@@ -69,6 +69,6 @@ public class WifeMaterial
     public void GivePhoto()
     {
         var playerHasCorrectPhoto = PhotoPreference == PhotoManager.Instance.PhotographedCharacter?.Name;
-        DialogueConditionManager.SharedInstance.SetWifeCondition("GAVE_PHOTO", playerHasCorrectPhoto, Character);
+        DialogueConditionManager.SharedInstance.SetWifeCondition(Constants.Conditions.GavePhoto, playerHasCorrectPhoto, Character);
     }
 }

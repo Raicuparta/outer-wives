@@ -10,12 +10,8 @@ namespace OuterWives;
 [HarmonyPatch]
 public static class TranslationPatches
 {
-    private const string KEY_PREFIX = "WIFE";
-    private const string PHOTO_PREFERENCE = "$PHOTO_PREFERENCE$";
-    private const string STONE_PREFERENCE = "$STONE_PREFERENCE$";
-    private const string MUSIC_PREFERENCE = "$MUSIC_PREFERENCE$";
 
-    private static Dictionary<string, string> translations = new Dictionary<string, string>
+    private static readonly Dictionary<string, string> translations = new()
     {
         { "MARRY_ME", "Shut up, will you marry me?" },
 
@@ -29,11 +25,11 @@ public static class TranslationPatches
 
         { "REJECTION_PART_2", "Unless you can woo me somehow." },
 
-        { "REQUEST_PHOTO_PART_1", $"Yes, that could work. I would love to see a picture of my beloved {PHOTO_PREFERENCE}" },
+        { "REQUEST_PHOTO_PART_1", $"Yes, that could work. I would love to see a picture of my beloved {Constants.Tokens.PhotoPreference}" },
 
-        { "REQUEST_STONE_PART_1", $"Yes, that could work. I would love to have a stone with a painting of {STONE_PREFERENCE}" },
+        { "REQUEST_STONE_PART_1", $"Yes, that could work. I would love to have a stone with a painting of {Constants.Tokens.StonePreference}" },
             
-        { "REQUEST_MUSIC_PART_1", $"Yes, that could work. I would love to hear some {MUSIC_PREFERENCE} music" },
+        { "REQUEST_MUSIC_PART_1", $"Yes, that could work. I would love to hear some {Constants.Tokens.MusicPreference} music" },
 
         { "ACCEPT_REQUEST", $"Ugh alright fine!" },
     };
@@ -46,7 +42,7 @@ public static class TranslationPatches
     [HarmonyPrefix, HarmonyPatch(typeof(TextTranslation), nameof(TextTranslation.Translate))]
     public static bool TextTranslation_Translate(string key, ref string __result)
     {
-        if (!key.StartsWith(KEY_PREFIX)) return true;
+        if (!key.StartsWith(Constants.Global.Prefix)) return true;
 
         OuterWives.Helper.Console.WriteLine($"Translating key {key}");
 
@@ -64,9 +60,9 @@ public static class TranslationPatches
             OuterWives.Helper.Console.WriteLine($"Character name in patch: {characterName} ({dictionaryKey})");
             var wife = WifeManager.Instance.Wives.First(w => w.Name == characterName);
 
-            SetPreferenceText(ref __result, PHOTO_PREFERENCE, wife.PhotoPreference);
-            SetPreferenceText(ref __result, STONE_PREFERENCE, wife.StonePreference);
-            SetPreferenceText(ref __result, MUSIC_PREFERENCE, wife.MusicPreference);
+            SetPreferenceText(ref __result, Constants.Tokens.PhotoPreference, wife.PhotoPreference);
+            SetPreferenceText(ref __result, Constants.Tokens.StonePreference, wife.StonePreference);
+            SetPreferenceText(ref __result, Constants.Tokens.MusicPreference, wife.MusicPreference);
         }
 
         return false;

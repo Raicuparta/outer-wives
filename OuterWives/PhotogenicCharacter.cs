@@ -1,5 +1,3 @@
-using OWML.ModHelper;
-using Steamworks;
 using System;
 using System.Linq;
 using UnityEngine;
@@ -12,7 +10,7 @@ public class PhotogenicCharacter : MonoBehaviour
 
     private Collider[] _colliders;
     private CharacterDialogueTree _character;
-    private float _maxPhotoDistance = 20f;
+    private readonly float _maxPhotoDistance = 20f;
 
     private void Awake()
     {
@@ -46,11 +44,11 @@ public class PhotogenicCharacter : MonoBehaviour
     {
         try
         {
-
-        return _character._attentionPoint.position;
-        } catch (Exception e)
+            return _character._attentionPoint.position;
+        }
+        catch (Exception e)
         {
-            OuterWives.Log($"Failed on {name} ({_character?._characterName})");
+            OuterWives.Log($"Failed on {name} ({_character?._characterName}): {e}");
             return Vector3.zero;
         }
     }
