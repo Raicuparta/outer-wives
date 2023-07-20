@@ -1,80 +1,74 @@
-﻿using Delaunay;
-using System;
-using Unity.Collections;
-using UnityEngine;
+﻿namespace OuterWives;
 
-namespace OuterWives
+public class WifeMaterial
 {
-    public class WifeMaterial
+    private readonly CharacterDialogueTree _photoPreference;
+    public string PhotoPreference => _photoPreference._characterName;
+    //public string PhotoPreference => "Slate";
+
+    private readonly SharedStone _stonePreference;
+    public string StonePreference => NomaiRemoteCameraPlatform.IDToPlanetString(_stonePreference._connectedPlatform);
+
+    private readonly TravelerController _musicPreference;
+    public string MusicPreference => _musicPreference._audioSource.name.Replace("Signal_", "");
+
+    public readonly CharacterDialogueTree Character;
+    public string Name => Character._characterName;
+
+    public WifeMaterial(string name, ThingFinder thingFinder, PhotoManager photoManager)
     {
-        private readonly CharacterDialogueTree _photoPreference;
-        //public string PhotoPreference => _photoPreference._characterName;
-        public string PhotoPreference => "Slate";
+        Character = thingFinder.GetCharacter(name);
+        _photoPreference = thingFinder.GetRandomCharacter();
+        _stonePreference = thingFinder.GetRandomStone();
+        _musicPreference = thingFinder.GetRandomTraveler();
 
-        private readonly SharedStone _stonePreference;
-        public string StonePreference => NomaiRemoteCameraPlatform.IDToPlanetString(_stonePreference._connectedPlatform);
+        photoManager.Characters.Add(Character.gameObject.AddComponent<PhotogenicCharacter>());
 
-        private readonly TravelerController _musicPreference;
-        public string MusicPreference => _musicPreference._audioSource.name.Replace("Signal_", "");
+        Character.LoadXml();
 
-        public readonly CharacterDialogueTree Character;
-        public string Name => Character._characterName;
 
-        public WifeMaterial(string name, ThingFinder thingFinder, PhotoManager photoManager)
+        var rejectionNode = Character.AddNode("REJECTION", 2);
+        foreach (var node in Character._mapDialogueNodes.Values)
         {
-            Character = thingFinder.GetCharacter(name);
-            _photoPreference = thingFinder.GetRandomCharacter();
-            _stonePreference = thingFinder.GetRandomStone();
-            _musicPreference = thingFinder.GetRandomTraveler();
+            if (node == rejectionNode) continue;
 
-            photoManager.Characters.Add(Character.gameObject.AddComponent<PhotogenicCharacter>());
-
-            Character.LoadXml();
-
-
-            var rejectionNode = Character.AddNode("REJECTION", 2);
-            foreach (var node in Character._mapDialogueNodes.Values)
-            {
-                if (node == rejectionNode) continue;
-
-                node._listDialogueOptions.Clear();
-                node.AddOption("MARRY_ME", rejectionNode);
-                node.AddOption("ACCEPT_REQUEST");
-            }
-
-            var requestPhotoNode = Character.AddNode("REQUEST_PHOTO");
-            var requestStoneNode = Character.AddNode("REQUEST_STONE");
-            var requestMusicNode = Character.AddNode("REQUEST_MUSIC");
-            rejectionNode.AddOption("PROPOSE_PHOTO", requestPhotoNode);
-            rejectionNode.AddOption("PROPOSE_STONE", requestStoneNode);
-            rejectionNode.AddOption("PROPOSE_MUSIC", requestMusicNode);
-            rejectionNode.AddOption("ACCEPT_REQUEST");
-
-            requestPhotoNode.AddOption("PROPOSE_STONE", requestStoneNode);
-            requestPhotoNode.AddOption("PROPOSE_MUSIC", requestMusicNode);
-            requestPhotoNode.AddOption("ACCEPT_REQUEST");
-
-            requestStoneNode.AddOption("PROPOSE_PHOTO", requestPhotoNode);
-            requestStoneNode.AddOption("PROPOSE_MUSIC", requestMusicNode);
-            requestStoneNode.AddOption("ACCEPT_REQUEST");
-
-            requestMusicNode.AddOption("PROPOSE_PHOTO", requestPhotoNode);
-            requestMusicNode.AddOption("PROPOSE_STONE", requestStoneNode);
-            requestMusicNode.AddOption("ACCEPT_REQUEST");
-
-            var acceptPhotoNode = Character.AddNode("ACCEPT_PHOTO", 1);
-            foreach (var node in Character._mapDialogueNodes.Values)
-            {
-                if (node == acceptPhotoNode) continue;
-                var givePhotoOption = node.AddOption("GIVE_PHOTO", acceptPhotoNode);
-                givePhotoOption.ConditionRequirement = $"WIFE_{Name}_GAVE_PHOTO";
-            }
+            node._listDialogueOptions.Clear();
+            node.AddOption("MARRY_ME", rejectionNode);
+            node.AddOption(Constants.Options.Accept);
         }
 
-        public void GivePhoto()
+        var requestPhotoNode = Character.AddNode(Constants.Nodes.RequestPhoto);
+        var requestStoneNode = Character.AddNode(Constants.Nodes.RequestStone);
+        var requestMusicNode = Character.AddNode(Constants.Nodes.RequestMusic);
+        rejectionNode.AddOption(Constants.Options.ProposePhoto, requestPhotoNode);
+        rejectionNode.AddOption(Constants.Options.ProposeStone, requestStoneNode);
+        rejectionNode.AddOption(Constants.Options.ProposeMusic, requestMusicNode);
+        rejectionNode.AddOption(Constants.Options.Accept);
+
+        requestPhotoNode.AddOption(Constants.Options.ProposeStone, requestStoneNode);
+        requestPhotoNode.AddOption(Constants.Options.ProposeMusic, requestMusicNode);
+        requestPhotoNode.AddOption(Constants.Options.Accept);
+
+        requestStoneNode.AddOption(Constants.Options.ProposePhoto, requestPhotoNode);
+        requestStoneNode.AddOption(Constants.Options.ProposeMusic, requestMusicNode);
+        requestStoneNode.AddOption(Constants.Options.Accept);
+
+        requestMusicNode.AddOption(Constants.Options.ProposePhoto, requestPhotoNode);
+        requestMusicNode.AddOption(Constants.Options.ProposeStone, requestStoneNode);
+        requestMusicNode.AddOption(Constants.Options.Accept);
+
+        var acceptPhotoNode = Character.AddNode(Constants.Nodes.AcceptPhoto, 1);
+        foreach (var node in Character._mapDialogueNodes.Values)
         {
-            var playerHasCorrectPhoto = PhotoPreference == PhotoManager.Instance.PhotographedCharacter?.Name;
-            DialogueConditionManager.SharedInstance.SetConditionState($"WIFE_{Name}_GAVE_PHOTO", playerHasCorrectPhoto);
+            if (node == acceptPhotoNode) continue;
+            node.AddOption(Constants.Options.GivePhoto, acceptPhotoNode)
+                .AddCondition(Constants.Conditions.GavePhoto, Character);
         }
+    }
+
+    public void GivePhoto()
+    {
+        var playerHasCorrectPhoto = PhotoPreference == PhotoManager.Instance.PhotographedCharacter?.Name;
+        DialogueConditionManager.SharedInstance.SetWifeCondition("GAVE_PHOTO", playerHasCorrectPhoto, Character);
     }
 }

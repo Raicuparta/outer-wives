@@ -3,58 +3,57 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-namespace OuterWives
+namespace OuterWives;
+
+public class WifeManager: MonoBehaviour
 {
-    public class WifeManager: MonoBehaviour
+    public static WifeManager Instance;
+
+    public readonly List<WifeMaterial> Wives = new();
+    private readonly Dictionary<CharacterDialogueTree, WifeMaterial> _characterWifeMap = new();
+
+    private ThingFinder _thingFinder;
+    private PhotoManager _photoManager;
+
+    private void Awake()
     {
-        public static WifeManager Instance;
+        Instance = this;
 
-        public readonly List<WifeMaterial> Wives = new();
-        private readonly Dictionary<CharacterDialogueTree, WifeMaterial> _characterWifeMap = new();
+        _thingFinder = new GameObject("ThingFinder").AddComponent<ThingFinder>();
+        _photoManager = new GameObject("PhotoManager").AddComponent<PhotoManager>();
 
-        private ThingFinder _thingFinder;
-        private PhotoManager _photoManager;
+        CreateWife("Feldspar");
+        CreateWife("Hal");
+        CreateWife("Chert");
+        CreateWife("Hornfels");
+        CreateWife("Slate");
+        CreateWife("Rutile");
+        CreateWife("Gneiss");
+        CreateWife("Marl");
+        CreateWife("Tuff");
+        CreateWife("Esker");
+        CreateWife("Porphy");
+        CreateWife("the Prisoner"); // TODO you can't get out of there, so we shouldn't ask for pictures.
+        CreateWife("Tektite");
+        CreateWife("Gossan");
+        CreateWife("Spinel");
+        CreateWife("Gabbro");
+        CreateWife("Riebeck");
+        CreateWife("Self");
+        CreateWife("Solanum");
+    }
 
-        private void Awake()
-        {
-            Instance = this;
+    private void CreateWife(string name)
+    {
+        var wife = new WifeMaterial(name, _thingFinder, _photoManager);
+        Wives.Add(wife);
 
-            _thingFinder = new GameObject("ThingFinder").AddComponent<ThingFinder>();
-            _photoManager = new GameObject("PhotoManager").AddComponent<PhotoManager>();
+        _characterWifeMap[wife.Character] = wife;
+    }
 
-            CreateWife("Feldspar");
-            CreateWife("Hal");
-            CreateWife("Chert");
-            CreateWife("Hornfels");
-            CreateWife("Slate");
-            CreateWife("Rutile");
-            CreateWife("Gneiss");
-            CreateWife("Marl");
-            CreateWife("Tuff");
-            CreateWife("Esker");
-            CreateWife("Porphy");
-            CreateWife("the Prisoner"); // TODO you can't get out of there, so we shouldn't ask for pictures.
-            CreateWife("Tektite");
-            CreateWife("Gossan");
-            CreateWife("Spinel");
-            CreateWife("Gabbro");
-            CreateWife("Riebeck");
-            CreateWife("Self");
-            CreateWife("Solanum");
-        }
-
-        private void CreateWife(string name)
-        {
-            var wife = new WifeMaterial(name, _thingFinder, _photoManager);
-            Wives.Add(wife);
-
-            _characterWifeMap[wife.Character] = wife;
-        }
-
-        public WifeMaterial GetWifeByCharacter(CharacterDialogueTree character)
-        {
-            _characterWifeMap.TryGetValue(character, out var wife);
-            return wife;
-        }
+    public WifeMaterial GetWifeByCharacter(CharacterDialogueTree character)
+    {
+        _characterWifeMap.TryGetValue(character, out var wife);
+        return wife;
     }
 }

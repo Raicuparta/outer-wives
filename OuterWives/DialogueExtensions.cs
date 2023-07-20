@@ -2,45 +2,55 @@
 using System.Linq;
 using System.Xml.Linq;
 
-namespace OuterWives
+namespace OuterWives;
+
+public static class DialogueExtensions
 {
-    public static class DialogueExtensions
+    public static DialogueNode AddNode(this CharacterDialogueTree character, string nodeTextId, int pageCount = 1)
     {
-        public static DialogueNode AddNode(this CharacterDialogueTree character, string nodeTextId, int pageCount = 1)
-        {
-            var nodeName = $"WIFE/{character._characterName}/{nodeTextId}";
+        var nodeName = $"{Constants.Global.Prefix}/{character._characterName}/{nodeTextId}";
 
-            return character._mapDialogueNodes[nodeName] = new DialogueNode()
+        return character._mapDialogueNodes[nodeName] = new DialogueNode()
+        {
+            _name = nodeName,
+            _listDialogueOptions = new(),
+            _displayTextData = new DialogueText(new XElement[] { }, false)
             {
-                _name = nodeName,
-                _listDialogueOptions = new(),
-                _displayTextData = new DialogueText(new XElement[] { }, false)
-                {
-                    _listTextBlocks = new List<DialogueText.TextBlock> {
-                        new DialogueText.TextBlock
-                        {
-                            condition = "",
-                            listPageText = Enumerable
-                                .Range(1, pageCount)
-                                .Select(index => $"_PART_{index}")
-                                .ToList()
-                        }
-                    },
+                _listTextBlocks = new List<DialogueText.TextBlock> {
+                    new DialogueText.TextBlock
+                    {
+                        condition = "",
+                        listPageText = Enumerable
+                            .Range(1, pageCount)
+                            .Select(index => $"_PART_{index}")
+                            .ToList()
+                    }
                 },
-            };
-        }
+            },
+        };
+    }
 
-        public static DialogueOption AddOption(this DialogueNode node, string optionTextId, DialogueNode target = null)
+    public static DialogueOption AddOption(this DialogueNode node, string optionTextId, DialogueNode target = null)
+    {
+        var option = new DialogueOption()
         {
-            var option = new DialogueOption()
-            {
-                _textID = $"WIFE/{optionTextId}",
-                _targetName = target?.Name ?? ""
-            };
+            _textID = $"{Constants.Global.Prefix}/{optionTextId}",
+            _targetName = target?.Name ?? ""
+        };
 
-            node._listDialogueOptions.Add(option);
+        node._listDialogueOptions.Add(option);
 
-            return option;
-        }
+        return option;
+    }
+
+    public static DialogueOption AddCondition(this DialogueOption option, string conditionId, CharacterDialogueTree character)
+    {
+        option.ConditionRequirement = $"{Constants.Global.Prefix}/{character._characterName}_{conditionId}";
+        return option;
+    }
+
+    public static void SetWifeCondition(this DialogueConditionManager conditionManager, string conditionId, bool conditionState, CharacterDialogueTree character)
+    {
+        conditionManager.SetConditionState($"{Constants.Global.Prefix}/{character._characterName}_{conditionId}", conditionState);
     }
 }
