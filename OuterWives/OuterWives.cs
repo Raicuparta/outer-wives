@@ -113,8 +113,17 @@ public class OuterWives : ModBehaviour
                     rejectionNode.AddOption("PROPOSE_PHOTO", requestPhotoNode);
                     rejectionNode.AddOption("PROPOSE_STONE", requestStoneNode);
                     rejectionNode.AddOption("PROPOSE_MUSIC", requestMusicNode);
+
+                    requestPhotoNode.AddOption("PROPOSE_STONE", requestStoneNode);
+                    requestPhotoNode.AddOption("PROPOSE_MUSIC", requestMusicNode);
                     requestPhotoNode.AddOption("ACCEPT_REQUEST");
+
+                    requestStoneNode.AddOption("PROPOSE_PHOTO", requestPhotoNode);
+                    requestStoneNode.AddOption("PROPOSE_MUSIC", requestMusicNode);
                     requestStoneNode.AddOption("ACCEPT_REQUEST");
+
+                    requestMusicNode.AddOption("PROPOSE_PHOTO", requestPhotoNode);
+                    requestMusicNode.AddOption("PROPOSE_STONE", requestStoneNode);
                     requestMusicNode.AddOption("ACCEPT_REQUEST");
                 }
 
