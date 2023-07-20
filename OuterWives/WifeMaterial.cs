@@ -1,11 +1,14 @@
-﻿using UnityEngine;
+﻿using System;
+using Unity.Collections;
+using UnityEngine;
 
 namespace OuterWives
 {
     public class WifeMaterial
     {
         private readonly CharacterDialogueTree _photoPreference;
-        public string PhotoPreference => _photoPreference._characterName;
+        //public string PhotoPreference => _photoPreference._characterName;
+        public string PhotoPreference => "Slate";
 
         private readonly SharedStone _stonePreference;
         public string StonePreference => NomaiRemoteCameraPlatform.IDToPlanetString(_stonePreference._connectedPlatform);
@@ -33,7 +36,6 @@ namespace OuterWives
             {
                 if (node == rejectionNode) continue;
 
-                OuterWives.Log($"{Character._characterName}: Adding marry me option to node {node.Name}");
                 node._listDialogueOptions.Clear();
                 node.AddOption("MARRY_ME", rejectionNode);
             }
@@ -56,6 +58,16 @@ namespace OuterWives
             requestMusicNode.AddOption("PROPOSE_PHOTO", requestPhotoNode);
             requestMusicNode.AddOption("PROPOSE_STONE", requestStoneNode);
             requestMusicNode.AddOption("ACCEPT_REQUEST");
+        }
+
+        public void GivePhoto()
+        {
+            var acceptPhotoNode = Character.AddNode("ACCEPT_PHOTO", 1);
+            foreach (var node in Character._mapDialogueNodes.Values)
+            {
+                if (node == acceptPhotoNode) continue;
+                node.AddOption("GIVE_PHOTO", acceptPhotoNode);
+            }
         }
     }
 }

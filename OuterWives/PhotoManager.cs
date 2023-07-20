@@ -8,6 +8,13 @@ namespace OuterWives
         public PhotogenicCharacter PhotographedCharacter { get; private set; }
         public readonly List<PhotogenicCharacter> Characters = new();
 
+        public static PhotoManager Instance { get; private set; }
+
+        private void Awake()
+        {
+            Instance = this;
+        }
+
         private void OnEnable()
         {
             GlobalMessenger.AddListener("Probe Snapshot Removed", OnProbeSnapshotRemoved);

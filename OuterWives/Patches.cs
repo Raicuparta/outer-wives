@@ -79,6 +79,14 @@ namespace OuterWives
         public static void BeforeConversationStart(CharacterDialogueTree __instance)
         {
             _startingConversation = true;
+
+            var wife = WifeManager.Instance.GetWifeByCharacter(__instance);
+            if (wife == null || PhotoManager.Instance.PhotographedCharacter == null) return;
+
+            if (wife.PhotoPreference == PhotoManager.Instance.PhotographedCharacter.Name)
+            {
+                wife.GivePhoto();
+            }
         }
 
         [HarmonyPostfix, HarmonyPatch(typeof(CharacterDialogueTree), nameof(CharacterDialogueTree.EndConversation))]
