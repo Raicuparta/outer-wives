@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Delaunay;
+using System;
 using Unity.Collections;
 using UnityEngine;
 
@@ -38,6 +39,7 @@ namespace OuterWives
 
                 node._listDialogueOptions.Clear();
                 node.AddOption("MARRY_ME", rejectionNode);
+                node.AddOption("ACCEPT_REQUEST");
             }
 
             var requestPhotoNode = Character.AddNode("REQUEST_PHOTO");
@@ -46,6 +48,7 @@ namespace OuterWives
             rejectionNode.AddOption("PROPOSE_PHOTO", requestPhotoNode);
             rejectionNode.AddOption("PROPOSE_STONE", requestStoneNode);
             rejectionNode.AddOption("PROPOSE_MUSIC", requestMusicNode);
+            rejectionNode.AddOption("ACCEPT_REQUEST");
 
             requestPhotoNode.AddOption("PROPOSE_STONE", requestStoneNode);
             requestPhotoNode.AddOption("PROPOSE_MUSIC", requestMusicNode);
@@ -58,16 +61,20 @@ namespace OuterWives
             requestMusicNode.AddOption("PROPOSE_PHOTO", requestPhotoNode);
             requestMusicNode.AddOption("PROPOSE_STONE", requestStoneNode);
             requestMusicNode.AddOption("ACCEPT_REQUEST");
-        }
 
-        public void GivePhoto()
-        {
             var acceptPhotoNode = Character.AddNode("ACCEPT_PHOTO", 1);
             foreach (var node in Character._mapDialogueNodes.Values)
             {
                 if (node == acceptPhotoNode) continue;
-                node.AddOption("GIVE_PHOTO", acceptPhotoNode);
+                var givePhotoOption = node.AddOption("GIVE_PHOTO", acceptPhotoNode);
+                givePhotoOption.ConditionRequirement = $"WIFE_{Name}_GAVE_PHOTO";
             }
+        }
+
+        public void GivePhoto()
+        {
+            var playerHasCorrectPhoto = PhotoPreference == PhotoManager.Instance.PhotographedCharacter?.Name;
+            DialogueConditionManager.SharedInstance.SetConditionState($"WIFE_{Name}_GAVE_PHOTO", playerHasCorrectPhoto);
         }
     }
 }
