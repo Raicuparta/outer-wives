@@ -34,6 +34,11 @@ public class OuterWives : ModBehaviour
         new WifeMaterial("Solanum"),
     };
 
+    public static void Log(string text)
+    {
+        Helper.Console.WriteLine(text);
+    }
+
     private void Awake()
     {
         // You won't be able to access OWML's mod helper in Awake.

@@ -1,3 +1,5 @@
+using OWML.ModHelper;
+using Steamworks;
 using System;
 using System.Linq;
 using UnityEngine;
@@ -6,6 +8,8 @@ namespace OuterWives;
 
 public class PhotogenicCharacter : MonoBehaviour
 {
+    public static CharacterDialogueTree PhotographedCharacter { get; private set; }
+
     private Collider[] _colliders;
     private CharacterDialogueTree _character;
     private float _maxPhotoDistance = 20f;
@@ -16,13 +20,14 @@ public class PhotogenicCharacter : MonoBehaviour
         _character = GetComponent<CharacterDialogueTree>();
     }
 
-    private void Start()
-    {
-    }
-
     private void OnEnable()
     {
         GlobalMessenger<ProbeCamera>.AddListener("ProbeSnapshot", new Callback<ProbeCamera>(OnProbeSnapshot));
+    }
+
+    private void OnDestroy()
+    {
+        PhotographedCharacter = null;
     }
 
     private void OnDisable()
@@ -59,6 +64,11 @@ public class PhotogenicCharacter : MonoBehaviour
 
     private void OnProbeSnapshot(ProbeCamera camera)
     {
+        if (PhotographedCharacter == _character)
+        {
+            PhotographedCharacter = null;
+        }
+
         Vector3 vector = GetTargetPosition() - camera.transform.position;
         float magnitude = vector.magnitude;
         if (magnitude > this._maxPhotoDistance) return;
@@ -68,5 +78,7 @@ public class PhotogenicCharacter : MonoBehaviour
         if (IsOccludedFromPosition(camera.transform.position)) return;
 
         NotificationManager.SharedInstance.PostNotification(new NotificationData($"Photographed {_character._characterName}"), false);
+
+        PhotographedCharacter = _character;
     }
 }

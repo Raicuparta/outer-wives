@@ -71,5 +71,27 @@ namespace OuterWives
 
             return false;
         }
+
+        private static bool _startingConversation = false;
+
+
+        [HarmonyPrefix, HarmonyPatch(typeof(CharacterDialogueTree), nameof(CharacterDialogueTree.StartConversation))]
+        public static void BeforeConversationStart()
+        {
+            _startingConversation = true;
+        }
+
+        [HarmonyPostfix, HarmonyPatch(typeof(CharacterDialogueTree), nameof(CharacterDialogueTree.EndConversation))]
+        public static void AfterConversationStart()
+        {
+            _startingConversation = false;
+        }
+
+
+        [HarmonyPrefix, HarmonyPatch(typeof(ToolModeSwapper), nameof(ToolModeSwapper.UnequipTool))]
+        public static bool PreventUnequip()
+        {
+            return !(Locator.GetToolModeSwapper().IsInToolMode(ToolMode.Probe) && _startingConversation);
+        }
     }
 }
