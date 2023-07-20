@@ -7,26 +7,6 @@ using UnityEngine;
 
 namespace OuterWives;
 
-public class WifeMaterial
-{
-    public readonly string name;
-    public WifeMaterial PhotoPreference { get; private set; }
-    public string StonePreference { get; private set; }
-    public string MusicPreference { get; private set; }
-
-    public WifeMaterial(string name)
-    {
-        this.name = name;
-    }
-
-    internal void Initialize()
-    {
-        PhotoPreference = OuterWives.Wives[Random.Range(0, OuterWives.Wives.Length)];
-        StonePreference = "Flintstones";
-        MusicPreference = "Poopy metal";
-    }
-}
-
 public class OuterWives : ModBehaviour
 {
 
@@ -59,11 +39,6 @@ public class OuterWives : ModBehaviour
         // You won't be able to access OWML's mod helper in Awake.
         // So you probably don't want to do anything here.
         // Use Start() instead.
-
-        foreach (var wife in Wives)
-        {
-            wife.Initialize();
-        }
     }
 
     private void Start()
@@ -84,6 +59,11 @@ public class OuterWives : ModBehaviour
 
             ModHelper.Events.Unity.FireInNUpdates(() =>
             {
+                foreach (var wife in Wives)
+                {
+                    wife.Initialize();
+                }
+
                 var characters = Resources.FindObjectsOfTypeAll<CharacterDialogueTree>()
                     .Where(character => Wives.Any(wife => wife.name == character._characterName));
 
