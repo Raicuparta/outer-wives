@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
-using System.Xml.Linq;
 using HarmonyLib;
 using OWML.Common;
 using OWML.ModHelper;
@@ -11,12 +9,21 @@ namespace OuterWives;
 
 public class WifeMaterial
 {
-    public string name;
-    public WifeMaterial secretLove;
+    public readonly string name;
+    public WifeMaterial PhotoPreference { get; private set; }
+    public string StonePreference { get; private set; }
+    public string MusicPreference { get; private set; }
+
+    public WifeMaterial(string name)
+    {
+        this.name = name;
+    }
 
     internal void Initialize()
     {
-        secretLove = OuterWives.Wives[Random.Range(0, OuterWives.Wives.Length)];
+        PhotoPreference = OuterWives.Wives[Random.Range(0, OuterWives.Wives.Length)];
+        StonePreference = "Flintstones";
+        MusicPreference = "Poopy metal";
     }
 }
 
@@ -26,63 +33,25 @@ public class OuterWives : ModBehaviour
     public static IModHelper Helper;
 
     public static readonly WifeMaterial[] Wives = new[] {
-        new WifeMaterial() {
-            name = "Feldspar"
-        },
-        new WifeMaterial() {
-            name = "Hal"
-        },
-        new WifeMaterial() {
-            name = "Chert"
-        },
-        new WifeMaterial() {
-            name = "Hornfels"
-        },
-        new WifeMaterial() {
-            name = "Slate"
-        },
-        new WifeMaterial() {
-            name = "Rutile"
-        },
-        new WifeMaterial() {
-            name = "Gneiss"
-        },
-        new WifeMaterial() {
-            name = "Marl"
-        },
-        new WifeMaterial() {
-            name = "Tuff"
-        },
-        new WifeMaterial() {
-            name = "Esker"
-        },
-        new WifeMaterial() {
-            name = "Porphy"
-        },
-        new WifeMaterial() {
-            name = "the Prisoner"
-        },
-        new WifeMaterial() {
-            name = "Tektite"
-        },
-        new WifeMaterial() {
-            name = "Gossan"
-        },
-        new WifeMaterial() {
-            name = "Spinel"
-        },
-        new WifeMaterial() {
-            name = "Gabbro"
-        },
-        new WifeMaterial() {
-            name = "Riebeck"
-        },
-        new WifeMaterial() {
-            name = "Self"
-        },
-        new WifeMaterial() {
-            name = "Solanum"
-        }
+        new WifeMaterial("Feldspar"),
+        new WifeMaterial("Hal"),
+        new WifeMaterial("Chert"),
+        new WifeMaterial("Hornfels"),
+        new WifeMaterial("Slate"),
+        new WifeMaterial("Rutile"),
+        new WifeMaterial("Gneiss"),
+        new WifeMaterial("Marl"),
+        new WifeMaterial("Tuff"),
+        new WifeMaterial("Esker"),
+        new WifeMaterial("Porphy"),
+        new WifeMaterial("the Prisoner"),
+        new WifeMaterial("Tektite"),
+        new WifeMaterial("Gossan"),
+        new WifeMaterial("Spinel"),
+        new WifeMaterial("Gabbro"),
+        new WifeMaterial("Riebeck"),
+        new WifeMaterial("Self"),
+        new WifeMaterial("Solanum"),
     };
 
     private void Awake()
@@ -128,10 +97,10 @@ public class OuterWives : ModBehaviour
                     character.LoadXml();
 
 
-                    var rejectionNode = character.AddNode("REJECTION", 3);
+                    var rejectionNode = character.AddNode("REJECTION", 2);
                     foreach (var node in character._mapDialogueNodes.Values)
                     {
-                        if (node == rejectionNode) return;
+                        if (node == rejectionNode) continue;
 
                         ModHelper.Console.WriteLine($"{character._characterName}: Adding marry me option to node {node.Name}");
                         node._listDialogueOptions.Clear();

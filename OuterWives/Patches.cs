@@ -11,6 +11,9 @@ namespace OuterWives
     public static class TranslationPatches
     {
         private const string KEY_PREFIX = "WIFE";
+        private const string PHOTO_PREFERENCE = "$PHOTO_PREFERENCE$";
+        private const string STONE_PREFERENCE = "$STONE_PREFERENCE$";
+        private const string MUSIC_PREFERENCE = "$MUSIC_PREFERENCE$";
 
         private static Dictionary<string, string> translations = new Dictionary<string, string>
         {
@@ -20,15 +23,19 @@ namespace OuterWives
 
             { "PROPOSE_STONE", "What if I bring you a nice stone with a drawing on it?" },
 
-            { "PROPOSE_REEL", "What if I bring you a nice slide reel?" },
-
             { "PROPOSE_MUSIC", "What if I play some nice music for you?" },
 
             { "REJECTION_PART_1", "No, I would really rather not marry you." },
 
             { "REJECTION_PART_2", "Unless you can woo me somehow." },
 
-            { "REJECTION_PART_3", "For instance, I would love to see a picture of my beloved $$SECRET_LOVE$$. I've loved them for a very long time, but they do not wish to marry me." },
+            { "REQUEST_PHOTO_PART_1", $"Yes, that could work. I would love to see a picture of my beloved {PHOTO_PREFERENCE}" },
+
+            { "REQUEST_STONE_PART_1", $"Yes, that could work. I would love to have a stone with a painting of {STONE_PREFERENCE}" },
+                
+            { "REQUEST_MUSIC_PART_1", $"Yes, that could work. I would love to hear some {MUSIC_PREFERENCE} music" },
+
+            { "ACCEPT_REQUEST", $"Ugh alright fine!" },
         };
 
         [HarmonyPrefix, HarmonyPatch(typeof(TextTranslation), nameof(TextTranslation.Translate))]
@@ -52,7 +59,9 @@ namespace OuterWives
                 OuterWives.Helper.Console.WriteLine($"Character name in patch: {characterName} ({dictionaryKey})");
                 var wife = OuterWives.Wives.First(w => w.name == characterName);
 
-                __result = __result.Replace("$$SECRET_LOVE$$", wife.secretLove.name);
+                __result = __result.Replace(PHOTO_PREFERENCE, wife.PhotoPreference.name);
+                __result = __result.Replace(STONE_PREFERENCE, wife.StonePreference);
+                __result = __result.Replace(MUSIC_PREFERENCE, wife.MusicPreference);
             }
 
             return false;
