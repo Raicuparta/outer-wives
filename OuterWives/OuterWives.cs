@@ -127,60 +127,26 @@ public class OuterWives : ModBehaviour
 
                     character.LoadXml();
 
-                    var requestNodeName = $"WIFE_{character._characterName}_MARRY_ME";
-                    var rejectionNodeName = $"WIFE_{character._characterName}_REJECTION";
+
+                    var rejectionNode = character.AddNode("REJECTION", 3);
                     foreach (var node in character._mapDialogueNodes.Values)
                     {
+                        if (node == rejectionNode) return;
+
+                        ModHelper.Console.WriteLine($"{character._characterName}: Adding marry me option to node {node.Name}");
                         node._listDialogueOptions.Clear();
-                        node._listDialogueOptions.Add(new DialogueOption()
-                        {
-                            _textID = requestNodeName,
-                            _targetName = rejectionNodeName
-                        });
+                        node.AddOption("MARRY_ME", rejectionNode);
                     }
 
-                    character._mapDialogueNodes[rejectionNodeName] = new DialogueNode()
-                    {
-                        _name = rejectionNodeName,
-                        _displayTextData = new DialogueText(new XElement[]{ }, false)
-                        {
-                            _listTextBlocks = new List<DialogueText.TextBlock> {
-                                new DialogueText.TextBlock
-                                {
-                                    condition= "DEFAULT",
-                                    listPageText = new List<string>
-                                    {
-                                        "_PART_1_VARIANT_1",
-                                        "_PART_2_VARIANT_1",
-                                        "_PART_3_VARIANT_1",
-                                    }
-                                }
-                            },
-                        },
-                        _listDialogueOptions = new List<DialogueOption>()
-                        {
-                            new DialogueOption()
-                            {
-                                _textID = $"WIFE_{character._characterName}_PROPOSE_PHOTO",
-                                _targetName = rejectionNodeName
-                            },
-                            new DialogueOption()
-                            {
-                                _textID = $"WIFE_{character._characterName}_PROPOSE_STONE",
-                                _targetName = rejectionNodeName
-                            },
-                            new DialogueOption()
-                            {
-                                _textID = $"WIFE_{character._characterName}_PROPOSE_REEL",
-                                _targetName = rejectionNodeName
-                            },
-                            new DialogueOption()
-                            {
-                                _textID = $"WIFE_{character._characterName}_PROPOSE_MUSIC",
-                                _targetName = rejectionNodeName
-                            }
-                        }
-                    };
+                    var requestPhotoNode = character.AddNode("REQUEST_PHOTO");
+                    var requestStoneNode = character.AddNode("REQUEST_STONE");
+                    var requestMusicNode = character.AddNode("REQUEST_MUSIC");
+                    rejectionNode.AddOption("PROPOSE_PHOTO", requestPhotoNode);
+                    rejectionNode.AddOption("PROPOSE_STONE", requestStoneNode);
+                    rejectionNode.AddOption("PROPOSE_MUSIC", requestMusicNode);
+                    requestPhotoNode.AddOption("ACCEPT_REQUEST");
+                    requestStoneNode.AddOption("ACCEPT_REQUEST");
+                    requestMusicNode.AddOption("ACCEPT_REQUEST");
                 }
 
                 var items = Resources.FindObjectsOfTypeAll<OWItem>();
