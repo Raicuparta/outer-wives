@@ -12,7 +12,8 @@ namespace OuterWives
         private SharedStone _stonePreference;
         public string StonePreference => NomaiRemoteCameraPlatform.IDToPlanetString(_stonePreference._connectedPlatform);
 
-        public string MusicPreference { get; private set; }
+        private TravelerController _musicPreference;
+        public string MusicPreference => _musicPreference._audioSource.name.Replace("Signal_", "");
 
         public WifeMaterial(string name)
         {
@@ -23,7 +24,7 @@ namespace OuterWives
         {
             _photoPreference = OuterWives.Wives[Random.Range(0, OuterWives.Wives.Length)];
             _stonePreference = ThingFinder.GetRandomStone();
-            MusicPreference = "Poopy metal";
+            _musicPreference = ThingFinder.GetRandomTraveler();
         }
     }
 }
