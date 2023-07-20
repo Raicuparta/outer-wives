@@ -12,28 +12,6 @@ public class OuterWives : ModBehaviour
 
     public static IModHelper Helper;
 
-    public static readonly WifeMaterial[] Wives = new[] {
-        new WifeMaterial("Feldspar"),
-        new WifeMaterial("Hal"),
-        new WifeMaterial("Chert"),
-        new WifeMaterial("Hornfels"),
-        new WifeMaterial("Slate"),
-        new WifeMaterial("Rutile"),
-        new WifeMaterial("Gneiss"),
-        new WifeMaterial("Marl"),
-        new WifeMaterial("Tuff"),
-        new WifeMaterial("Esker"),
-        new WifeMaterial("Porphy"),
-        new WifeMaterial("the Prisoner"), // TODO you can't get out of there, so we shouldn't ask for pictures.
-        new WifeMaterial("Tektite"),
-        new WifeMaterial("Gossan"),
-        new WifeMaterial("Spinel"),
-        new WifeMaterial("Gabbro"),
-        new WifeMaterial("Riebeck"),
-        new WifeMaterial("Self"),
-        new WifeMaterial("Solanum"),
-    };
-
     public static void Log(string text)
     {
         Helper.Console.WriteLine(text);
@@ -64,51 +42,7 @@ public class OuterWives : ModBehaviour
 
             ModHelper.Events.Unity.FireInNUpdates(() =>
             {
-                foreach (var wife in Wives)
-                {
-                    wife.Initialize();
-                }
-
-                var characters = Resources.FindObjectsOfTypeAll<CharacterDialogueTree>()
-                    .Where(character => Wives.Any(wife => wife.name == character._characterName));
-
-                foreach (var character in characters)
-                {
-                    ModHelper.Console.WriteLine($"Character: {character._characterName} ({character.gameObject.activeInHierarchy})");
-                    var visibilityTracker = character.gameObject.AddComponent<PhotogenicCharacter>();
-
-                    character.LoadXml();
-
-
-                    var rejectionNode = character.AddNode("REJECTION", 2);
-                    foreach (var node in character._mapDialogueNodes.Values)
-                    {
-                        if (node == rejectionNode) continue;
-
-                        ModHelper.Console.WriteLine($"{character._characterName}: Adding marry me option to node {node.Name}");
-                        node._listDialogueOptions.Clear();
-                        node.AddOption("MARRY_ME", rejectionNode);
-                    }
-
-                    var requestPhotoNode = character.AddNode("REQUEST_PHOTO");
-                    var requestStoneNode = character.AddNode("REQUEST_STONE");
-                    var requestMusicNode = character.AddNode("REQUEST_MUSIC");
-                    rejectionNode.AddOption("PROPOSE_PHOTO", requestPhotoNode);
-                    rejectionNode.AddOption("PROPOSE_STONE", requestStoneNode);
-                    rejectionNode.AddOption("PROPOSE_MUSIC", requestMusicNode);
-
-                    requestPhotoNode.AddOption("PROPOSE_STONE", requestStoneNode);
-                    requestPhotoNode.AddOption("PROPOSE_MUSIC", requestMusicNode);
-                    requestPhotoNode.AddOption("ACCEPT_REQUEST");
-
-                    requestStoneNode.AddOption("PROPOSE_PHOTO", requestPhotoNode);
-                    requestStoneNode.AddOption("PROPOSE_MUSIC", requestMusicNode);
-                    requestStoneNode.AddOption("ACCEPT_REQUEST");
-
-                    requestMusicNode.AddOption("PROPOSE_PHOTO", requestPhotoNode);
-                    requestMusicNode.AddOption("PROPOSE_STONE", requestStoneNode);
-                    requestMusicNode.AddOption("ACCEPT_REQUEST");
-                }
+                new GameObject("WifeManager").AddComponent<WifeManager>();
             }, 100);
 
         };

@@ -62,7 +62,7 @@ namespace OuterWives
             {
                var characterName = keyParts[1];
                 OuterWives.Helper.Console.WriteLine($"Character name in patch: {characterName} ({dictionaryKey})");
-                var wife = OuterWives.Wives.First(w => w.name == characterName);
+                var wife = WifeManager.Instance.Wives.First(w => w.name == characterName);
 
                 SetPreferenceText(ref __result, PHOTO_PREFERENCE, wife.PhotoPreference);
                 SetPreferenceText(ref __result, STONE_PREFERENCE, wife.StonePreference);

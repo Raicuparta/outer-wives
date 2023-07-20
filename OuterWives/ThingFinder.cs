@@ -4,14 +4,14 @@ using UnityEngine;
 
 namespace OuterWives
 {
-    public static class ThingFinder
+    public class ThingFinder: MonoBehaviour
     {
-        private static readonly string[] _stoneBlocklist = new string[] {
+        private readonly string[] _stoneBlocklist = new string[] {
             "None",
             "Module",
         };
-        private static SharedStone[] _stones; // TODO don't persist across reloads.
-        public static SharedStone GetRandomStone()
+        private SharedStone[] _stones;
+        public SharedStone GetRandomStone()
         {
             if (_stones == null)
             {
@@ -34,8 +34,8 @@ namespace OuterWives
             return _stones[index];
         }
 
-        private static TravelerController[] _travelers;
-        public static TravelerController GetRandomTraveler()
+        private TravelerController[] _travelers;
+        public TravelerController GetRandomTraveler()
         {
             if (_travelers == null)
             {

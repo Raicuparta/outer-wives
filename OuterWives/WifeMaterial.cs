@@ -22,9 +22,11 @@ namespace OuterWives
 
         public void Initialize()
         {
-            _photoPreference = OuterWives.Wives[Random.Range(0, OuterWives.Wives.Length)];
-            _stonePreference = ThingFinder.GetRandomStone();
-            _musicPreference = ThingFinder.GetRandomTraveler();
+            var thingFinder = new GameObject("ThingFinder").AddComponent<ThingFinder>();
+
+            _photoPreference = WifeManager.Instance.Wives[Random.Range(0, WifeManager.Instance.Wives.Length)];
+            _stonePreference = thingFinder.GetRandomStone();
+            _musicPreference = thingFinder.GetRandomTraveler();
         }
     }
 }
