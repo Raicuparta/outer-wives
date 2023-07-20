@@ -67,8 +67,6 @@ public class OuterWives : ModBehaviour
                 var characters = Resources.FindObjectsOfTypeAll<CharacterDialogueTree>()
                     .Where(character => Wives.Any(wife => wife.name == character._characterName));
 
-                ModHelper.Console.WriteLine($"Found {characters.Count()} wife-material characters:", MessageType.Success);
-
                 foreach (var character in characters)
                 {
                     ModHelper.Console.WriteLine($"Character: {character._characterName} ({character.gameObject.activeInHierarchy})");
@@ -106,14 +104,6 @@ public class OuterWives : ModBehaviour
                     requestMusicNode.AddOption("PROPOSE_STONE", requestStoneNode);
                     requestMusicNode.AddOption("ACCEPT_REQUEST");
                 }
-
-                var items = Resources.FindObjectsOfTypeAll<OWItem>();
-                ModHelper.Console.WriteLine($"Found {items.Count()} items:", MessageType.Success);
-                foreach (var item in items)
-                {
-                    ModHelper.Console.WriteLine($"Item: {item.GetDisplayName()} (interactable: {item._interactable})");
-                }
-
             }, 100);
 
         };
