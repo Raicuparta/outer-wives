@@ -24,7 +24,7 @@ public class OuterWives : ModBehaviour
         new WifeMaterial("Tuff"),
         new WifeMaterial("Esker"),
         new WifeMaterial("Porphy"),
-        new WifeMaterial("the Prisoner"),
+        new WifeMaterial("the Prisoner"), // TODO you can't get out of there, so we shouldn't ask for pictures.
         new WifeMaterial("Tektite"),
         new WifeMaterial("Gossan"),
         new WifeMaterial("Spinel"),

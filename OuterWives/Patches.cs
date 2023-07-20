@@ -38,6 +38,11 @@ namespace OuterWives
             { "ACCEPT_REQUEST", $"Ugh alright fine!" },
         };
 
+        private static void SetPreferenceText(ref string original, string token, string value)
+        {
+            original = original.Replace(token, $"<color=orange>{value}</color>");
+        }
+
         [HarmonyPrefix, HarmonyPatch(typeof(TextTranslation), nameof(TextTranslation.Translate))]
         public static bool TextTranslation_Translate(string key, ref string __result)
         {
@@ -59,9 +64,9 @@ namespace OuterWives
                 OuterWives.Helper.Console.WriteLine($"Character name in patch: {characterName} ({dictionaryKey})");
                 var wife = OuterWives.Wives.First(w => w.name == characterName);
 
-                __result = __result.Replace(PHOTO_PREFERENCE, wife.PhotoPreference);
-                __result = __result.Replace(STONE_PREFERENCE, wife.StonePreference);
-                __result = __result.Replace(MUSIC_PREFERENCE, wife.MusicPreference);
+                SetPreferenceText(ref __result, PHOTO_PREFERENCE, wife.PhotoPreference);
+                SetPreferenceText(ref __result, STONE_PREFERENCE, wife.StonePreference);
+                SetPreferenceText(ref __result, MUSIC_PREFERENCE, wife.MusicPreference);
             }
 
             return false;
