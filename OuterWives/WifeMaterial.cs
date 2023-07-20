@@ -28,47 +28,50 @@ public class WifeMaterial
 
 
         var rejectionNode = Character.AddNode(Constants.Nodes.Rejection, 2);
+        var acceptOption = rejectionNode.AddOption(Constants.Options.Accept);
+
         foreach (var node in Character._mapDialogueNodes.Values)
         {
             if (node == rejectionNode) continue;
 
             node._listDialogueOptions.Clear();
             node.AddOption(Constants.Options.MarryMe, rejectionNode);
-            node.AddOption(Constants.Options.Accept);
+            node.AddOption(acceptOption);
         }
 
         var requestPhotoNode = Character.AddNode(Constants.Nodes.RequestPhoto);
         var requestStoneNode = Character.AddNode(Constants.Nodes.RequestStone);
         var requestMusicNode = Character.AddNode(Constants.Nodes.RequestMusic);
-        rejectionNode.AddOption(Constants.Options.ProposePhoto, requestPhotoNode);
-        rejectionNode.AddOption(Constants.Options.ProposeStone, requestStoneNode);
-        rejectionNode.AddOption(Constants.Options.ProposeMusic, requestMusicNode);
-        rejectionNode.AddOption(Constants.Options.Accept);
 
-        requestPhotoNode.AddOption(Constants.Options.ProposeStone, requestStoneNode);
-        requestPhotoNode.AddOption(Constants.Options.ProposeMusic, requestMusicNode);
-        requestPhotoNode.AddOption(Constants.Options.Accept);
+        var proposePhotoOption = rejectionNode.AddOption(Constants.Options.ProposePhoto, requestPhotoNode);
+        var proposeStoneOption = rejectionNode.AddOption(Constants.Options.ProposeStone, requestStoneNode);
+        var proposeMusicOption = rejectionNode.AddOption(Constants.Options.ProposeMusic, requestMusicNode);
 
-        requestStoneNode.AddOption(Constants.Options.ProposePhoto, requestPhotoNode);
-        requestStoneNode.AddOption(Constants.Options.ProposeMusic, requestMusicNode);
-        requestStoneNode.AddOption(Constants.Options.Accept);
+        requestPhotoNode.AddOption(proposeStoneOption);
+        requestPhotoNode.AddOption(proposeMusicOption);
+        requestPhotoNode.AddOption(acceptOption);
 
-        requestMusicNode.AddOption(Constants.Options.ProposePhoto, requestPhotoNode);
-        requestMusicNode.AddOption(Constants.Options.ProposeStone, requestStoneNode);
-        requestMusicNode.AddOption(Constants.Options.Accept);
+        requestStoneNode.AddOption(proposePhotoOption);
+        requestStoneNode.AddOption(proposeMusicOption);
+        requestStoneNode.AddOption(acceptOption);
+
+        requestMusicNode.AddOption(proposePhotoOption);
+        requestMusicNode.AddOption(proposeStoneOption);
+        requestMusicNode.AddOption(acceptOption);
 
         var acceptPhotoNode = Character.AddNode(Constants.Nodes.AcceptPhoto, 1);
         foreach (var node in Character._mapDialogueNodes.Values)
         {
             if (node == acceptPhotoNode) continue;
             node.AddOption(Constants.Options.GivePhoto, acceptPhotoNode)
-                .AddCondition(Constants.Conditions.GavePhoto, Character);
+                .RequireCondition(Constants.Conditions.PlayerBroughtPhoto, Character)
+                .GiveCondition(Constants.Conditions.WifeAcceptedPhoto, Character);
         }
     }
 
     public void GivePhoto()
     {
         var playerHasCorrectPhoto = PhotoPreference == PhotoManager.Instance.PhotographedCharacter?.Name;
-        DialogueConditionManager.SharedInstance.SetWifeCondition(Constants.Conditions.GavePhoto, playerHasCorrectPhoto, Character);
+        DialogueConditionManager.SharedInstance.SetWifeCondition(Constants.Conditions.PlayerBroughtPhoto, playerHasCorrectPhoto, Character);
     }
 }

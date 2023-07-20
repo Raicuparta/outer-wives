@@ -16,11 +16,6 @@ public static class Constants
         public const string AcceptPhoto = "ACCEPT_PHOTO";
     }
 
-    public static class Conditions
-    {
-        public const string GavePhoto = "GAVE_PHOTO";
-    }
-
     public static class Options
     {
         public const string MarryMe = "MARRY_ME";
@@ -36,5 +31,11 @@ public static class Constants
         public const string PhotoPreference = "$PHOTO_PREFERENCE$";
         public const string StonePreference = "$STONE_PREFERENCE$";
         public const string MusicPreference = "$MUSIC_PREFERENCE$";
+    }
+
+    public static class Conditions
+    {
+        public const string PlayerBroughtPhoto = "BROUGHT_PHOTO";
+        public const string WifeAcceptedPhoto = "ACCEPTED_PHOTO";
     }
 }
