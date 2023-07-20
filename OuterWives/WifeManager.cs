@@ -1,5 +1,6 @@
 ﻿using OWML.ModHelper;
-using System.Linq;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 
 namespace OuterWives
@@ -8,85 +9,52 @@ namespace OuterWives
     {
         public static WifeManager Instance;
 
-        public WifeMaterial[] Wives { get; private set; }
+        public readonly List<WifeMaterial> Wives = new();
+        private readonly Dictionary<CharacterDialogueTree, WifeMaterial> _characterWifeMap = new();
+
+        private ThingFinder _thingFinder;
+        private PhotoManager _photoManager;
 
         private void Awake()
         {
-            OuterWives.Log("Wife Manager Awake");
-
             Instance = this;
-            Wives = new[] {
-                new WifeMaterial("Feldspar"),
-                new WifeMaterial("Hal"),
-                new WifeMaterial("Chert"),
-                new WifeMaterial("Hornfels"),
-                new WifeMaterial("Slate"),
-                new WifeMaterial("Rutile"),
-                new WifeMaterial("Gneiss"),
-                new WifeMaterial("Marl"),
-                new WifeMaterial("Tuff"),
-                new WifeMaterial("Esker"),
-                new WifeMaterial("Porphy"),
-                new WifeMaterial("the Prisoner"), // TODO you can't get out of there, so we shouldn't ask for pictures.
-                new WifeMaterial("Tektite"),
-                new WifeMaterial("Gossan"),
-                new WifeMaterial("Spinel"),
-                new WifeMaterial("Gabbro"),
-                new WifeMaterial("Riebeck"),
-                new WifeMaterial("Self"),
-                new WifeMaterial("Solanum"),
-            };
+
+            _thingFinder = new GameObject("ThingFinder").AddComponent<ThingFinder>();
+            _photoManager = new GameObject("PhotoManager").AddComponent<PhotoManager>();
+
+            CreateWife("Feldspar");
+            CreateWife("Hal");
+            CreateWife("Chert");
+            CreateWife("Hornfels");
+            CreateWife("Slate");
+            CreateWife("Rutile");
+            CreateWife("Gneiss");
+            CreateWife("Marl");
+            CreateWife("Tuff");
+            CreateWife("Esker");
+            CreateWife("Porphy");
+            CreateWife("the Prisoner"); // TODO you can't get out of there, so we shouldn't ask for pictures.
+            CreateWife("Tektite");
+            CreateWife("Gossan");
+            CreateWife("Spinel");
+            CreateWife("Gabbro");
+            CreateWife("Riebeck");
+            CreateWife("Self");
+            CreateWife("Solanum");
         }
 
-        private void Start()
+        private void CreateWife(string name)
         {
-            foreach (var wife in Wives)
-            {
-                wife.Initialize();
-            }
+            var wife = new WifeMaterial(name, _thingFinder, _photoManager);
+            Wives.Add(wife);
 
-            var photoManager = new GameObject("PhotoManager").AddComponent<PhotoManager>();
+            _characterWifeMap[wife.Character] = wife;
+        }
 
-            var characters = Resources.FindObjectsOfTypeAll<CharacterDialogueTree>()
-                .Where(character => Wives.Any(wife => wife.name == character._characterName));
-
-            foreach (var character in characters)
-            {
-                OuterWives.Log($"Character: {character._characterName} ({character.gameObject.activeInHierarchy})");
-                photoManager.Characters.Add(character.gameObject.AddComponent<PhotogenicCharacter>());
-
-                character.LoadXml();
-
-
-                var rejectionNode = character.AddNode("REJECTION", 2);
-                foreach (var node in character._mapDialogueNodes.Values)
-                {
-                    if (node == rejectionNode) continue;
-
-                    OuterWives.Log($"{character._characterName}: Adding marry me option to node {node.Name}");
-                    node._listDialogueOptions.Clear();
-                    node.AddOption("MARRY_ME", rejectionNode);
-                }
-
-                var requestPhotoNode = character.AddNode("REQUEST_PHOTO");
-                var requestStoneNode = character.AddNode("REQUEST_STONE");
-                var requestMusicNode = character.AddNode("REQUEST_MUSIC");
-                rejectionNode.AddOption("PROPOSE_PHOTO", requestPhotoNode);
-                rejectionNode.AddOption("PROPOSE_STONE", requestStoneNode);
-                rejectionNode.AddOption("PROPOSE_MUSIC", requestMusicNode);
-
-                requestPhotoNode.AddOption("PROPOSE_STONE", requestStoneNode);
-                requestPhotoNode.AddOption("PROPOSE_MUSIC", requestMusicNode);
-                requestPhotoNode.AddOption("ACCEPT_REQUEST");
-
-                requestStoneNode.AddOption("PROPOSE_PHOTO", requestPhotoNode);
-                requestStoneNode.AddOption("PROPOSE_MUSIC", requestMusicNode);
-                requestStoneNode.AddOption("ACCEPT_REQUEST");
-
-                requestMusicNode.AddOption("PROPOSE_PHOTO", requestPhotoNode);
-                requestMusicNode.AddOption("PROPOSE_STONE", requestStoneNode);
-                requestMusicNode.AddOption("ACCEPT_REQUEST");
-            }
+        public WifeMaterial GetWifeByCharacter(CharacterDialogueTree character)
+        {
+            _characterWifeMap.TryGetValue(character, out var wife);
+            return wife;
         }
     }
 }

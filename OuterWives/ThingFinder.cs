@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
 
 namespace OuterWives
@@ -10,50 +9,74 @@ namespace OuterWives
             "None",
             "Module",
         };
+
+        private readonly string[] _characterBlocklist = new string[] {
+            null,
+            "",
+            CharacterDialogueTree.RECORDING_NAME,
+            CharacterDialogueTree.SIGN_NAME,
+        };
+
         private SharedStone[] _stones;
-        public SharedStone GetRandomStone()
+        private TravelerController[] _travelers;
+        private CharacterDialogueTree[] _characters;
+
+        private void InitializeStones()
         {
-            if (_stones == null)
-            {
-                _stones = Resources.FindObjectsOfTypeAll<SharedStone>()
-                    .Where(stone => !_stoneBlocklist.Any(blockedWord => stone.GetDisplayName().Contains(blockedWord)))
-                    .GroupBy(stone => stone.GetDisplayName())
-                    .Select(group => group.First())
-                    .ToArray();
+            if (_stones != null) return;
 
-                foreach (var stone in _stones)
-                {
-                    OuterWives.Helper.Console.WriteLine($"Found stone: {stone.GetDisplayName()}");
-                }
-            }
-
-            var index = Random.Range(0, _stones.Length);
-
-            OuterWives.Helper.Console.WriteLine($"Index is {index} ({_stones.Length})");
-
-            return _stones[index];
+            _stones = Resources.FindObjectsOfTypeAll<SharedStone>()
+                .Where(stone => !_stoneBlocklist.Any(blockedWord => stone.GetDisplayName().Contains(blockedWord)))
+                .GroupBy(stone => stone.GetDisplayName())
+                .Select(group => group.First())
+                .ToArray();
         }
 
-        private TravelerController[] _travelers;
+        public SharedStone GetRandomStone()
+        {
+            InitializeStones();
+            return GetRandomObject(_stones);
+        }
+
+        private void InitializeTravelers()
+        {
+            if (_travelers != null) return;
+
+            _travelers = Resources.FindObjectsOfTypeAll<TravelerController>()
+                .Where(traveler => traveler._audioSource != null)
+                .ToArray();
+        }
+
         public TravelerController GetRandomTraveler()
         {
-            if (_travelers == null)
-            {
-                _travelers = Resources.FindObjectsOfTypeAll<TravelerController>()
-                    .Where(traveler => traveler._audioSource != null)
-                    .ToArray();
+            InitializeTravelers();
+            return GetRandomObject(_travelers);
+        }
 
-                foreach (var traveler in _travelers)
-                {
-                    OuterWives.Helper.Console.WriteLine($"Found traveler: {traveler.name}");
-                }
-            }
+        private void InitializeCharacters ()
+        {
+            if (_characters != null) return;
 
-            var index = Random.Range(0, _travelers.Length);
+            _characters = Resources.FindObjectsOfTypeAll<CharacterDialogueTree>()
+                .Where(character => !_characterBlocklist.Contains(character._characterName))
+                .ToArray();
+        }
 
-            OuterWives.Helper.Console.WriteLine($"Index is {index} ({_travelers.Length})");
+        public CharacterDialogueTree GetCharacter(string name)
+        {
+            InitializeCharacters();
+            return _characters.First(character => character._characterName == name);
+        }
 
-            return _travelers[index];
+        public CharacterDialogueTree GetRandomCharacter()
+        {
+            InitializeCharacters();
+            return GetRandomObject(_characters);
+        }
+
+        private TComponent GetRandomObject<TComponent>(TComponent[] array)
+        {
+            return array[Random.Range(0, array.Length)];
         }
     }
 }
