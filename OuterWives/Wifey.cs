@@ -12,7 +12,7 @@ public class Wifey: MonoBehaviour
     //public string PhotoPreference => "Slate";
 
     private SharedStone _stonePreference;
-    public string StonePreference => NomaiRemoteCameraPlatform.IDToPlanetString(_stonePreference._connectedPlatform);
+    public string StonePreference => GetStoneName(_stonePreference);
 
     private TravelerController _musicPreference;
     public string MusicPreference => _musicPreference._audioSource.name.Replace("Signal_", "");
@@ -87,7 +87,7 @@ public class Wifey: MonoBehaviour
             var dialogueNode = desireNodes[desireId] = CreateDesire(desireId);
 
             desireOptions[desireId] = rejectionNode.AddOption(DesireString.Actions.Propose(desireId), dialogueNode)
-                .RejectCondition(DesireString.Actions.Accept(desireId), Character);
+                .RejectCondition(DesireString.Conditions.Accepted(desireId), Character);
 
             dialogueNode.AddOption(acceptOption);
         }
@@ -134,11 +134,32 @@ public class Wifey: MonoBehaviour
         return signalStrength == 1f && signalScope.GetStrongestSignal().name == _musicPreference._audioSource.name;
     }
 
-    public void GivePhoto()
+    public void PresentDesires()
+    {
+        PresentPhoto();
+        PresentStone();
+    }
+
+    private void PresentPhoto()
     {
         var condition = DesireString.Conditions.Presented(DesireString.Desires.Photo);
 
         var playerHasCorrectPhoto = PhotoPreference == PhotoManager.Instance.PhotographedCharacter?.Name;
         DialogueConditionManager.SharedInstance.SetWifeCondition(condition, playerHasCorrectPhoto, Character);
     }
+
+    private string GetStoneName(SharedStone stone)
+    {
+        return NomaiRemoteCameraPlatform.IDToPlanetString(stone._connectedPlatform);
+    }
+
+    private void PresentStone()
+    {
+        var condition = DesireString.Conditions.Presented(DesireString.Desires.Stone);
+
+        var heldItem = Locator.GetToolModeSwapper().GetItemCarryTool().GetHeldItem();
+        var playerHasCorrectStone = heldItem is SharedStone stone && GetStoneName(stone) == StonePreference;
+        DialogueConditionManager.SharedInstance.SetWifeCondition(condition, playerHasCorrectStone, Character);
+    }
+
 }

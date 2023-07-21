@@ -79,7 +79,7 @@ public static class TranslationPatches
         var wife = WifeManager.Instance.GetWifeByCharacter(__instance);
         if (wife == null) return;
 
-        wife.GivePhoto();
+        wife.PresentDesires();
     }
 
     [HarmonyPostfix, HarmonyPatch(typeof(CharacterDialogueTree), nameof(CharacterDialogueTree.EndConversation))]
