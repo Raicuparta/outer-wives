@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem.Utilities;
 
 namespace OuterWives;
 
@@ -39,10 +40,15 @@ public class ThingFinder: MonoBehaviour
             .ToArray();
     }
 
-    public SharedStone GetRandomStone()
+    public ReadOnlyArray<SharedStone> GetStones()
     {
         InitializeStones();
-        return GetRandomObject(_stones);
+        return _stones;
+    }
+
+    public SharedStone GetRandomStone()
+    {
+        return GetRandomObject(GetStones());
     }
 
     private void InitializeTravelers()
@@ -54,10 +60,16 @@ public class ThingFinder: MonoBehaviour
             .ToArray();
     }
 
+    public ReadOnlyArray<TravelerController> GetTravelers()
+    {
+        InitializeTravelers();
+        return _travelers;
+    }
+
     public TravelerController GetRandomTraveler()
     {
         InitializeTravelers();
-        return GetRandomObject(_travelers);
+        return GetRandomObject(GetTravelers());
     }
 
     private void InitializeCharacters ()
@@ -69,20 +81,25 @@ public class ThingFinder: MonoBehaviour
             .ToArray();
     }
 
-    public CharacterDialogueTree GetCharacter(string name)
+    public ReadOnlyArray<CharacterDialogueTree> GetCharacters()
     {
         InitializeCharacters();
-        return _characters.First(character => character._characterName == name);
+        return _characters;
+    }
+
+    public CharacterDialogueTree GetCharacter(string name)
+    {
+        return GetCharacters().First(character => character._characterName == name);
     }
 
     public CharacterDialogueTree GetRandomCharacter()
     {
         InitializeCharacters();
-        return GetRandomObject(_characters);
+        return GetRandomObject(GetCharacters());
     }
 
-    private TComponent GetRandomObject<TComponent>(TComponent[] array)
+    private TComponent GetRandomObject<TComponent>(ReadOnlyArray<TComponent> array)
     {
-        return array[Random.Range(0, array.Length)];
+        return array[Random.Range(0, array.Count)];
     }
 }

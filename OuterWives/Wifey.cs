@@ -47,9 +47,6 @@ public class Wifey: MonoBehaviour
         _musicPreference = ThingFinder.Instance.GetRandomTraveler();
         _animator = Character.transform.parent.GetComponentInChildren<Animator>();
 
-        // TODO: some characters that aren't wives can be photographed.
-        PhotoManager.Instance.Characters.Add(Character.gameObject.AddComponent<PhotogenicCharacter>());
-
         SetUpDialogue();
     }
 

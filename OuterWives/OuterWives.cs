@@ -42,6 +42,8 @@ public class OuterWives : ModBehaviour
 
             ModHelper.Events.Unity.FireInNUpdates(() =>
             {
+                ThingFinder.Create();
+                PhotoManager.Create();
                 WifeManager.Create();
             }, 100);
 

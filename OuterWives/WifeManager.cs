@@ -19,9 +19,6 @@ public class WifeManager: MonoBehaviour
 
     private void Start()
     {
-        ThingFinder.Create();
-        PhotoManager.Create();
-
         CreateWife("Feldspar");
         CreateWife("Hal");
         CreateWife("Chert");

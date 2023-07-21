@@ -5,14 +5,23 @@ namespace OuterWives;
 
 public class PhotoManager : MonoBehaviour
 {
-    public PhotogenicCharacter PhotographedCharacter { get; private set; }
-    public readonly List<PhotogenicCharacter> Characters = new();
-
     public static PhotoManager Instance { get; private set; }
+
+    public PhotogenicCharacter PhotographedCharacter { get; private set; }
+
+    private readonly List<PhotogenicCharacter> _characters = new();
 
     public static void Create()
     {
         Instance = new GameObject(nameof(PhotoManager)).AddComponent<PhotoManager>();
+    }
+
+    private void Start()
+    {
+        foreach (var character in ThingFinder.Instance.GetCharacters())
+        {
+            _characters.Add(character.gameObject.AddComponent<PhotogenicCharacter>());
+        }
     }
 
     private void OnEnable()
@@ -41,7 +50,7 @@ public class PhotoManager : MonoBehaviour
     {
         Reset();
         string notificationText = null;
-        foreach (var character in Characters)
+        foreach (var character in _characters)
         {
             if (character.IsInShot(camera))
             {

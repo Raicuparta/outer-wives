@@ -21,15 +21,15 @@ public static class TranslationPatches
 
         { "PROPOSE_MUSIC", "What if I play some nice music for you?" },
 
-        { "REJECTION_PART_1", "No, I would really rather not marry you." },
+        { "REJECTION_1", "No, I would really rather not marry you." },
 
-        { "REJECTION_PART_2", "Unless you can woo me somehow." },
+        { "REJECTION_2", "Unless you can woo me somehow." },
 
-        { "REQUEST_PHOTO_PART_1", $"Yes, that could work. I would love to see a picture of my beloved {Constants.Tokens.PhotoPreference}" },
+        { "REQUEST_PHOTO_1", $"Yes, that could work. I would love to see a picture of my beloved {Constants.Tokens.PhotoPreference}" },
 
-        { "REQUEST_STONE_PART_1", $"Yes, that could work. I would love to have a stone with a painting of {Constants.Tokens.StonePreference}" },
+        { "REQUEST_STONE_1", $"Yes, that could work. I would love to have a stone with a painting of {Constants.Tokens.StonePreference}" },
             
-        { "REQUEST_MUSIC_PART_1", $"Yes, that could work. I would love to hear some {Constants.Tokens.MusicPreference} music" },
+        { "REQUEST_MUSIC_1", $"Yes, that could work. I would love to hear some {Constants.Tokens.MusicPreference} music" },
 
         { "ACCEPT_REQUEST", $"Ugh alright fine!" },
     };

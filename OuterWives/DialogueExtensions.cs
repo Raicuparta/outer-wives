@@ -22,7 +22,7 @@ public static class DialogueExtensions
                         condition = "",
                         listPageText = Enumerable
                             .Range(1, pageCount)
-                            .Select(index => $"_PART_{index}")
+                            .Select(index => $"_{index}")
                             .ToList()
                     }
                 },
