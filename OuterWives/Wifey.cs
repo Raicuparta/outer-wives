@@ -1,31 +1,52 @@
-﻿namespace OuterWives;
+﻿using System.Security.Policy;
+using UnityEngine;
 
-public class Wifey
+namespace OuterWives;
+
+public class Wifey: MonoBehaviour
 {
-    private readonly CharacterDialogueTree _photoPreference;
+    private CharacterDialogueTree _photoPreference;
     public string PhotoPreference => _photoPreference._characterName;
     //public string PhotoPreference => "Slate";
 
-    private readonly SharedStone _stonePreference;
+    private SharedStone _stonePreference;
     public string StonePreference => NomaiRemoteCameraPlatform.IDToPlanetString(_stonePreference._connectedPlatform);
 
-    private readonly TravelerController _musicPreference;
+    private TravelerController _musicPreference;
     public string MusicPreference => _musicPreference._audioSource.name.Replace("Signal_", "");
 
-    public readonly CharacterDialogueTree Character;
+    public CharacterDialogueTree Character;
     public string Name => Character._characterName;
 
-    public Wifey(string name, ThingFinder thingFinder, PhotoManager photoManager)
-    {
-        Character = thingFinder.GetCharacter(name);
-        _photoPreference = thingFinder.GetRandomCharacter();
-        _stonePreference = thingFinder.GetRandomStone();
-        _musicPreference = thingFinder.GetRandomTraveler();
+    private Animator _animator;
+    public bool Active => _animator.enabled;
 
-        photoManager.Characters.Add(Character.gameObject.AddComponent<PhotogenicCharacter>());
+    public static Wifey Create(string name)
+    {
+        var character = ThingFinder.Instance.GetCharacter(name);
+        if (character == null)
+        {
+            OuterWives.Log($"Failed to find character for wife {name}");
+            return null;
+        }
+
+        var wifey = character.gameObject.AddComponent<Wifey>();
+        wifey.Character = character;
+
+        return wifey;
+    }
+
+    private void Start()
+    {
+        _photoPreference = ThingFinder.Instance.GetRandomCharacter();
+        _stonePreference = ThingFinder.Instance.GetRandomStone();
+        _musicPreference = ThingFinder.Instance.GetRandomTraveler();
+        _animator = Character.transform.parent.GetComponentInChildren<Animator>();
+
+        // TODO: some characters that aren't wives can be photographed.
+        PhotoManager.Instance.Characters.Add(Character.gameObject.AddComponent<PhotogenicCharacter>());
 
         Character.LoadXml();
-
 
         var rejectionNode = Character.AddNode(Constants.Nodes.Rejection, 2);
         var acceptOption = rejectionNode.AddOption(Constants.Options.Accept);

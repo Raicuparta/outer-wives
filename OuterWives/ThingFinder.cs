@@ -5,6 +5,8 @@ namespace OuterWives;
 
 public class ThingFinder: MonoBehaviour
 {
+    public static ThingFinder Instance { get; private set; }
+
     private readonly string[] _stoneBlocklist = new string[] {
         "None",
         "Module",
@@ -20,6 +22,11 @@ public class ThingFinder: MonoBehaviour
     private SharedStone[] _stones;
     private TravelerController[] _travelers;
     private CharacterDialogueTree[] _characters;
+
+    public static void Create()
+    {
+        Instance = new GameObject(nameof(ThingFinder)).AddComponent<ThingFinder>();
+    }
 
     private void InitializeStones()
     {

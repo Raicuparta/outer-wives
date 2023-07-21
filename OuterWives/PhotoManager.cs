@@ -10,9 +10,9 @@ public class PhotoManager : MonoBehaviour
 
     public static PhotoManager Instance { get; private set; }
 
-    private void Awake()
+    public static void Create()
     {
-        Instance = this;
+        Instance = new GameObject(nameof(PhotoManager)).AddComponent<PhotoManager>();
     }
 
     private void OnEnable()

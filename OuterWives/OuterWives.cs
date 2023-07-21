@@ -42,7 +42,7 @@ public class OuterWives : ModBehaviour
 
             ModHelper.Events.Unity.FireInNUpdates(() =>
             {
-                new GameObject("WifeManager").AddComponent<WifeManager>();
+                WifeManager.Create();
             }, 100);
 
         };

@@ -12,15 +12,15 @@ public class WifeManager: MonoBehaviour
     public readonly List<Wifey> Wives = new();
     private readonly Dictionary<CharacterDialogueTree, Wifey> _characterWifeMap = new();
 
-    private ThingFinder _thingFinder;
-    private PhotoManager _photoManager;
-
-    private void Awake()
+    public static void Create()
     {
-        Instance = this;
+        Instance = new GameObject(nameof(WifeManager)).AddComponent<WifeManager>();
+    }
 
-        _thingFinder = new GameObject("ThingFinder").AddComponent<ThingFinder>();
-        _photoManager = new GameObject("PhotoManager").AddComponent<PhotoManager>();
+    private void Start()
+    {
+        ThingFinder.Create();
+        PhotoManager.Create();
 
         CreateWife("Feldspar");
         CreateWife("Hal");
@@ -45,9 +45,8 @@ public class WifeManager: MonoBehaviour
 
     private void CreateWife(string name)
     {
-        var wife = new Wifey(name, _thingFinder, _photoManager);
+        var wife = Wifey.Create(name);
         Wives.Add(wife);
-
         _characterWifeMap[wife.Character] = wife;
     }
 
