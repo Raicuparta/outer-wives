@@ -76,4 +76,9 @@ public class PhotoManager : MonoBehaviour
     {
         PhotographedCharacter = null;
     }
+
+    public PhotogenicCharacter GetRandomCharacter()
+    {
+        return _characters[Random.Range(0, _characters.Count)];
+    }
 }

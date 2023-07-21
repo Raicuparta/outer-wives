@@ -7,8 +7,8 @@ namespace OuterWives;
 
 public class Wifey: MonoBehaviour
 {
-    private CharacterDialogueTree _photoPreference;
-    public string PhotoPreference => _photoPreference._characterName;
+    private PhotogenicCharacter _photoPreference;
+    public string PhotoPreference => _photoPreference.name;
     //public string PhotoPreference => "Slate";
 
     private SharedStone _stonePreference;
@@ -42,7 +42,7 @@ public class Wifey: MonoBehaviour
 
     private void Start()
     {
-        _photoPreference = ThingFinder.Instance.GetRandomCharacter();
+        _photoPreference = PhotoManager.Instance.GetRandomCharacter();
         _stonePreference = ThingFinder.Instance.GetRandomStone();
         _musicPreference = ThingFinder.Instance.GetRandomTraveler();
         _animator = Character.transform.parent.GetComponentInChildren<Animator>();

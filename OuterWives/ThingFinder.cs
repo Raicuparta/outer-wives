@@ -98,7 +98,7 @@ public class ThingFinder: MonoBehaviour
         return GetRandomObject(GetCharacters());
     }
 
-    private TComponent GetRandomObject<TComponent>(ReadOnlyArray<TComponent> array)
+    public TComponent GetRandomObject<TComponent>(ReadOnlyArray<TComponent> array)
     {
         return array[Random.Range(0, array.Count)];
     }
