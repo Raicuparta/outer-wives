@@ -1,6 +1,6 @@
 ﻿namespace OuterWives;
 
-public static class DesireString
+public static class WifeDesires
 {
     private static string Id(params string[] ids)
     {

@@ -57,7 +57,7 @@ public class Wifey: MonoBehaviour
     {
         if (Active && IsMusicPreferencePlaying() && IsNearPlayer())
         {
-            var condition = DesireString.Conditions.Presented(DesireString.Desires.Music);
+            var condition = WifeDesires.Conditions.Presented(WifeDesires.Desires.Music);
             if (WifeConditions.Get(condition, this)) return;
             WifeConditions.Set(condition, true, this);
         }
@@ -88,19 +88,19 @@ public class Wifey: MonoBehaviour
         var desireNodes = new Dictionary<string, DialogueNode>();
         var desireOptions = new Dictionary<string, DialogueOption>();
 
-        foreach (var desireId in DesireString.Desires.All)
+        foreach (var desireId in WifeDesires.Desires.All)
         {
             var dialogueNode = desireNodes[desireId] = CreateDesire(desireId);
 
-            desireOptions[desireId] = rejectionNode.AddOption(DesireString.Actions.Propose(desireId), dialogueNode)
-                .RejectCondition(DesireString.Conditions.Accepted(desireId), this);
+            desireOptions[desireId] = rejectionNode.AddOption(WifeDesires.Actions.Propose(desireId), dialogueNode)
+                .RejectCondition(WifeDesires.Conditions.Accepted(desireId), this);
 
             dialogueNode.AddOption(acceptOption);
         }
 
-        foreach (var nodeDesireId in DesireString.Desires.All)
+        foreach (var nodeDesireId in WifeDesires.Desires.All)
         {
-            foreach (var optionDesireId in DesireString.Desires.All)
+            foreach (var optionDesireId in WifeDesires.Desires.All)
             {
                 if (nodeDesireId == optionDesireId) continue;
                 desireNodes[nodeDesireId].AddOption(desireOptions[optionDesireId]);
@@ -110,18 +110,18 @@ public class Wifey: MonoBehaviour
 
     private DialogueNode CreateDesire(string desireId)
     {
-        var requestNode = Character.AddNode(DesireString.Actions.Request(desireId));
+        var requestNode = Character.AddNode(WifeDesires.Actions.Request(desireId));
 
-        var acceptNode = Character.AddNode(DesireString.Actions.Accept(desireId), 1);
+        var acceptNode = Character.AddNode(WifeDesires.Actions.Accept(desireId), 1);
 
         foreach (var node in Character._mapDialogueNodes.Values)
         {
             if (node == acceptNode) continue;
 
-            node.AddOption(DesireString.Actions.Present(desireId), acceptNode)
-                .RequireCondition(DesireString.Conditions.Presented(desireId), this)
-                .GiveCondition(DesireString.Conditions.Accepted(desireId), this)
-                .RejectCondition(DesireString.Conditions.Accepted(desireId), this);
+            node.AddOption(WifeDesires.Actions.Present(desireId), acceptNode)
+                .RequireCondition(WifeDesires.Conditions.Presented(desireId), this)
+                .GiveCondition(WifeDesires.Conditions.Accepted(desireId), this)
+                .RejectCondition(WifeDesires.Conditions.Accepted(desireId), this);
         }
 
         return requestNode;
@@ -148,7 +148,7 @@ public class Wifey: MonoBehaviour
 
     private void PresentPhoto()
     {
-        var condition = DesireString.Conditions.Presented(DesireString.Desires.Photo);
+        var condition = WifeDesires.Conditions.Presented(WifeDesires.Desires.Photo);
 
         var playerHasCorrectPhoto = PhotoPreference == PhotoManager.Instance.PhotographedCharacter?.Name;
         WifeConditions.Set(condition, playerHasCorrectPhoto, this);
@@ -161,7 +161,7 @@ public class Wifey: MonoBehaviour
 
     private void PresentStone()
     {
-        var condition = DesireString.Conditions.Presented(DesireString.Desires.Stone);
+        var condition = WifeDesires.Conditions.Presented(WifeDesires.Desires.Stone);
 
         var heldItem = Locator.GetToolModeSwapper().GetItemCarryTool().GetHeldItem();
         var playerHasCorrectStone = heldItem is SharedStone stone && GetStoneName(stone) == StonePreference;
@@ -170,9 +170,9 @@ public class Wifey: MonoBehaviour
 
     public bool HasFulfilledAllDesires()
     {
-        foreach (var desireId in DesireString.Desires.All)
+        foreach (var desireId in WifeDesires.Desires.All)
         {
-            if (!WifeConditions.Get(DesireString.Conditions.Accepted(desireId), this)) return false;
+            if (!WifeConditions.Get(WifeDesires.Conditions.Accepted(desireId), this)) return false;
         }
         return true;
     }
