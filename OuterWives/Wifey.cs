@@ -8,7 +8,7 @@ namespace OuterWives;
 public class Wifey: MonoBehaviour
 {
     private PhotogenicCharacter _photoPreference;
-    public string PhotoPreference => _photoPreference.name;
+    public string PhotoPreference => _photoPreference.Name;
     //public string PhotoPreference => "Slate";
 
     private SharedStone _stonePreference;

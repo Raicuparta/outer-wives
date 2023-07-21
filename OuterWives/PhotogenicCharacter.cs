@@ -12,7 +12,7 @@ public class PhotogenicCharacter : MonoBehaviour
     private CharacterDialogueTree _character;
     private readonly float _maxPhotoDistance = 20f;
 
-    private void Awake()
+    private void Start()
     {
         _colliders = transform.parent.GetComponentsInChildren<Collider>();
         _character = GetComponent<CharacterDialogueTree>();
