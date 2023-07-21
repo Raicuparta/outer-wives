@@ -1,4 +1,6 @@
-﻿using System.Security.Policy;
+﻿using System;
+using System.Collections.Generic;
+using System.Security.Policy;
 using UnityEngine;
 
 namespace OuterWives;
@@ -48,6 +50,21 @@ public class Wifey: MonoBehaviour
         // TODO: some characters that aren't wives can be photographed.
         PhotoManager.Instance.Characters.Add(Character.gameObject.AddComponent<PhotogenicCharacter>());
 
+        SetUpDialogue();
+    }
+
+    private void Update()
+    {
+        if (Active && IsMusicPreferencePlaying() && IsNearPlayer())
+        {
+            var condition = DesireString.Conditions.Presented(DesireString.Desires.Music);
+            if (DialogueConditionManager.SharedInstance.GetWifeCondition(condition, Character)) return;
+            DialogueConditionManager.SharedInstance.SetWifeCondition(condition, true, Character);
+        }
+    }
+
+    private void SetUpDialogue()
+    {
         Character.LoadXml();
 
         var rejectionNode = Character.AddNode(Constants.Nodes.Rejection, 2);
@@ -62,63 +79,46 @@ public class Wifey: MonoBehaviour
             node.AddOption(acceptOption);
         }
 
-        var requestPhotoNode = Character.AddNode(Constants.Nodes.RequestPhoto);
-        var requestStoneNode = Character.AddNode(Constants.Nodes.RequestStone);
-        var requestMusicNode = Character.AddNode(Constants.Nodes.RequestMusic);
+        var desireNodes = new Dictionary<string, DialogueNode>();
+        var desireOptions = new Dictionary<string, DialogueOption>();
 
-        var proposePhotoOption = rejectionNode.AddOption(Constants.Options.ProposePhoto, requestPhotoNode)
-            .RejectCondition(Constants.Conditions.WifeAcceptedPhoto, Character);
-
-        var proposeStoneOption = rejectionNode.AddOption(Constants.Options.ProposeStone, requestStoneNode)
-            .RejectCondition(Constants.Conditions.WifeAcceptedStone, Character);
-
-        var proposeMusicOption = rejectionNode.AddOption(Constants.Options.ProposeMusic, requestMusicNode)
-            .RejectCondition(Constants.Conditions.WifeAcceptedMusic, Character);
-
-        requestPhotoNode.AddOption(proposeStoneOption);
-        requestPhotoNode.AddOption(proposeMusicOption);
-        requestPhotoNode.AddOption(acceptOption);
-
-        requestStoneNode.AddOption(proposePhotoOption);
-        requestStoneNode.AddOption(proposeMusicOption);
-        requestStoneNode.AddOption(acceptOption);
-
-        requestMusicNode.AddOption(proposePhotoOption);
-        requestMusicNode.AddOption(proposeStoneOption);
-        requestMusicNode.AddOption(acceptOption);
-
-        var acceptPhotoNode = Character.AddNode(Constants.Nodes.AcceptPhoto, 1);
-        var acceptStoneNode = Character.AddNode(Constants.Nodes.AcceptStone, 1);
-        var acceptMusicNode = Character.AddNode(Constants.Nodes.AcceptMusic, 1);
-
-        foreach (var node in Character._mapDialogueNodes.Values)
+        foreach (var desireId in DesireString.Desires.All)
         {
-            if (node == acceptPhotoNode) continue;
+            var dialogueNode = desireNodes[desireId] = CreateDesire(desireId);
 
-            node.AddOption(Constants.Options.PresentPhoto, acceptPhotoNode)
-                .RequireCondition(Constants.Conditions.PlayerPresentedPhoto, Character)
-                .GiveCondition(Constants.Conditions.WifeAcceptedPhoto, Character)
-                .RejectCondition(Constants.Conditions.WifeAcceptedPhoto, Character);
+            desireOptions[desireId] = rejectionNode.AddOption(DesireString.Actions.Propose(desireId), dialogueNode)
+                .RejectCondition(DesireString.Actions.Accept(desireId), Character);
 
-            node.AddOption(Constants.Options.PresentStone, acceptStoneNode)
-                .RequireCondition(Constants.Conditions.PlayerPresentedStone, Character)
-                .GiveCondition(Constants.Conditions.WifeAcceptedStone, Character)
-                .RejectCondition(Constants.Conditions.WifeAcceptedStone, Character);
+            dialogueNode.AddOption(acceptOption);
+        }
 
-            node.AddOption(Constants.Options.PresentMusic, acceptMusicNode)
-                .RequireCondition(Constants.Conditions.PlayerPresentedMusic, Character)
-                .GiveCondition(Constants.Conditions.WifeAcceptedMusic, Character)
-                .RejectCondition(Constants.Conditions.WifeAcceptedMusic, Character);
+        foreach (var nodeDesireId in DesireString.Desires.All)
+        {
+            foreach (var optionDesireId in DesireString.Desires.All)
+            {
+                if (nodeDesireId == optionDesireId) continue;
+                desireNodes[nodeDesireId].AddOption(desireOptions[optionDesireId]);
+            }
         }
     }
 
-    private void Update()
+    private DialogueNode CreateDesire(string desireId)
     {
-        if (Active && IsMusicPreferencePlaying() && IsNearPlayer())
+        var requestNode = Character.AddNode(DesireString.Actions.Request(desireId));
+
+        var acceptNode = Character.AddNode(DesireString.Actions.Accept(desireId), 1);
+
+        foreach (var node in Character._mapDialogueNodes.Values)
         {
-            if (DialogueConditionManager.SharedInstance.GetWifeCondition(Constants.Conditions.PlayerPresentedMusic, Character)) return;
-            DialogueConditionManager.SharedInstance.SetWifeCondition(Constants.Conditions.PlayerPresentedMusic, true, Character);
+            if (node == acceptNode) continue;
+
+            node.AddOption(DesireString.Actions.Present(desireId), acceptNode)
+                .RequireCondition(DesireString.Conditions.Presented(desireId), Character)
+                .GiveCondition(DesireString.Conditions.Accepted(desireId), Character)
+                .RejectCondition(DesireString.Conditions.Accepted(desireId), Character);
         }
+
+        return requestNode;
     }
 
     private bool IsNearPlayer()
@@ -136,7 +136,9 @@ public class Wifey: MonoBehaviour
 
     public void GivePhoto()
     {
+        var condition = DesireString.Conditions.Presented(DesireString.Desires.Photo);
+
         var playerHasCorrectPhoto = PhotoPreference == PhotoManager.Instance.PhotographedCharacter?.Name;
-        DialogueConditionManager.SharedInstance.SetWifeCondition(Constants.Conditions.PlayerPresentedPhoto, playerHasCorrectPhoto, Character);
+        DialogueConditionManager.SharedInstance.SetWifeCondition(condition, playerHasCorrectPhoto, Character);
     }
 }
