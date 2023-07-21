@@ -9,8 +9,8 @@ public class WifeManager: MonoBehaviour
 {
     public static WifeManager Instance;
 
-    public readonly List<WifeMaterial> Wives = new();
-    private readonly Dictionary<CharacterDialogueTree, WifeMaterial> _characterWifeMap = new();
+    public readonly List<Wifey> Wives = new();
+    private readonly Dictionary<CharacterDialogueTree, Wifey> _characterWifeMap = new();
 
     private ThingFinder _thingFinder;
     private PhotoManager _photoManager;
@@ -45,13 +45,13 @@ public class WifeManager: MonoBehaviour
 
     private void CreateWife(string name)
     {
-        var wife = new WifeMaterial(name, _thingFinder, _photoManager);
+        var wife = new Wifey(name, _thingFinder, _photoManager);
         Wives.Add(wife);
 
         _characterWifeMap[wife.Character] = wife;
     }
 
-    public WifeMaterial GetWifeByCharacter(CharacterDialogueTree character)
+    public Wifey GetWifeByCharacter(CharacterDialogueTree character)
     {
         _characterWifeMap.TryGetValue(character, out var wife);
         return wife;

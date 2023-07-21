@@ -1,6 +1,6 @@
 ﻿namespace OuterWives;
 
-public class WifeMaterial
+public class Wifey
 {
     private readonly CharacterDialogueTree _photoPreference;
     public string PhotoPreference => _photoPreference._characterName;
@@ -15,7 +15,7 @@ public class WifeMaterial
     public readonly CharacterDialogueTree Character;
     public string Name => Character._characterName;
 
-    public WifeMaterial(string name, ThingFinder thingFinder, PhotoManager photoManager)
+    public Wifey(string name, ThingFinder thingFinder, PhotoManager photoManager)
     {
         Character = thingFinder.GetCharacter(name);
         _photoPreference = thingFinder.GetRandomCharacter();
