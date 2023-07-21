@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace OuterWives;
@@ -18,7 +19,8 @@ public class PhotoManager : MonoBehaviour
 
     private void Start()
     {
-        foreach (var character in ThingFinder.Instance.GetCharacters())
+        var characters = ThingFinder.Instance.GetCharacters().Where(character => character._characterName != "the Prisoner");
+        foreach (var character in characters)
         {
             _characters.Add(character.gameObject.AddComponent<PhotogenicCharacter>());
         }

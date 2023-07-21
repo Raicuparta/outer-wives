@@ -30,7 +30,7 @@ public class WifeManager: MonoBehaviour
         CreateWife("Tuff");
         CreateWife("Esker");
         CreateWife("Porphy");
-        CreateWife("the Prisoner"); // TODO you can't get out of there, so we shouldn't ask for pictures.
+        CreateWife("the Prisoner");
         CreateWife("Tektite");
         CreateWife("Gossan");
         CreateWife("Spinel");
