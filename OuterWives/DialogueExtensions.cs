@@ -35,7 +35,7 @@ public static class DialogueExtensions
         var option = new DialogueOption()
         {
             _textID = $"{Constants.Global.Prefix}/{optionTextId}",
-            _targetName = target?.Name ?? ""
+            _targetName = target?.Name ?? "",
         };
 
         node.AddOption(option);
@@ -49,31 +49,21 @@ public static class DialogueExtensions
         return option;
     }
 
-    public static DialogueOption RequireCondition(this DialogueOption option, string conditionId, CharacterDialogueTree character)
+    public static DialogueOption RequireCondition(this DialogueOption option, string conditionId, Wifey character)
     {
-        option.ConditionRequirement = $"{Constants.Global.Prefix}/{character._characterName}_{conditionId}";
+        option.ConditionRequirement = $"{Constants.Global.Prefix}/{character.Name}_{conditionId}";
         return option;
     }
 
-    public static DialogueOption RejectCondition(this DialogueOption option, string conditionId, CharacterDialogueTree character)
+    public static DialogueOption RejectCondition(this DialogueOption option, string conditionId, Wifey character)
     {
-        option.CancelledRequirement = $"{Constants.Global.Prefix}/{character._characterName}_{conditionId}";
+        option.CancelledRequirement = $"{Constants.Global.Prefix}/{character.Name}_{conditionId}";
         return option;
     }
 
-    public static DialogueOption GiveCondition(this DialogueOption option, string conditionId, CharacterDialogueTree character)
+    public static DialogueOption GiveCondition(this DialogueOption option, string conditionId, Wifey character)
     {
-        option.ConditionToSet = $"{Constants.Global.Prefix}/{character._characterName}_{conditionId}";
+        option.ConditionToSet = $"{Constants.Global.Prefix}/{character.Name}_{conditionId}";
         return option;
-    }
-
-    public static void SetWifeCondition(this DialogueConditionManager conditionManager, string conditionId, bool conditionState, CharacterDialogueTree character)
-    {
-        conditionManager.SetConditionState($"{Constants.Global.Prefix}/{character._characterName}_{conditionId}", conditionState);
-    }
-
-    public static bool GetWifeCondition(this DialogueConditionManager conditionManager, string conditionId, CharacterDialogueTree character)
-    {
-        return conditionManager.GetConditionState($"{Constants.Global.Prefix}/{character._characterName}_{conditionId}");
     }
 }

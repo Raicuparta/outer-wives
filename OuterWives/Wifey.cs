@@ -58,8 +58,8 @@ public class Wifey: MonoBehaviour
         if (Active && IsMusicPreferencePlaying() && IsNearPlayer())
         {
             var condition = DesireString.Conditions.Presented(DesireString.Desires.Music);
-            if (DialogueConditionManager.SharedInstance.GetWifeCondition(condition, Character)) return;
-            DialogueConditionManager.SharedInstance.SetWifeCondition(condition, true, Character);
+            if (WifeConditions.Get(condition, this)) return;
+            WifeConditions.Set(condition, true, this);
         }
     }
 
@@ -67,16 +67,22 @@ public class Wifey: MonoBehaviour
     {
         Character.LoadXml();
 
-        var rejectionNode = Character.AddNode(Constants.Nodes.Rejection, 2);
-        var acceptOption = rejectionNode.AddOption(Constants.Options.Accept);
+        var rejectionNode = Character.AddNode(Constants.Nodes.RejectMarriage, 2);
+        var acceptMarriageNode = Character.AddNode(Constants.Nodes.AcceptMarriage, 1);
+        var acceptOption = rejectionNode.AddOption(Constants.Options.Ok);
 
         foreach (var node in Character._mapDialogueNodes.Values)
         {
-            if (node == rejectionNode) continue;
+            if (node == rejectionNode || node == acceptMarriageNode) continue;
 
             node._listDialogueOptions.Clear();
-            node.AddOption(Constants.Options.MarryMe, rejectionNode);
             node.AddOption(acceptOption);
+            
+            var proposeMarriageOption = node.AddOption(Constants.Options.ProposeMarriage, rejectionNode);
+            proposeMarriageOption.RejectCondition(Constants.Conditions.ReadyToMarry, this);
+
+            var confirmMarriageOption = node.AddOption(Constants.Options.ConfirmMarriage, acceptMarriageNode);
+            confirmMarriageOption.RequireCondition(Constants.Conditions.ReadyToMarry, this);
         }
 
         var desireNodes = new Dictionary<string, DialogueNode>();
@@ -87,7 +93,7 @@ public class Wifey: MonoBehaviour
             var dialogueNode = desireNodes[desireId] = CreateDesire(desireId);
 
             desireOptions[desireId] = rejectionNode.AddOption(DesireString.Actions.Propose(desireId), dialogueNode)
-                .RejectCondition(DesireString.Conditions.Accepted(desireId), Character);
+                .RejectCondition(DesireString.Conditions.Accepted(desireId), this);
 
             dialogueNode.AddOption(acceptOption);
         }
@@ -113,9 +119,9 @@ public class Wifey: MonoBehaviour
             if (node == acceptNode) continue;
 
             node.AddOption(DesireString.Actions.Present(desireId), acceptNode)
-                .RequireCondition(DesireString.Conditions.Presented(desireId), Character)
-                .GiveCondition(DesireString.Conditions.Accepted(desireId), Character)
-                .RejectCondition(DesireString.Conditions.Accepted(desireId), Character);
+                .RequireCondition(DesireString.Conditions.Presented(desireId), this)
+                .GiveCondition(DesireString.Conditions.Accepted(desireId), this)
+                .RejectCondition(DesireString.Conditions.Accepted(desireId), this);
         }
 
         return requestNode;
@@ -145,7 +151,7 @@ public class Wifey: MonoBehaviour
         var condition = DesireString.Conditions.Presented(DesireString.Desires.Photo);
 
         var playerHasCorrectPhoto = PhotoPreference == PhotoManager.Instance.PhotographedCharacter?.Name;
-        DialogueConditionManager.SharedInstance.SetWifeCondition(condition, playerHasCorrectPhoto, Character);
+        WifeConditions.Set(condition, playerHasCorrectPhoto, this);
     }
 
     private string GetStoneName(SharedStone stone)
@@ -159,7 +165,15 @@ public class Wifey: MonoBehaviour
 
         var heldItem = Locator.GetToolModeSwapper().GetItemCarryTool().GetHeldItem();
         var playerHasCorrectStone = heldItem is SharedStone stone && GetStoneName(stone) == StonePreference;
-        DialogueConditionManager.SharedInstance.SetWifeCondition(condition, playerHasCorrectStone, Character);
+        WifeConditions.Set(condition, playerHasCorrectStone, this);
     }
 
+    public bool HasFulfilledAllDesires()
+    {
+        foreach (var desireId in DesireString.Desires.All)
+        {
+            if (!WifeConditions.Get(DesireString.Conditions.Accepted(desireId), this)) return false;
+        }
+        return true;
+    }
 }
