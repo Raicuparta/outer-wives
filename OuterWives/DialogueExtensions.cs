@@ -71,4 +71,9 @@ public static class DialogueExtensions
     {
         conditionManager.SetConditionState($"{Constants.Global.Prefix}/{character._characterName}_{conditionId}", conditionState);
     }
+
+    public static bool GetWifeCondition(this DialogueConditionManager conditionManager, string conditionId, CharacterDialogueTree character)
+    {
+        return conditionManager.GetConditionState($"{Constants.Global.Prefix}/{character._characterName}_{conditionId}");
+    }
 }
