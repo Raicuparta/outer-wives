@@ -22,7 +22,7 @@ public class PhotoManager : MonoBehaviour
         var characters = ThingFinder.Instance.GetCharacters().Where(character => character._characterName != "the Prisoner");
         foreach (var character in characters)
         {
-            _characters.Add(character.gameObject.AddComponent<PhotogenicCharacter>());
+            _characters.Add(PhotogenicCharacter.Create(character));
         }
     }
 

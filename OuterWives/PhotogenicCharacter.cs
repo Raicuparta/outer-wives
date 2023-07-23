@@ -12,10 +12,16 @@ public class PhotogenicCharacter : MonoBehaviour
     private CharacterDialogueTree _character;
     private readonly float _maxPhotoDistance = 20f;
 
-    private void Start()
+    public static PhotogenicCharacter Create(CharacterDialogueTree character)
+    {
+        var instance = character.gameObject.AddComponent<PhotogenicCharacter>();
+        instance._character = character;
+        return instance;
+    }
+
+    private void Awake()
     {
         _colliders = transform.parent.GetComponentsInChildren<Collider>();
-        _character = GetComponent<CharacterDialogueTree>();
     }
 
     public bool IsVisible(OWCamera camera)
