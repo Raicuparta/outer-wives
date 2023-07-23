@@ -8,9 +8,11 @@ public class ThingFinder: MonoBehaviour
 {
     public static ThingFinder Instance { get; private set; }
 
-    private readonly string[] _stoneBlocklist = new string[] {
-        "None",
-        "Module",
+    private readonly NomaiRemoteCameraPlatform.ID[] _stoneBlocklist = new NomaiRemoteCameraPlatform.ID[] {
+        NomaiRemoteCameraPlatform.ID.None,
+        NomaiRemoteCameraPlatform.ID.GD_ProbeCannonDamagedModule,
+        NomaiRemoteCameraPlatform.ID.GD_ProbeCannonIntactModule,
+        NomaiRemoteCameraPlatform.ID.GD_ProbeCannonSunkenModule,
     };
 
     private readonly string[] _characterBlocklist = new string[] {
@@ -34,7 +36,7 @@ public class ThingFinder: MonoBehaviour
         if (_stones != null) return;
 
         _stones = Resources.FindObjectsOfTypeAll<SharedStone>()
-            .Where(stone => !_stoneBlocklist.Any(blockedWord => stone.GetDisplayName().Contains(blockedWord)))
+            .Where(stone => !_stoneBlocklist.Contains(stone.GetRemoteCameraID()))
             .GroupBy(stone => stone.GetDisplayName())
             .Select(group => group.First())
             .ToArray();

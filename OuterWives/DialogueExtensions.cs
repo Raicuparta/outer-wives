@@ -8,7 +8,7 @@ public static class DialogueExtensions
 {
     public static DialogueNode AddNode(this CharacterDialogueTree character, string nodeTextId, int pageCount = 1)
     {
-        var nodeName = $"{Constants.Global.Prefix}/{character._characterName}/{nodeTextId}";
+        var nodeName = $"{TextIds.Prefix}/{character._characterName}/{nodeTextId}";
 
         return character._mapDialogueNodes[nodeName] = new DialogueNode()
         {
@@ -34,7 +34,7 @@ public static class DialogueExtensions
     {
         var option = new DialogueOption()
         {
-            _textID = $"{Constants.Global.Prefix}/{optionTextId}",
+            _textID = $"{TextIds.Prefix}/{optionTextId}",
             _targetName = target?.Name ?? "",
         };
 
@@ -51,19 +51,19 @@ public static class DialogueExtensions
 
     public static DialogueOption RequireCondition(this DialogueOption option, string conditionId, Wifey character)
     {
-        option.ConditionRequirement = $"{Constants.Global.Prefix}/{character.Name}_{conditionId}";
+        option.ConditionRequirement = $"{TextIds.Prefix}/{character.Name}_{conditionId}";
         return option;
     }
 
     public static DialogueOption RejectCondition(this DialogueOption option, string conditionId, Wifey character)
     {
-        option.CancelledRequirement = $"{Constants.Global.Prefix}/{character.Name}_{conditionId}";
+        option.CancelledRequirement = $"{TextIds.Prefix}/{character.Name}_{conditionId}";
         return option;
     }
 
     public static DialogueOption GiveCondition(this DialogueOption option, string conditionId, Wifey character)
     {
-        option.ConditionToSet = $"{Constants.Global.Prefix}/{character.Name}_{conditionId}";
+        option.ConditionToSet = $"{TextIds.Prefix}/{character.Name}_{conditionId}";
         return option;
     }
 }

@@ -1,0 +1,27 @@
+{
+  "PROPOSE_MARRIAGE": "Shut up, will you marry me?",
+  "CONFIRM_MARRIAGE": "OK, will you marry me now?",
+
+  "REJECT_MARRIAGE_1": "No, I would really rather not marry you.",
+  "REJECT_MARRIAGE_2": "Unless you can woo me somehow.",
+
+  "ACCEPT_MARRIAGE_1": "Ok fine, let's get married.",
+
+  "PROPOSE_PHOTO": "What if I bring you a nice picture?",
+  "PROPOSE_STONE": "What if I bring you a nice stone with a drawing on it?",
+  "PROPOSE_MUSIC": "What if I play some nice music for you?",
+
+  "REQUEST_PHOTO_1": "Yes, that could work. I would love to see a picture of my beloved $PHOTO_PREFERENCE$",
+  "REQUEST_STONE_1": "Yes, that could work. I would love to have a stone with a drawing of $STONE_PREFERENCE$",
+  "REQUEST_MUSIC_1": "Yes, that could work. I would love to hear some $MUSIC_PREFERENCE$ music",
+
+  "PRESENT_PHOTO": "I got that picture you wanted.",
+  "PRESENT_STONE": "What do you think of this cool rock I found?",
+  "PRESENT_MUSIC": "Did you hear the music from my signal scope?",
+
+  "ACCEPT_PHOTO": "This is exactly what I wanted! $PHOTO_PREFERENCE$ looks so cute in this one!",
+  "ACCEPT_STONE": "Thank you! This drawing of $STONE_PREFERENCE$ is really nice.",
+  "ACCEPT_MUSIC": "What a beautiful song! I always love to hear some $MUSIC_PREFERENCE$.",
+
+  "OK": "k bye"
+}

@@ -47,7 +47,7 @@ public class Wifey: MonoBehaviour
     {
         if (Active && IsMusicPreferencePlaying() && IsNearPlayer())
         {
-            var condition = WifeDesires.Conditions.Presented(WifeDesires.Desires.Music);
+            var condition = TextIds.Conditions.Presented(TextIds.Desires.Music);
             if (WifeConditions.Get(condition, this)) return;
             WifeConditions.Set(condition, true, this);
         }
@@ -57,9 +57,9 @@ public class Wifey: MonoBehaviour
     {
         Character.LoadXml();
 
-        var rejectionNode = Character.AddNode(Constants.Nodes.RejectMarriage, 2);
-        var acceptMarriageNode = Character.AddNode(Constants.Nodes.AcceptMarriage, 1);
-        var acceptOption = rejectionNode.AddOption(Constants.Options.Ok);
+        var rejectionNode = Character.AddNode(TextIds.Nodes.RejectMarriage, 2);
+        var acceptMarriageNode = Character.AddNode(TextIds.Nodes.AcceptMarriage, 1);
+        var acceptOption = rejectionNode.AddOption(TextIds.Options.Ok);
 
         foreach (var node in Character._mapDialogueNodes.Values)
         {
@@ -68,29 +68,29 @@ public class Wifey: MonoBehaviour
             node._listDialogueOptions.Clear();
             node.AddOption(acceptOption);
             
-            var proposeMarriageOption = node.AddOption(Constants.Options.ProposeMarriage, rejectionNode);
-            proposeMarriageOption.RejectCondition(Constants.Conditions.ReadyToMarry, this);
+            var proposeMarriageOption = node.AddOption(TextIds.Options.ProposeMarriage, rejectionNode);
+            proposeMarriageOption.RejectCondition(TextIds.Conditions.ReadyToMarry, this);
 
-            var confirmMarriageOption = node.AddOption(Constants.Options.ConfirmMarriage, acceptMarriageNode);
-            confirmMarriageOption.RequireCondition(Constants.Conditions.ReadyToMarry, this);
+            var confirmMarriageOption = node.AddOption(TextIds.Options.ConfirmMarriage, acceptMarriageNode);
+            confirmMarriageOption.RequireCondition(TextIds.Conditions.ReadyToMarry, this);
         }
 
         var desireNodes = new Dictionary<string, DialogueNode>();
         var desireOptions = new Dictionary<string, DialogueOption>();
 
-        foreach (var desireId in WifeDesires.Desires.All)
+        foreach (var desireId in TextIds.Desires.All)
         {
             var dialogueNode = desireNodes[desireId] = CreateDesire(desireId);
 
-            desireOptions[desireId] = rejectionNode.AddOption(WifeDesires.Actions.Propose(desireId), dialogueNode)
-                .RejectCondition(WifeDesires.Conditions.Accepted(desireId), this);
+            desireOptions[desireId] = rejectionNode.AddOption(TextIds.Actions.Propose(desireId), dialogueNode)
+                .RejectCondition(TextIds.Conditions.Accepted(desireId), this);
 
             dialogueNode.AddOption(acceptOption);
         }
 
-        foreach (var nodeDesireId in WifeDesires.Desires.All)
+        foreach (var nodeDesireId in TextIds.Desires.All)
         {
-            foreach (var optionDesireId in WifeDesires.Desires.All)
+            foreach (var optionDesireId in TextIds.Desires.All)
             {
                 if (nodeDesireId == optionDesireId) continue;
                 desireNodes[nodeDesireId].AddOption(desireOptions[optionDesireId]);
@@ -100,18 +100,18 @@ public class Wifey: MonoBehaviour
 
     private DialogueNode CreateDesire(string desireId)
     {
-        var requestNode = Character.AddNode(WifeDesires.Actions.Request(desireId));
+        var requestNode = Character.AddNode(TextIds.Actions.Request(desireId));
 
-        var acceptNode = Character.AddNode(WifeDesires.Actions.Accept(desireId), 1);
+        var acceptNode = Character.AddNode(TextIds.Actions.Accept(desireId), 1);
 
         foreach (var node in Character._mapDialogueNodes.Values)
         {
             if (node == acceptNode) continue;
 
-            node.AddOption(WifeDesires.Actions.Present(desireId), acceptNode)
-                .RequireCondition(WifeDesires.Conditions.Presented(desireId), this)
-                .GiveCondition(WifeDesires.Conditions.Accepted(desireId), this)
-                .RejectCondition(WifeDesires.Conditions.Accepted(desireId), this);
+            node.AddOption(TextIds.Actions.Present(desireId), acceptNode)
+                .RequireCondition(TextIds.Conditions.Presented(desireId), this)
+                .GiveCondition(TextIds.Conditions.Accepted(desireId), this)
+                .RejectCondition(TextIds.Conditions.Accepted(desireId), this);
         }
 
         return requestNode;
@@ -138,7 +138,7 @@ public class Wifey: MonoBehaviour
 
     private void PresentPhoto()
     {
-        var condition = WifeDesires.Conditions.Presented(WifeDesires.Desires.Photo);
+        var condition = TextIds.Conditions.Presented(TextIds.Desires.Photo);
 
         WifeConditions.Set(condition, PhotoManager.Instance.IsCharacterInShot(PhotoPreference), this);
     }
@@ -150,7 +150,7 @@ public class Wifey: MonoBehaviour
 
     private void PresentStone()
     {
-        var condition = WifeDesires.Conditions.Presented(WifeDesires.Desires.Stone);
+        var condition = TextIds.Conditions.Presented(TextIds.Desires.Stone);
 
         var heldItem = Locator.GetToolModeSwapper().GetItemCarryTool().GetHeldItem();
         var playerHasCorrectStone = heldItem is SharedStone stone && GetStoneName(stone) == StonePreference;
@@ -159,9 +159,9 @@ public class Wifey: MonoBehaviour
 
     public bool HasFulfilledAllDesires()
     {
-        foreach (var desireId in WifeDesires.Desires.All)
+        foreach (var desireId in TextIds.Desires.All)
         {
-            if (!WifeConditions.Get(WifeDesires.Conditions.Accepted(desireId), this)) return false;
+            if (!WifeConditions.Get(TextIds.Conditions.Accepted(desireId), this)) return false;
         }
         return true;
     }
