@@ -1,6 +1,5 @@
-﻿using OWML.ModHelper;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace OuterWives;
@@ -11,6 +10,14 @@ public class WifeManager: MonoBehaviour
 
     public readonly List<Wifey> Wives = new();
     private readonly Dictionary<CharacterDialogueTree, Wifey> _characterWifeMap = new();
+    private readonly string[] _characterBlockList = new[]
+{
+        "Tephra",
+        "Arkose",
+        "Galena",
+        "Moraine",
+        "Mica",
+    };
 
     public static void Create()
     {
@@ -19,30 +26,16 @@ public class WifeManager: MonoBehaviour
 
     private void Start()
     {
-        CreateWife("Feldspar");
-        CreateWife("Hal");
-        CreateWife("Chert");
-        CreateWife("Hornfels");
-        CreateWife("Slate");
-        CreateWife("Rutile");
-        CreateWife("Gneiss");
-        CreateWife("Marl");
-        CreateWife("Tuff");
-        CreateWife("Esker");
-        CreateWife("Porphy");
-        CreateWife("the Prisoner");
-        CreateWife("Tektite");
-        CreateWife("Gossan");
-        CreateWife("Spinel");
-        CreateWife("Gabbro");
-        CreateWife("Riebeck");
-        CreateWife("Self");
-        CreateWife("Solanum");
+        var characters = ThingFinder.Instance.GetCharacters().Where(character => !_characterBlockList.Contains(character._characterName));
+        foreach (var character in characters)
+        {
+            CreateWife(character);
+        }
     }
 
-    private void CreateWife(string name)
+    private void CreateWife(CharacterDialogueTree character)
     {
-        var wife = Wifey.Create(name);
+        var wife = Wifey.Create(character);
         Wives.Add(wife);
         _characterWifeMap[wife.Character] = wife;
     }

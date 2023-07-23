@@ -25,15 +25,8 @@ public class Wifey: MonoBehaviour
 
     private float _playerNearbyDistance = 5f;
 
-    public static Wifey Create(string name)
+    public static Wifey Create(CharacterDialogueTree character)
     {
-        var character = ThingFinder.Instance.GetCharacter(name);
-        if (character == null)
-        {
-            OuterWives.Log($"Failed to find character for wife {name}");
-            return null;
-        }
-
         var wifey = character.gameObject.AddComponent<Wifey>();
         wifey.Character = character;
 
@@ -147,8 +140,7 @@ public class Wifey: MonoBehaviour
     {
         var condition = WifeDesires.Conditions.Presented(WifeDesires.Desires.Photo);
 
-        var playerHasCorrectPhoto = PhotoPreference == PhotoManager.Instance.PhotographedCharacter?.Name;
-        WifeConditions.Set(condition, playerHasCorrectPhoto, this);
+        WifeConditions.Set(condition, PhotoManager.Instance.IsCharacterInShot(PhotoPreference), this);
     }
 
     private string GetStoneName(SharedStone stone)

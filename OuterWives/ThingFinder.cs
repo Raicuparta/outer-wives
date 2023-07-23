@@ -87,11 +87,6 @@ public class ThingFinder: MonoBehaviour
         return _characters;
     }
 
-    public CharacterDialogueTree GetCharacter(string name)
-    {
-        return GetCharacters().First(character => character._characterName == name);
-    }
-
     public CharacterDialogueTree GetRandomCharacter()
     {
         InitializeCharacters();

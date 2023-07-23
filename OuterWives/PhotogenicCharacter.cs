@@ -8,7 +8,8 @@ public class PhotogenicCharacter : MonoBehaviour
 {
     public string Name => _character._characterName;
 
-    private Collider[] _colliders;
+    private Collider _collider;
+    private Collider[] _collidersToIgnoreForOcclusion;
     private CharacterDialogueTree _character;
     private readonly float _maxPhotoDistance = 20f;
 
@@ -21,17 +22,13 @@ public class PhotogenicCharacter : MonoBehaviour
 
     private void Awake()
     {
-        _colliders = transform.parent.GetComponentsInChildren<Collider>();
+        _collidersToIgnoreForOcclusion = transform.parent.GetComponentsInChildren<Collider>();
+        _collider = gameObject.GetComponent<Collider>();
     }
 
     public bool IsVisible(OWCamera camera)
     {
-        foreach (var collider in _colliders)
-        {
-            if (GeometryUtility.TestPlanesAABB(camera.GetFrustumPlanes(), collider.bounds))
-                return true;
-        }
-        return false;
+        return GeometryUtility.TestPlanesAABB(camera.GetFrustumPlanes(), _collider.bounds);
     }
 
     private bool IsOccludedFromPosition(Vector3 worldPos)
@@ -43,7 +40,7 @@ public class PhotogenicCharacter : MonoBehaviour
             OuterWives.Helper.Console.WriteLine($"{_character._characterName} collides {ray.collider.name}");
         }
 
-        return hit && !_colliders.Contains(ray.collider);
+        return hit && !_collidersToIgnoreForOcclusion.Contains(ray.collider);
     }
 
     private Vector3 GetTargetPosition()
