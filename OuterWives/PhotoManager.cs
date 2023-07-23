@@ -67,7 +67,8 @@ public class PhotoManager : MonoBehaviour
 
         if (_charactersInShot.Count == 0) return;
 
-        notificationText = $"Photographed {string.Join(", ", _charactersInShot.Select(character => character.Name))}";
+        // TODO: Localize "photographed".
+        notificationText = $"Photographed {string.Join(", ", _charactersInShot.Select(character => character.DisplayName))}";
         NotificationManager.SharedInstance.PostNotification(new NotificationData(notificationText), false);
     }
 
@@ -81,8 +82,8 @@ public class PhotoManager : MonoBehaviour
         return _characters[Random.Range(0, _characters.Count)];
     }
 
-    public bool IsCharacterInShot(string characterName)
+    public bool IsCharacterInShot(string characterId)
     {
-        return _charactersInShot.Any(character => character.Name == characterName);
+        return _charactersInShot.Any(character => character.Id == characterId);
     }
 }

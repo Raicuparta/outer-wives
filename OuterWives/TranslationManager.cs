@@ -22,10 +22,5 @@ public class TranslationManager: MonoBehaviour
     private void Awake ()
     {
         Translation = OuterWives.Helper.Storage.Load<Dictionary<string, string>>("Localization/english.json");
-        OuterWives.Log("Loading translation...");
-        foreach (var entry in Translation)
-        {
-            OuterWives.Log($"{entry.Key}: {entry.Value}");
-        }
     }
 }

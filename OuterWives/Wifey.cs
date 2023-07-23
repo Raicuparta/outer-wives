@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OuterWives.Desires;
+using System;
 using System.Collections.Generic;
 using System.Security.Policy;
 using UnityEngine;
@@ -7,15 +8,9 @@ namespace OuterWives;
 
 public class Wifey: MonoBehaviour
 {
-    private PhotogenicCharacter _photoPreference;
-    public string PhotoPreference => _photoPreference.Name;
-    //public string PhotoPreference => "Slate";
-
-    private SharedStone _stonePreference;
-    public string StonePreference => GetStoneName(_stonePreference);
-
-    private TravelerController _musicPreference;
-    public string MusicPreference => _musicPreference._audioSource.name.Replace("Signal_", "");
+    public PhotoDesire PhotoDesire { get; private set; }
+    public StoneDesire StoneDesire { get; private set; }
+    public MusicDesire MusicDesire { get; private set; }
 
     public CharacterDialogueTree Character;
     public string Name => Character._characterName;
@@ -35,9 +30,10 @@ public class Wifey: MonoBehaviour
 
     private void Start()
     {
-        _photoPreference = PhotoManager.Instance.GetRandomCharacter();
-        _stonePreference = ThingFinder.Instance.GetRandomStone();
-        _musicPreference = ThingFinder.Instance.GetRandomTraveler();
+        PhotoDesire = PhotoDesire.Create<PhotoDesire>(this);
+        StoneDesire = StoneDesire.Create<StoneDesire>(this);
+        MusicDesire = MusicDesire.Create<MusicDesire>(this);
+
         _animator = Character.transform.parent.GetComponentInChildren<Animator>();
 
         SetUpDialogue();
@@ -80,7 +76,7 @@ public class Wifey: MonoBehaviour
 
         foreach (var desireId in TextIds.Desires.All)
         {
-            var dialogueNode = desireNodes[desireId] = CreateDesire(desireId);
+            var dialogueNode = desireNodes[desireId] = CreateDesireDialogue(desireId);
 
             desireOptions[desireId] = rejectionNode.AddOption(TextIds.Actions.Propose(desireId), dialogueNode)
                 .RejectCondition(TextIds.Conditions.Accepted(desireId), this);
@@ -98,7 +94,7 @@ public class Wifey: MonoBehaviour
         }
     }
 
-    private DialogueNode CreateDesire(string desireId)
+    private DialogueNode CreateDesireDialogue(string desireId)
     {
         var requestNode = Character.AddNode(TextIds.Actions.Request(desireId));
 
@@ -127,7 +123,7 @@ public class Wifey: MonoBehaviour
         var signalScope = Locator.GetToolModeSwapper().GetSignalScope();
         var signalStrength = signalScope.GetStrongestSignalStrength(AudioSignal.FrequencyToIndex(SignalFrequency.Traveler));
 
-        return signalStrength == 1f && signalScope.GetStrongestSignal().name == _musicPreference._audioSource.name;
+        return signalStrength == 1f && MusicDesire.IsMatch(signalScope.GetStrongestSignal());
     }
 
     public void PresentDesires()
@@ -140,12 +136,7 @@ public class Wifey: MonoBehaviour
     {
         var condition = TextIds.Conditions.Presented(TextIds.Desires.Photo);
 
-        WifeConditions.Set(condition, PhotoManager.Instance.IsCharacterInShot(PhotoPreference), this);
-    }
-
-    private string GetStoneName(SharedStone stone)
-    {
-        return NomaiRemoteCameraPlatform.IDToPlanetString(stone._connectedPlatform);
+        WifeConditions.Set(condition, PhotoManager.Instance.IsCharacterInShot(PhotoDesire.Id), this);
     }
 
     private void PresentStone()
@@ -153,7 +144,7 @@ public class Wifey: MonoBehaviour
         var condition = TextIds.Conditions.Presented(TextIds.Desires.Stone);
 
         var heldItem = Locator.GetToolModeSwapper().GetItemCarryTool().GetHeldItem();
-        var playerHasCorrectStone = heldItem is SharedStone stone && GetStoneName(stone) == StonePreference;
+        var playerHasCorrectStone = heldItem is SharedStone stone && StoneDesire.IsMatch(stone);
         WifeConditions.Set(condition, playerHasCorrectStone, this);
     }
 

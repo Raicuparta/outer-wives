@@ -23,7 +23,7 @@ public class ThingFinder: MonoBehaviour
     };
 
     private SharedStone[] _stones;
-    private TravelerController[] _travelers;
+    private AudioSignal[] _musicSignals;
     private CharacterDialogueTree[] _characters;
 
     public static void Create()
@@ -55,23 +55,24 @@ public class ThingFinder: MonoBehaviour
 
     private void InitializeTravelers()
     {
-        if (_travelers != null) return;
+        if (_musicSignals != null) return;
 
-        _travelers = Resources.FindObjectsOfTypeAll<TravelerController>()
+        _musicSignals = Resources.FindObjectsOfTypeAll<TravelerController>()
             .Where(traveler => traveler._audioSource != null)
+            .Select(traveler => traveler._audioSource.GetComponent<AudioSignal>())
             .ToArray();
     }
 
-    public ReadOnlyArray<TravelerController> GetTravelers()
+    public ReadOnlyArray<AudioSignal> GetMusicSignals()
     {
         InitializeTravelers();
-        return _travelers;
+        return _musicSignals;
     }
 
-    public TravelerController GetRandomTraveler()
+    public AudioSignal GetRandomMusicSignal()
     {
         InitializeTravelers();
-        return GetRandomObject(GetTravelers());
+        return GetRandomObject(GetMusicSignals());
     }
 
     private void InitializeCharacters ()

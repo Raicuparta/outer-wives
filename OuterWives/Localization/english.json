@@ -19,9 +19,9 @@
   "PRESENT_STONE": "What do you think of this cool rock I found?",
   "PRESENT_MUSIC": "Did you hear the music from my signal scope?",
 
-  "ACCEPT_PHOTO": "This is exactly what I wanted! $PHOTO_PREFERENCE$ looks so cute in this one!",
-  "ACCEPT_STONE": "Thank you! This drawing of $STONE_PREFERENCE$ is really nice.",
-  "ACCEPT_MUSIC": "What a beautiful song! I always love to hear some $MUSIC_PREFERENCE$.",
+  "ACCEPT_PHOTO_1": "This is exactly what I wanted! $PHOTO_PREFERENCE$ looks so cute in this one!",
+  "ACCEPT_STONE_1": "Thank you! This drawing of $STONE_PREFERENCE$ is really nice.",
+  "ACCEPT_MUSIC_1": "What a beautiful song! I always love to hear some $MUSIC_PREFERENCE$.",
 
   "OK": "k bye"
 }

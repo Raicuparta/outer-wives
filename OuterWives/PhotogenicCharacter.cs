@@ -6,7 +6,8 @@ namespace OuterWives;
 
 public class PhotogenicCharacter : MonoBehaviour
 {
-    public string Name => _character._characterName;
+    public string Id => _character._characterName;
+    public string DisplayName => _character._characterName; // TODO this isn't localized.
 
     private Collider _collider;
     private Collider[] _collidersToIgnoreForOcclusion;

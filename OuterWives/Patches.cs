@@ -16,8 +16,6 @@ public static class TranslationPatches
     {
         if (!key.StartsWith(TextIds.Prefix)) return true;
 
-        OuterWives.Helper.Console.WriteLine($"Translating key {key}");
-
         var keyParts = key.Split('/');
         var hasCharacterName = keyParts.Length > 2;
 
@@ -32,9 +30,9 @@ public static class TranslationPatches
             OuterWives.Helper.Console.WriteLine($"Character name in patch: {characterName} ({dictionaryKey})");
             var wife = WifeManager.Instance.Wives.First(w => w.Name == characterName);
 
-            SetPreferenceText(ref __result, TextIds.Tokens.PhotoPreference, wife.PhotoPreference);
-            SetPreferenceText(ref __result, TextIds.Tokens.StonePreference, wife.StonePreference);
-            SetPreferenceText(ref __result, TextIds.Tokens.MusicPreference, wife.MusicPreference);
+            SetPreferenceText(ref __result, TextIds.Tokens.PhotoPreference, wife.PhotoDesire.DisplayName);
+            SetPreferenceText(ref __result, TextIds.Tokens.StonePreference, wife.StoneDesire.DisplayName);
+            SetPreferenceText(ref __result, TextIds.Tokens.MusicPreference, wife.MusicDesire.DisplayName);
         }
 
         return false;
