@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using OuterWives.Desires;
 using System.Linq;
 
 namespace OuterWives;
@@ -6,9 +7,9 @@ namespace OuterWives;
 [HarmonyPatch]
 public static class TranslationPatches
 {
-    private static void SetPreferenceText(ref string original, string token, string value)
+    private static void SetPreferenceText(ref string original, IDesire desire)
     {
-        original = original.Replace(token, $"<color=orange>{value}</color>");
+        original = original.Replace(TextIds.Tokens.Preference(desire), $"<color=orange>{desire.DisplayName}</color>");
     }
 
     [HarmonyPrefix, HarmonyPatch(typeof(TextTranslation), nameof(TextTranslation.Translate))]
@@ -30,9 +31,10 @@ public static class TranslationPatches
             OuterWives.Helper.Console.WriteLine($"Character name in patch: {characterName} ({dictionaryKey})");
             var wife = WifeManager.Instance.Wives.First(w => w.Name == characterName);
 
-            SetPreferenceText(ref __result, TextIds.Tokens.PhotoPreference, wife.PhotoDesire.DisplayName);
-            SetPreferenceText(ref __result, TextIds.Tokens.StonePreference, wife.StoneDesire.DisplayName);
-            SetPreferenceText(ref __result, TextIds.Tokens.MusicPreference, wife.MusicDesire.DisplayName);
+            foreach (var desire in wife.Desires)
+            {
+                SetPreferenceText(ref __result, desire);
+            }
         }
 
         return false;

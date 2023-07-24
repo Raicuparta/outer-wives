@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿namespace OuterWives.Desires;
 
-namespace OuterWives.Desires;
-
-public class IDesire: MonoBehaviour
+public interface IDesire
 {
+    string ObjectId{ get; }
+    string TextId { get; }
+    string DisplayName { get; }
+    bool IsFulfilled { get; }
+
+    void Present();
 }

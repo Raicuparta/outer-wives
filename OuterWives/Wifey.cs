@@ -1,24 +1,18 @@
 ﻿using OuterWives.Desires;
-using System;
 using System.Collections.Generic;
-using System.Security.Policy;
 using UnityEngine;
 
 namespace OuterWives;
 
 public class Wifey: MonoBehaviour
 {
-    public PhotoDesire PhotoDesire { get; private set; }
-    public StoneDesire StoneDesire { get; private set; }
-    public MusicDesire MusicDesire { get; private set; }
+    public List<IDesire> Desires { get; private set; } = new();
 
     public CharacterDialogueTree Character;
     public string Name => Character._characterName;
 
     private Animator _animator;
     public bool Active => _animator.enabled;
-
-    private float _playerNearbyDistance = 5f;
 
     public static Wifey Create(CharacterDialogueTree character)
     {
@@ -30,23 +24,18 @@ public class Wifey: MonoBehaviour
 
     private void Start()
     {
-        PhotoDesire = PhotoDesire.Create<PhotoDesire>(this);
-        StoneDesire = StoneDesire.Create<StoneDesire>(this);
-        MusicDesire = MusicDesire.Create<MusicDesire>(this);
+        CreateDesires();
 
         _animator = Character.transform.parent.GetComponentInChildren<Animator>();
 
         SetUpDialogue();
     }
 
-    private void Update()
+    private void CreateDesires()
     {
-        if (Active && IsMusicPreferencePlaying() && IsNearPlayer())
-        {
-            var condition = TextIds.Conditions.Presented(TextIds.Desires.Music);
-            if (WifeConditions.Get(condition, this)) return;
-            WifeConditions.Set(condition, true, this);
-        }
+        Desires.Add(PhotoDesire.Create<PhotoDesire>(this));
+        Desires.Add(StoneDesire.Create<StoneDesire>(this));
+        Desires.Add(MusicDesire.Create<MusicDesire>(this));
     }
 
     private void SetUpDialogue()
@@ -74,85 +63,58 @@ public class Wifey: MonoBehaviour
         var desireNodes = new Dictionary<string, DialogueNode>();
         var desireOptions = new Dictionary<string, DialogueOption>();
 
-        foreach (var desireId in TextIds.Desires.All)
+        foreach (var desire in Desires)
         {
-            var dialogueNode = desireNodes[desireId] = CreateDesireDialogue(desireId);
+            var dialogueNode = desireNodes[desire.TextId] = CreateDesireDialogue(desire);
 
-            desireOptions[desireId] = rejectionNode.AddOption(TextIds.Actions.Propose(desireId), dialogueNode)
-                .RejectCondition(TextIds.Conditions.Accepted(desireId), this);
+            desireOptions[desire.TextId] = rejectionNode.AddOption(TextIds.Actions.Propose(desire), dialogueNode)
+                .RejectCondition(TextIds.Conditions.Accepted(desire), this);
 
             dialogueNode.AddOption(acceptOption);
         }
 
-        foreach (var nodeDesireId in TextIds.Desires.All)
+        foreach (var nodeDesire in Desires)
         {
-            foreach (var optionDesireId in TextIds.Desires.All)
+            foreach (var optionDesire in Desires)
             {
-                if (nodeDesireId == optionDesireId) continue;
-                desireNodes[nodeDesireId].AddOption(desireOptions[optionDesireId]);
+                if (Desires == Desires) continue;
+                desireNodes[nodeDesire.TextId].AddOption(desireOptions[optionDesire.TextId]);
             }
         }
     }
 
-    private DialogueNode CreateDesireDialogue(string desireId)
+    private DialogueNode CreateDesireDialogue(IDesire desire)
     {
-        var requestNode = Character.AddNode(TextIds.Actions.Request(desireId));
+        var requestNode = Character.AddNode(TextIds.Actions.Request(desire));
 
-        var acceptNode = Character.AddNode(TextIds.Actions.Accept(desireId), 1);
+        var acceptNode = Character.AddNode(TextIds.Actions.Accept(desire), 1);
 
         foreach (var node in Character._mapDialogueNodes.Values)
         {
             if (node == acceptNode) continue;
 
-            node.AddOption(TextIds.Actions.Present(desireId), acceptNode)
-                .RequireCondition(TextIds.Conditions.Presented(desireId), this)
-                .GiveCondition(TextIds.Conditions.Accepted(desireId), this)
-                .RejectCondition(TextIds.Conditions.Accepted(desireId), this);
+            node.AddOption(TextIds.Actions.Present(desire), acceptNode)
+                .RequireCondition(TextIds.Conditions.Presented(desire), this)
+                .GiveCondition(TextIds.Conditions.Accepted(desire), this)
+                .RejectCondition(TextIds.Conditions.Accepted(desire), this);
         }
 
         return requestNode;
     }
 
-    private bool IsNearPlayer()
-    {
-        return Vector3.Distance(Locator.GetPlayerTransform().position, transform.position) < _playerNearbyDistance;
-    }
-
-    private bool IsMusicPreferencePlaying()
-    {
-        var signalScope = Locator.GetToolModeSwapper().GetSignalScope();
-        var signalStrength = signalScope.GetStrongestSignalStrength(AudioSignal.FrequencyToIndex(SignalFrequency.Traveler));
-
-        return signalStrength == 1f && MusicDesire.IsMatch(signalScope.GetStrongestSignal());
-    }
-
     public void PresentDesires()
     {
-        PresentPhoto();
-        PresentStone();
-    }
-
-    private void PresentPhoto()
-    {
-        var condition = TextIds.Conditions.Presented(TextIds.Desires.Photo);
-
-        WifeConditions.Set(condition, PhotoManager.Instance.IsCharacterInShot(PhotoDesire.Id), this);
-    }
-
-    private void PresentStone()
-    {
-        var condition = TextIds.Conditions.Presented(TextIds.Desires.Stone);
-
-        var heldItem = Locator.GetToolModeSwapper().GetItemCarryTool().GetHeldItem();
-        var playerHasCorrectStone = heldItem is SharedStone stone && StoneDesire.IsMatch(stone);
-        WifeConditions.Set(condition, playerHasCorrectStone, this);
+        foreach (var desire in Desires)
+        {
+            desire.Present();
+        }
     }
 
     public bool HasFulfilledAllDesires()
     {
-        foreach (var desireId in TextIds.Desires.All)
+        foreach (var desire in Desires)
         {
-            if (!WifeConditions.Get(TextIds.Conditions.Accepted(desireId), this)) return false;
+            if (!desire.IsFulfilled) return false;
         }
         return true;
     }

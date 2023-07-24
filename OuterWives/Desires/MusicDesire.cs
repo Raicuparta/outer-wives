@@ -1,8 +1,13 @@
-﻿namespace OuterWives.Desires;
+﻿using UnityEngine;
+
+namespace OuterWives.Desires;
 
 public class MusicDesire : Desire<AudioSignal>
 {
+    public override string TextId => TextIds.Desires.Music;
     public override string DisplayName => ObjectBehaviour.name.Replace("Signal_", ""); // TODO this is not localized
+
+    private float _playerNearbyDistance = 5f;
 
     protected override string GetId(AudioSignal signal)
     {
@@ -12,5 +17,32 @@ public class MusicDesire : Desire<AudioSignal>
     protected override AudioSignal GetObjectBehaviour()
     {
         return ThingFinder.Instance.GetRandomMusicSignal();
+    }
+
+    public override void Present()
+    {
+    }
+
+    private void Update()
+    {
+        if (Wife.Active && IsMusicPreferencePlaying() && IsNearPlayer())
+        {
+            var condition = TextIds.Conditions.Presented(this);
+            if (WifeConditions.Get(condition, Wife)) return;
+            WifeConditions.Set(condition, true, Wife);
+        }
+    }
+
+    private bool IsMusicPreferencePlaying()
+    {
+        var signalScope = Locator.GetToolModeSwapper().GetSignalScope();
+        var signalStrength = signalScope.GetStrongestSignalStrength(AudioSignal.FrequencyToIndex(SignalFrequency.Traveler));
+
+        return signalStrength == 1f && IsMatch(signalScope.GetStrongestSignal());
+    }
+
+    private bool IsNearPlayer()
+    {
+        return Vector3.Distance(Locator.GetPlayerTransform().position, transform.position) < _playerNearbyDistance;
     }
 }

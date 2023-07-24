@@ -1,4 +1,6 @@
-﻿namespace OuterWives;
+﻿using OuterWives.Desires;
+
+namespace OuterWives;
 
 public static class TextIds
 {
@@ -19,9 +21,7 @@ public static class TextIds
 
     public static class Tokens
     {
-        public const string PhotoPreference = "$PHOTO_PREFERENCE$";
-        public const string StonePreference = "$STONE_PREFERENCE$";
-        public const string MusicPreference = "$MUSIC_PREFERENCE$";
+        public static string Preference(IDesire desire) => $"${Join(desire.TextId, "PREFERENCE")}$";
     }
 
     public static class Desires
@@ -29,26 +29,20 @@ public static class TextIds
         public const string Photo = "PHOTO";
         public const string Stone = "STONE";
         public const string Music = "MUSIC";
-        public static readonly string[] All = new[]
-        {
-            Photo,
-            Stone,
-            Music,
-        };
     }
 
     public static class Actions
     {
-        public static string Propose(string request) => Join("PROPOSE", request);
-        public static string Request(string request) => Join("REQUEST", request);
-        public static string Present(string request) => Join("PRESENT", request);
-        public static string Accept(string request) => Join("ACCEPT", request);
+        public static string Propose(IDesire desire) => Join("PROPOSE", desire.TextId);
+        public static string Request(IDesire desire) => Join("REQUEST", desire.TextId);
+        public static string Present(IDesire desire) => Join("PRESENT", desire.TextId);
+        public static string Accept(IDesire desire) => Join("ACCEPT", desire.TextId);
     }
 
     public static class Conditions
     {
-        public static string Presented(string request) => Join("PRESENTED", request);
-        public static string Accepted(string request) => Join("ACCEPTED", request);
+        public static string Presented(IDesire desire) => Join("PRESENTED", desire.TextId);
+        public static string Accepted(IDesire desire) => Join("ACCEPTED", desire.TextId);
 
         public const string ReadyToMarry = "READY_TO_MARRY";
     }

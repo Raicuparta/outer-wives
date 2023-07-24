@@ -3,7 +3,6 @@ using System.Reflection;
 using HarmonyLib;
 using OWML.Common;
 using OWML.ModHelper;
-using UnityEngine;
 
 namespace OuterWives;
 
@@ -31,11 +30,6 @@ public class OuterWives : ModBehaviour
 
         Helper = ModHelper;
 
-        // Starting here, you'll have access to OWML's mod helper.
-        ModHelper.Console.WriteLine($"My mod {nameof(OuterWives)} is loaded!", MessageType.Success);
-
-
-        // Example of accessing game code.
         LoadManager.OnCompleteSceneLoad += (scene, loadScene) =>
         {
             if (loadScene != OWScene.SolarSystem) return;
@@ -45,8 +39,7 @@ public class OuterWives : ModBehaviour
                 ThingFinder.Create();
                 PhotoManager.Create();
                 WifeManager.Create();
-            }, 100);
-
+            }, 100); // TODO ewww
         };
     }
 }
