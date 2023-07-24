@@ -28,9 +28,9 @@ public static class Patches
 
         if (hasCharacterName)
         {
-           var characterName = keyParts[1];
-            OuterWives.Helper.Console.WriteLine($"Character name in patch: {characterName} ({textKey})");
-            var wife = WifeManager.Instance.Wives.First(w => w.Name == characterName);
+           var characterId = keyParts[1];
+            OuterWives.Helper.Console.WriteLine($"Character ID in patch: {characterId} ({textKey})");
+            var wife = WifeManager.Instance.Wives.First(w => w.Id == characterId);
 
             foreach (var desire in wife.Desires)
             {

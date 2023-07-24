@@ -4,7 +4,7 @@ public static class WifeConditions
 {
     private static string GetFullConditionId(string conditionId, Wifey wife)
     {
-        return $"{TextIds.Prefix}/{wife.Name}_{conditionId}";
+        return $"{TextIds.Prefix}/{wife.Id}_{conditionId}";
     }
 
     public static void Set(string conditionId, bool conditionState, Wifey wife)

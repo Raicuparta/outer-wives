@@ -45,6 +45,7 @@ public static class TextIds
         public static string Accepted(IDesire desire) => Join("ACCEPTED", desire.TextId);
 
         public const string ReadyToMarry = "READY_TO_MARRY";
+        public const string GettingMarried = "GETTING_MARRIED";
     }
 
     private static string Join(params string[] ids)

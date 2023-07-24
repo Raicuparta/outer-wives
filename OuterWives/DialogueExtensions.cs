@@ -51,19 +51,19 @@ public static class DialogueExtensions
 
     public static DialogueOption RequireCondition(this DialogueOption option, string conditionId, Wifey character)
     {
-        option.ConditionRequirement = $"{TextIds.Prefix}/{character.Name}_{conditionId}";
+        option.ConditionRequirement = $"{TextIds.Prefix}/{character.Id}_{conditionId}";
         return option;
     }
 
     public static DialogueOption RejectCondition(this DialogueOption option, string conditionId, Wifey character)
     {
-        option.CancelledRequirement = $"{TextIds.Prefix}/{character.Name}_{conditionId}";
+        option.CancelledRequirement = $"{TextIds.Prefix}/{character.Id}_{conditionId}";
         return option;
     }
 
     public static DialogueOption GiveCondition(this DialogueOption option, string conditionId, Wifey character)
     {
-        option.ConditionToSet = $"{TextIds.Prefix}/{character.Name}_{conditionId}";
+        option.ConditionToSet = $"{TextIds.Prefix}/{character.Id}_{conditionId}";
         return option;
     }
 }

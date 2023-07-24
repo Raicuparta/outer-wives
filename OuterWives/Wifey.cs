@@ -9,7 +9,7 @@ public class Wifey: MonoBehaviour
     public List<IDesire> Desires { get; private set; } = new();
 
     public CharacterDialogueTree Character;
-    public string Name => Character._characterName;
+    public string Id => Character._characterName;
 
     private Animator _animator;
     public bool Active => _animator.enabled;
@@ -29,6 +29,23 @@ public class Wifey: MonoBehaviour
         _animator = Character.transform.parent.GetComponentInChildren<Animator>();
 
         SetUpDialogue();
+    }
+
+    private void OnEnable()
+    {
+        GlobalMessenger.AddListener("ExitConversation", OnExitConversation);
+    }
+
+    private void OnExitConversation()
+    {
+        if (!WifeConditions.Get(TextIds.Conditions.GettingMarried, this)) return;
+
+        GetMarried();
+    }
+
+    private void GetMarried()
+    {
+        NotificationManager.SharedInstance.PostNotification(new NotificationData($"You got married to {Id}"), false);
     }
 
     private void CreateDesires()
@@ -58,6 +75,7 @@ public class Wifey: MonoBehaviour
 
             var confirmMarriageOption = node.AddOption(TextIds.Options.ConfirmMarriage, acceptMarriageNode);
             confirmMarriageOption.RequireCondition(TextIds.Conditions.ReadyToMarry, this);
+            confirmMarriageOption.GiveCondition(TextIds.Conditions.GettingMarried, this);
         }
 
         var desireNodes = new Dictionary<string, DialogueNode>();
