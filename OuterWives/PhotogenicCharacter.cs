@@ -21,7 +21,7 @@ public class PhotogenicCharacter : MonoBehaviour
         return instance;
     }
 
-    private void Awake()
+    protected void Awake()
     {
         _collidersToIgnoreForOcclusion = transform.parent.GetComponentsInChildren<Collider>();
         _collider = gameObject.GetComponent<Collider>();

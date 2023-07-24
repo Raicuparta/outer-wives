@@ -15,14 +15,14 @@ public class OuterWives : ModBehaviour
         Helper.Console.WriteLine(text);
     }
 
-    private void Awake()
+    protected void Awake()
     {
         // You won't be able to access OWML's mod helper in Awake.
         // So you probably don't want to do anything here.
         // Use Start() instead.
     }
 
-    private void Start()
+    protected void Start()
     {
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
 

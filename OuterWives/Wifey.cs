@@ -22,7 +22,7 @@ public class Wifey: MonoBehaviour
         return wifey;
     }
 
-    private void Start()
+    protected void Start()
     {
         CreateDesires();
 
@@ -34,7 +34,7 @@ public class Wifey: MonoBehaviour
         Character.OnEndConversation += OnExitConversation;
     }
 
-    private void OnDestroy()
+    protected void OnDestroy()
     {
         Character.OnStartConversation -= OnStartConversation;
         Character.OnEndConversation -= OnExitConversation;
@@ -129,7 +129,7 @@ public class Wifey: MonoBehaviour
         return requestNode;
     }
 
-    public void PresentDesires()
+    private void PresentDesires()
     {
         foreach (var desire in Desires)
         {

@@ -9,7 +9,7 @@ public class MusicDesire : Desire<AudioSignal>
     // Might need to add it to the translation files.
     public override string DisplayName => ObjectBehaviour.name.Replace("Signal_", "");
 
-    private float _playerNearbyDistance = 5f;
+    private readonly float _playerNearbyDistance = 5f;
 
     protected override string GetId(AudioSignal signal)
     {
@@ -25,7 +25,7 @@ public class MusicDesire : Desire<AudioSignal>
     {
     }
 
-    private void Update()
+    protected void Update()
     {
         if (Wife.Active && IsMusicPreferencePlaying() && IsNearPlayer())
         {

@@ -30,7 +30,7 @@ public abstract class Desire<TBehaviour> : MonoBehaviour, IDesire where TBehavio
         return GetId(otherObject) == GetId(ObjectBehaviour);
     }
 
-    private void Start()
+    protected void Start()
     {
         ObjectBehaviour = GetObjectBehaviour();
     }
