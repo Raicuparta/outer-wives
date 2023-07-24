@@ -66,6 +66,9 @@ public static class Patches
     [HarmonyPrefix, HarmonyPatch(typeof(ToolModeSwapper), nameof(ToolModeSwapper.UnequipTool))]
     public static bool PreventUnequip()
     {
+        // Unequiping the probe launcher would mean forever losing the picture the player took.
+        // The game usually automatically unequips any tool when starting a dialogue.
+        // So we prevent that from happening, so the wife can have a chance to look at the picture.
         return !(Locator.GetToolModeSwapper().IsInToolMode(ToolMode.Probe) && _startingConversation);
     }
 
