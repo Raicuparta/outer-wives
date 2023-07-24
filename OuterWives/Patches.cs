@@ -67,4 +67,10 @@ public static class Patches
     {
         return !(Locator.GetToolModeSwapper().IsInToolMode(ToolMode.Probe) && _startingConversation);
     }
+
+    [HarmonyPostfix, HarmonyPatch(typeof(NomaiConversationManager), nameof(NomaiConversationManager.OnFinishDialogue))]
+    public static void PreventDisablingSolanumDialogue(NomaiConversationManager __instance)
+    {
+        __instance._characterDialogueTree.GetInteractVolume().EnableInteraction();
+    }
 }
