@@ -5,7 +5,7 @@ using System.Linq;
 namespace OuterWives;
 
 [HarmonyPatch]
-public static class TranslationPatches
+public static class Patches
 {
     private static void SetPreferenceText(ref string original, IDesire desire)
     {
@@ -13,22 +13,23 @@ public static class TranslationPatches
     }
 
     [HarmonyPrefix, HarmonyPatch(typeof(TextTranslation), nameof(TextTranslation.Translate))]
-    public static bool TextTranslation_Translate(string key, ref string __result)
+    public static bool TranslateText(string key, ref string __result)
     {
         if (!key.StartsWith(TextIds.Prefix)) return true;
 
         var keyParts = key.Split('/');
         var hasCharacterName = keyParts.Length > 2;
 
-        var dictionaryKey = keyParts[hasCharacterName ? 2 : 1];
+        var textKey = keyParts[hasCharacterName ? 2 : 1];
 
-        var hasTranslation = TranslationManager.Instance.Translation.TryGetValue(dictionaryKey, out __result);
-        if (!hasTranslation) return true;
+        var text = TranslationManager.Instance.GetText(textKey);
+        if (text == default) return true;
+        __result = text;
 
         if (hasCharacterName)
         {
            var characterName = keyParts[1];
-            OuterWives.Helper.Console.WriteLine($"Character name in patch: {characterName} ({dictionaryKey})");
+            OuterWives.Helper.Console.WriteLine($"Character name in patch: {characterName} ({textKey})");
             var wife = WifeManager.Instance.Wives.First(w => w.Name == characterName);
 
             foreach (var desire in wife.Desires)
