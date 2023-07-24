@@ -29,6 +29,20 @@ public class PhotogenicCharacter : MonoBehaviour
 
     public bool IsVisible(OWCamera camera)
     {
+        if (camera == null)
+        {
+            OuterWives.Log($"When checking if {DisplayName} is visible, camera was somehow null");
+            return false;
+        }
+
+        if (_collider == null)
+        {
+            OuterWives.Log($"When checking if {DisplayName} is visible, collider was somehow null");
+            return false;
+        }
+
+        OuterWives.Log($"Nothing was null");
+
         return GeometryUtility.TestPlanesAABB(camera.GetFrustumPlanes(), _collider.bounds);
     }
 
@@ -59,7 +73,7 @@ public class PhotogenicCharacter : MonoBehaviour
 
     public bool IsInShot(ProbeCamera camera)
     {
-        if (!_character) return false;
+        if (!_character || !isActiveAndEnabled) return false;
 
         Vector3 vector = GetTargetPosition() - camera.transform.position;
         float magnitude = vector.magnitude;

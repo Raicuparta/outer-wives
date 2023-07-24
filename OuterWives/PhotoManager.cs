@@ -34,13 +34,13 @@ public class PhotoManager : MonoBehaviour
     private void OnEnable()
     {
         GlobalMessenger.AddListener("Probe Snapshot Removed", OnProbeSnapshotRemoved);
-        GlobalMessenger<ProbeCamera>.AddListener("ProbeSnapshot", new Callback<ProbeCamera>(OnProbeSnapshot));
+        GlobalMessenger<ProbeCamera>.AddListener("ProbeSnapshot", OnProbeSnapshot);
     }
 
     private void OnDisable()
     {
         GlobalMessenger.RemoveListener("Probe Snapshot Removed", OnProbeSnapshotRemoved);
-        GlobalMessenger<ProbeCamera>.RemoveListener("ProbeSnapshot", new Callback<ProbeCamera>(OnProbeSnapshot));
+        GlobalMessenger<ProbeCamera>.RemoveListener("ProbeSnapshot", OnProbeSnapshot);
     }
 
     private void OnDestroy()
