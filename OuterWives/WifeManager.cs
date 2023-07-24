@@ -26,16 +26,19 @@ public class WifeManager: MonoBehaviour
 
     private void Start()
     {
-        var characters = ThingFinder.Instance.GetCharacters().Where(character => !_characterBlockList.Contains(character._characterName));
-        foreach (var character in characters)
+        var characters = ThingFinder.Instance.GetCharacters();
+        for (var characterIndex = 0; characterIndex < characters.Length; characterIndex++)
         {
-            CreateWife(character);
+            var character = characters[characterIndex];
+            if (_characterBlockList.Contains(character._characterName)) continue;
+
+            CreateWife(character, characterIndex);
         }
     }
 
-    private void CreateWife(CharacterDialogueTree character)
+    private void CreateWife(CharacterDialogueTree character, int characterIndex)
     {
-        var wife = Wifey.Create(character);
+        var wife = Wifey.Create(character, characterIndex);
         _wives[wife.Id] = wife;
     }
 

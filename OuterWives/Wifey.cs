@@ -7,6 +7,7 @@ namespace OuterWives;
 public class Wifey: MonoBehaviour
 {
     public List<IDesire> Desires { get; private set; } = new();
+    public int Index { get; private set; }
 
     public CharacterDialogueTree Character;
     public string Id => Character._characterName;
@@ -14,10 +15,11 @@ public class Wifey: MonoBehaviour
     private Animator _animator;
     public bool Active => _animator.enabled;
 
-    public static Wifey Create(CharacterDialogueTree character)
+    public static Wifey Create(CharacterDialogueTree character, int index)
     {
         var wifey = character.gameObject.AddComponent<Wifey>();
         wifey.Character = character;
+        wifey.Index = index;
 
         return wifey;
     }

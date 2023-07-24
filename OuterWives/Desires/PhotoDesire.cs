@@ -7,7 +7,7 @@ public class PhotoDesire : Desire<PhotogenicCharacter>
 
     protected override PhotogenicCharacter GetObjectBehaviour()
     {
-        return PhotoManager.Instance.GetRandomCharacter();
+        return PhotoManager.Instance.GetRandomCharacter(Wife);
     }
 
     protected override string GetId(PhotogenicCharacter character)

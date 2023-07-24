@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using OuterWives.Extensions;
 using UnityEngine;
 
 namespace OuterWives;
@@ -9,11 +10,11 @@ public class PhotoManager : MonoBehaviour
     public static PhotoManager Instance { get; private set; }
 
     private readonly List<PhotogenicCharacter> _charactersInShot = new();
-    private readonly List<PhotogenicCharacter> _characters = new();
     private readonly string[] _characterBlockList = new[]
     {
         "the Prisoner"
     };
+    private PhotogenicCharacter[] _characters;
 
     public static void Create()
     {
@@ -22,13 +23,10 @@ public class PhotoManager : MonoBehaviour
 
     private void Start()
     {
-        var characters = ThingFinder.Instance.GetCharacters()
-            .Where(character => !_characterBlockList.Contains(character._characterName));
-
-        foreach (var character in characters)
-        {
-            _characters.Add(PhotogenicCharacter.Create(character));
-        }
+        _characters = ThingFinder.Instance.GetCharacters()
+            .Where(character => !_characterBlockList.Contains(character._characterName))
+            .Select(character => PhotogenicCharacter.Create(character))
+            .ToArray();
     }
 
     private void OnEnable()
@@ -77,9 +75,9 @@ public class PhotoManager : MonoBehaviour
         _charactersInShot.Clear();
     }
 
-    public PhotogenicCharacter GetRandomCharacter()
+    public PhotogenicCharacter GetRandomCharacter(Wifey wife)
     {
-        return _characters[Random.Range(0, _characters.Count)];
+        return _characters.GetWrapped(wife.Index, _characters.FirstOrDefault(character => character.Id == wife.Id));
     }
 
     public bool IsCharacterInShot(string characterId)

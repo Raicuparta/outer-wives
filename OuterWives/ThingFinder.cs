@@ -39,18 +39,13 @@ public class ThingFinder: MonoBehaviour
             .Where(stone => !_stoneBlocklist.Contains(stone.GetRemoteCameraID()))
             .GroupBy(stone => stone.GetDisplayName())
             .Select(group => group.First())
-            .ToArray();
+            .ToShuffledArray();
     }
 
-    public ReadOnlyArray<SharedStone> GetStones()
+    public SharedStone[] GetStones()
     {
         InitializeStones();
         return _stones;
-    }
-
-    public SharedStone GetRandomStone()
-    {
-        return GetRandomObject(GetStones());
     }
 
     private void InitializeTravelers()
@@ -60,19 +55,13 @@ public class ThingFinder: MonoBehaviour
         _musicSignals = Resources.FindObjectsOfTypeAll<TravelerController>()
             .Where(traveler => traveler._audioSource != null)
             .Select(traveler => traveler._audioSource.GetComponent<AudioSignal>())
-            .ToArray();
+            .ToShuffledArray();
     }
 
-    public ReadOnlyArray<AudioSignal> GetMusicSignals()
+    public AudioSignal[] GetMusicSignals()
     {
         InitializeTravelers();
         return _musicSignals;
-    }
-
-    public AudioSignal GetRandomMusicSignal()
-    {
-        InitializeTravelers();
-        return GetRandomObject(GetMusicSignals());
     }
 
     private void InitializeCharacters ()
@@ -81,23 +70,12 @@ public class ThingFinder: MonoBehaviour
 
         _characters = Resources.FindObjectsOfTypeAll<CharacterDialogueTree>()
             .Where(character => !_characterBlocklist.Contains(character._characterName))
-            .ToArray();
+            .ToShuffledArray();
     }
 
-    public ReadOnlyArray<CharacterDialogueTree> GetCharacters()
+    public CharacterDialogueTree[] GetCharacters()
     {
         InitializeCharacters();
         return _characters;
-    }
-
-    public CharacterDialogueTree GetRandomCharacter()
-    {
-        InitializeCharacters();
-        return GetRandomObject(GetCharacters());
-    }
-
-    public TComponent GetRandomObject<TComponent>(ReadOnlyArray<TComponent> array)
-    {
-        return array[Random.Range(0, array.Count)];
     }
 }

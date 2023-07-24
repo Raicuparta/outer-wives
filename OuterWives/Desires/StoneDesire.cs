@@ -1,4 +1,6 @@
-﻿namespace OuterWives.Desires;
+﻿using OuterWives.Extensions;
+
+namespace OuterWives.Desires;
 
 public class StoneDesire : Desire<SharedStone>
 {
@@ -7,7 +9,7 @@ public class StoneDesire : Desire<SharedStone>
 
     protected override SharedStone GetObjectBehaviour()
     {
-        return ThingFinder.Instance.GetRandomStone();
+        return ThingFinder.Instance.GetStones().GetWrapped(Wife.Index);
     }
 
     protected override string GetId(SharedStone stone)

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Xml.Linq;
 
-namespace OuterWives;
+namespace OuterWives.Extensions;
 
 public static class DialogueExtensions
 {
