@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -8,8 +9,7 @@ public class WifeManager: MonoBehaviour
 {
     public static WifeManager Instance;
 
-    public readonly List<Wifey> Wives = new();
-    private readonly Dictionary<CharacterDialogueTree, Wifey> _characterWifeMap = new();
+    private readonly Dictionary<string, Wifey> _wives = new();
     private readonly string[] _characterBlockList = new[]
 {
         "Tephra",
@@ -36,7 +36,12 @@ public class WifeManager: MonoBehaviour
     private void CreateWife(CharacterDialogueTree character)
     {
         var wife = Wifey.Create(character);
-        Wives.Add(wife);
-        _characterWifeMap[wife.Character] = wife;
+        _wives[wife.Id] = wife;
+    }
+
+    public Wifey GetWife(string characterId)
+    {
+        _wives.TryGetValue(characterId, out var wife);
+        return wife;
     }
 }

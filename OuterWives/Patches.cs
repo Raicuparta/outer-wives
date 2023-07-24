@@ -30,7 +30,13 @@ public static class Patches
         {
            var characterId = keyParts[1];
             OuterWives.Helper.Console.WriteLine($"Character ID in patch: {characterId} ({textKey})");
-            var wife = WifeManager.Instance.Wives.First(w => w.Id == characterId);
+            var wife = WifeManager.Instance.GetWife(characterId);
+
+            if (wife == null)
+            {
+                OuterWives.Log($"Failed to find wife with character ID \"{characterId}\"");
+                return true;
+            }
 
             foreach (var desire in wife.Desires)
             {
@@ -45,7 +51,7 @@ public static class Patches
 
 
     [HarmonyPrefix, HarmonyPatch(typeof(CharacterDialogueTree), nameof(CharacterDialogueTree.StartConversation))]
-    public static void SetUpUnequipPrevention(CharacterDialogueTree __instance)
+    public static void SetUpUnequipPrevention()
     {
         _startingConversation = true;
     }
