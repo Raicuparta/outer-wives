@@ -39,10 +39,4 @@ public class WifeManager: MonoBehaviour
         Wives.Add(wife);
         _characterWifeMap[wife.Character] = wife;
     }
-
-    public Wifey GetWifeByCharacter(CharacterDialogueTree character)
-    {
-        _characterWifeMap.TryGetValue(character, out var wife);
-        return wife;
-    }
 }

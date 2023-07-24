@@ -45,18 +45,13 @@ public static class Patches
 
 
     [HarmonyPrefix, HarmonyPatch(typeof(CharacterDialogueTree), nameof(CharacterDialogueTree.StartConversation))]
-    public static void BeforeConversationStart(CharacterDialogueTree __instance)
+    public static void SetUpUnequipPrevention(CharacterDialogueTree __instance)
     {
         _startingConversation = true;
-
-        var wife = WifeManager.Instance.GetWifeByCharacter(__instance);
-        if (wife == null) return;
-
-        wife.PresentDesires();
     }
 
     [HarmonyPostfix, HarmonyPatch(typeof(CharacterDialogueTree), nameof(CharacterDialogueTree.EndConversation))]
-    public static void AfterConversationStart()
+    public static void ResetUnequipPrevention()
     {
         _startingConversation = false;
     }

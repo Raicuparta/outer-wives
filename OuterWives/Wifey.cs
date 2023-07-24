@@ -30,12 +30,19 @@ public class Wifey: MonoBehaviour
 
         SetUpDialogue();
 
+        Character.OnStartConversation += OnStartConversation;
         Character.OnEndConversation += OnExitConversation;
     }
 
     private void OnDestroy()
     {
+        Character.OnStartConversation -= OnStartConversation;
         Character.OnEndConversation -= OnExitConversation;
+    }
+
+    private void OnStartConversation()
+    {
+        PresentDesires();
     }
 
     private void OnExitConversation()
