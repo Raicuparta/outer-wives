@@ -25,7 +25,6 @@ public class OuterWives : ModBehaviour
 
     private void Start()
     {
-
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
 
         Helper = ModHelper;
