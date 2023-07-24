@@ -12,9 +12,9 @@ public class StoneDesire : Desire<SharedStone>
 
     protected override string GetId(SharedStone stone)
     {
-        // TODO: this is localized, not good for an ID.
-        // Need to get an ID that's not localized, but is the same for every stone with the same drawing.
-        return NomaiRemoteCameraPlatform.IDToPlanetString(stone._connectedPlatform);
+        // Using translated display name as the ID,
+        // which should be fine since you need to go back to the main menu to change the language I think.
+        return DisplayName;
     }
 
     public override void Present()
