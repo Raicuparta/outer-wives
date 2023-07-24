@@ -33,7 +33,12 @@ public class Wifey: MonoBehaviour
 
     private void OnEnable()
     {
-        GlobalMessenger.AddListener("ExitConversation", OnExitConversation);
+        Character.OnEndConversation += OnExitConversation;
+    }
+
+    private void OnDisable()
+    {
+        Character.OnEndConversation -= OnExitConversation;
     }
 
     private void OnExitConversation()
