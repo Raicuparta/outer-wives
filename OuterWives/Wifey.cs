@@ -29,14 +29,11 @@ public class Wifey: MonoBehaviour
         _animator = Character.transform.parent.GetComponentInChildren<Animator>();
 
         SetUpDialogue();
-    }
 
-    private void OnEnable()
-    {
         Character.OnEndConversation += OnExitConversation;
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         Character.OnEndConversation -= OnExitConversation;
     }
