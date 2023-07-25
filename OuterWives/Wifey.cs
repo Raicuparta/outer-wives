@@ -11,12 +11,12 @@ public class Wifey: MonoBehaviour
     public List<IDesire> Desires { get; private set; } = new();
     public int Index { get; private set; }
 
-    public CharacterDialogueTree Character;
+    public CharacterDialogueTree Character { get; private set; }
     public string Id => Character._characterName;
     public string DisplayName => TextTranslation.Translate(Character._characterName);
+    public bool Active => !_animator || _animator.enabled;
 
     private Animator _animator;
-    public bool Active => !_animator || _animator.enabled;
 
     public static Wifey Create(CharacterDialogueTree character, int index)
     {
@@ -30,14 +30,10 @@ public class Wifey: MonoBehaviour
     protected void Start()
     {
         CreateDesires();
-
-        _animator = Character.transform.parent.GetComponentInChildren<Animator>();
-        if (!_animator)
-        {
-            OuterWives.Error($"Failed to find animator for Wife {Id}");
-        }
-
+        SetUpAnimator();
         SetUpDialogue();
+
+        gameObject.AddComponent<WarpTarget>();
 
         Character.OnStartConversation += OnStartConversation;
         Character.OnEndConversation += OnExitConversation;
@@ -71,6 +67,15 @@ public class Wifey: MonoBehaviour
         Desires.Add(PhotoDesire.Create<PhotoDesire>(this));
         Desires.Add(StoneDesire.Create<StoneDesire>(this));
         Desires.Add(MusicDesire.Create<MusicDesire>(this));
+    }
+
+    private void SetUpAnimator()
+    {
+        _animator = Character.transform.parent.GetComponentInChildren<Animator>();
+        if (!_animator)
+        {
+            OuterWives.Error($"Failed to find animator for Wife {Id}");
+        }
     }
 
     private void SetUpDialogue()

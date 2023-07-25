@@ -33,5 +33,6 @@ public abstract class Desire<TBehaviour> : MonoBehaviour, IDesire where TBehavio
     protected void Start()
     {
         ObjectBehaviour = GetObjectBehaviour();
+        ObjectBehaviour.gameObject.GetAddComponent<WarpTarget>();
     }
 }
