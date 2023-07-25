@@ -75,4 +75,16 @@ public static class Patches
     {
         __instance._characterDialogueTree.GetInteractVolume().EnableInteraction();
     }
+
+    [HarmonyPostfix, HarmonyPatch(typeof(PrisonerChoiceDialogue), nameof(PrisonerChoiceDialogue.OnEndConversation))]
+    public static void PreventDisablingPrisonerDialogue_Choice(PrisonerChoiceDialogue __instance)
+    {
+        __instance._interactReceiver.EnableInteraction();
+    }
+
+    [HarmonyPostfix, HarmonyPatch(typeof(PrisonerDirector), nameof(PrisonerDirector.OnFinishDialogue))]
+    public static void PreventDisablingPrisonerDialogue_Director(PrisonerDirector __instance)
+    {
+        __instance._characterDialogueTree.GetInteractVolume().EnableInteraction();
+    }
 }
