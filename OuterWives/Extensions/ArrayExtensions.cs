@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 
-namespace OuterWives;
+namespace OuterWives.Extensions;
 
 public static class ArrayExtensions
 {
