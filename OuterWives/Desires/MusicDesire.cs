@@ -36,10 +36,10 @@ public class MusicDesire : Desire<AudioSignal>
 
     protected void Update()
     {
+        var condition = TextIds.Conditions.Presented(this);
+        if (WifeConditions.Get(condition, Wife)) return;
         if (Wife.Active && IsMusicPreferencePlaying() && IsNearPlayer())
         {
-            var condition = TextIds.Conditions.Presented(this);
-            if (WifeConditions.Get(condition, Wife)) return;
             WifeConditions.Set(condition, true, Wife);
             // TODO translate
             NotificationManager.SharedInstance.PostNotification(new NotificationData($"Played {DisplayName} music near {Wife.DisplayName}"));
