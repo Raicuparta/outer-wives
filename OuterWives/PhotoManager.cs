@@ -14,7 +14,7 @@ public class PhotoManager : MonoBehaviour
     {
         "the Prisoner"
     };
-    private PhotogenicCharacter[] _characters;
+    private ShuffledArray<PhotogenicCharacter> _characters;
 
     public static void Create()
     {
@@ -23,10 +23,12 @@ public class PhotoManager : MonoBehaviour
 
     private void Start()
     {
-        _characters = ThingFinder.Instance.GetCharacters()
+        _characters = ThingFinder.Instance.GetCharacters().Array
             .Where(character => !_characterBlockList.Contains(character._characterName))
-            .Select(character => PhotogenicCharacter.Create(character))
-            .ToArray();
+            .Select(PhotogenicCharacter.Create) // Create PhotoGenicCharacter components for all including clones,
+            .GroupBy(character => character.Id) // but merge clones into one in the stored array.
+            .Select(group => group.First())
+            .ToShuffledArray();
     }
 
     private void OnEnable()
@@ -55,7 +57,7 @@ public class PhotoManager : MonoBehaviour
     {
         Reset();
         string notificationText = null;
-        foreach (var character in _characters)
+        foreach (var character in _characters.Array)
         {
             if (character.IsInShot(camera))
             {
@@ -77,7 +79,7 @@ public class PhotoManager : MonoBehaviour
 
     public PhotogenicCharacter GetRandomCharacter(Wifey wife)
     {
-        return _characters.GetWrapped(wife.Index, _characters.FirstOrDefault(character => character.Id == wife.Id));
+        return _characters.Get(wife.Index);
     }
 
     public bool IsCharacterInShot(string characterId)

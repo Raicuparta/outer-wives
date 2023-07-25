@@ -23,9 +23,9 @@ public class ThingFinder: MonoBehaviour
         CharacterDialogueTree.SIGN_NAME,
     };
 
-    private SharedStone[] _stones;
-    private AudioSignal[] _musicSignals;
-    private CharacterDialogueTree[] _characters;
+    private ShuffledArray<SharedStone> _stones;
+    private ShuffledArray<AudioSignal> _musicSignals;
+    private ShuffledArray<CharacterDialogueTree> _characters;
 
     public static void Create()
     {
@@ -43,7 +43,7 @@ public class ThingFinder: MonoBehaviour
             .ToShuffledArray();
     }
 
-    public SharedStone[] GetStones()
+    public ShuffledArray<SharedStone> GetStones()
     {
         InitializeStones();
         return _stones;
@@ -59,7 +59,7 @@ public class ThingFinder: MonoBehaviour
             .ToShuffledArray();
     }
 
-    public AudioSignal[] GetMusicSignals()
+    public ShuffledArray<AudioSignal> GetMusicSignals()
     {
         InitializeTravelers();
         return _musicSignals;
@@ -74,7 +74,7 @@ public class ThingFinder: MonoBehaviour
             .ToShuffledArray();
     }
 
-    public CharacterDialogueTree[] GetCharacters()
+    public ShuffledArray<CharacterDialogueTree> GetCharacters()
     {
         InitializeCharacters();
         return _characters;

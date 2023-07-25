@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -27,13 +26,17 @@ public class WifeManager: MonoBehaviour
     private void Start()
     {
         var characters = ThingFinder.Instance.GetCharacters();
-        for (var characterIndex = 0; characterIndex < characters.Length; characterIndex++)
+        for (var characterIndex = 0; characterIndex < characters.Array.Count; characterIndex++)
         {
-            var character = characters[characterIndex];
+            var character = characters.Array[characterIndex];
             if (_characterBlockList.Contains(character._characterName)) continue;
 
             CreateWife(character, characterIndex);
         }
+        OuterWives.Helper.Events.Unity.FireInNUpdates(() =>
+        {
+            LogWives();
+        }, 100);
     }
 
     private void CreateWife(CharacterDialogueTree character, int characterIndex)
@@ -46,5 +49,15 @@ public class WifeManager: MonoBehaviour
     {
         _wives.TryGetValue(characterId, out var wife);
         return wife;
+    }
+
+    private void LogWives()
+    {
+        OuterWives.Log("## Start Logging Wives ##");
+        foreach (var wife in _wives.Values)
+        {
+            OuterWives.Log($"- {wife}");
+        }
+        OuterWives.Log("## End Logging Wives ##");
     }
 }

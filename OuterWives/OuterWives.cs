@@ -12,7 +12,12 @@ public class OuterWives : ModBehaviour
 
     public static void Log(string text)
     {
-        Helper.Console.WriteLine(text);
+        Helper.Console.WriteLine(text, MessageType.Info);
+    }
+
+    public static void Error(string text)
+    {
+        Helper.Console.WriteLine(text, MessageType.Error);
     }
 
     protected void Awake()

@@ -1,6 +1,7 @@
 ﻿using OuterWives.Desires;
 using OuterWives.Extensions;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace OuterWives;
@@ -12,9 +13,10 @@ public class Wifey: MonoBehaviour
 
     public CharacterDialogueTree Character;
     public string Id => Character._characterName;
+    public string DisplayName => TextTranslation.Translate(Character._characterName);
 
     private Animator _animator;
-    public bool Active => _animator.enabled;
+    public bool Active => !_animator || _animator.enabled;
 
     public static Wifey Create(CharacterDialogueTree character, int index)
     {
@@ -30,6 +32,10 @@ public class Wifey: MonoBehaviour
         CreateDesires();
 
         _animator = Character.transform.parent.GetComponentInChildren<Animator>();
+        if (!_animator)
+        {
+            OuterWives.Error($"Failed to find animator for Wife {Id}");
+        }
 
         SetUpDialogue();
 
@@ -147,5 +153,10 @@ public class Wifey: MonoBehaviour
             if (!desire.IsFulfilled) return false;
         }
         return true;
+    }
+
+    public override string ToString()
+    {
+        return $"{Id} ({DisplayName}): {string.Join(", ", Desires.Select(desire => $"{desire.TextId}={desire.DisplayName}"))}";
     }
 }

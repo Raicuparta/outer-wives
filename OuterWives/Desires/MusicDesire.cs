@@ -1,5 +1,4 @@
-﻿using OuterWives.Extensions;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace OuterWives.Desires;
 
@@ -19,7 +18,7 @@ public class MusicDesire : Desire<AudioSignal>
 
     protected override AudioSignal GetObjectBehaviour()
     {
-        return ThingFinder.Instance.GetMusicSignals().GetWrapped(Wife.Index);
+        return ThingFinder.Instance.GetMusicSignals().Get(Wife.Index);
     }
 
     public override void Present()

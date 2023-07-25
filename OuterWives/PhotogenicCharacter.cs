@@ -31,17 +31,15 @@ public class PhotogenicCharacter : MonoBehaviour
     {
         if (camera == null)
         {
-            OuterWives.Log($"When checking if {DisplayName} is visible, camera was somehow null");
+            OuterWives.Error($"When checking if {DisplayName} is visible, camera was somehow null");
             return false;
         }
 
         if (_collider == null)
         {
-            OuterWives.Log($"When checking if {DisplayName} is visible, collider was somehow null");
+            OuterWives.Error($"When checking if {DisplayName} is visible, collider was somehow null");
             return false;
         }
-
-        OuterWives.Log($"Nothing was null");
 
         return GeometryUtility.TestPlanesAABB(camera.GetFrustumPlanes(), _collider.bounds);
     }
@@ -49,11 +47,6 @@ public class PhotogenicCharacter : MonoBehaviour
     private bool IsOccludedFromPosition(Vector3 worldPos)
     {
         var hit = Physics.Linecast(worldPos, GetTargetPosition(), out RaycastHit ray, OWLayerMask.physicalMask);
-
-        if (hit)
-        {
-            OuterWives.Helper.Console.WriteLine($"{_character._characterName} collides {ray.collider.name}");
-        }
 
         return hit && !_collidersToIgnoreForOcclusion.Contains(ray.collider);
     }
@@ -64,9 +57,9 @@ public class PhotogenicCharacter : MonoBehaviour
         {
             return _character._attentionPoint.position;
         }
-        catch (Exception e)
+        catch (Exception exception)
         {
-            OuterWives.Log($"Failed on {name} ({_character?._characterName}): {e}");
+            OuterWives.Error($"Failed on {name} ({_character?._characterName}): {exception}");
             return Vector3.zero;
         }
     }

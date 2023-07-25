@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using OuterWives.Desires;
-using System.Linq;
 
 namespace OuterWives;
 
@@ -29,12 +28,11 @@ public static class Patches
         if (hasCharacterName)
         {
            var characterId = keyParts[1];
-            OuterWives.Helper.Console.WriteLine($"Character ID in patch: {characterId} ({textKey})");
             var wife = WifeManager.Instance.GetWife(characterId);
 
             if (wife == null)
             {
-                OuterWives.Log($"Failed to find wife with character ID \"{characterId}\"");
+                OuterWives.Error($"Failed to find wife with character ID \"{characterId}\"");
                 return true;
             }
 
