@@ -9,7 +9,7 @@ public class MusicDesire : Desire<AudioSignal>
     // Might need to add it to the translation files.
     public override string DisplayName => ObjectBehaviour.name.Replace("Signal_", "");
 
-    private readonly float _playerNearbyDistance = 5f;
+    private readonly float _playerNearbySquareDistance = 25f;
 
     protected override string GetId(AudioSignal signal)
     {
@@ -23,6 +23,15 @@ public class MusicDesire : Desire<AudioSignal>
 
     public override void Present()
     {
+        var signalscope = Locator.GetToolModeSwapper().GetSignalScope();
+        signalscope.UpdateAudioSignals();
+        signalscope.SelectFrequency(SignalFrequency.Traveler);
+        var travelerSignal = signalscope.GetStrongestSignal();
+        if (travelerSignal == null || !travelerSignal.CanBePickedUpByScope())
+        {
+            // Can't get signals in some places, so if we're in there, we'll skip this desire.
+            WifeConditions.Set(TextIds.Conditions.Accepted(this), true, Wife);
+        }
     }
 
     protected void Update()
@@ -32,6 +41,8 @@ public class MusicDesire : Desire<AudioSignal>
             var condition = TextIds.Conditions.Presented(this);
             if (WifeConditions.Get(condition, Wife)) return;
             WifeConditions.Set(condition, true, Wife);
+            // TODO translate
+            NotificationManager.SharedInstance.PostNotification(new NotificationData($"Played {DisplayName} music near {Wife.DisplayName}"));
         }
     }
 
@@ -45,6 +56,6 @@ public class MusicDesire : Desire<AudioSignal>
 
     private bool IsNearPlayer()
     {
-        return Vector3.Distance(Locator.GetPlayerTransform().position, transform.position) < _playerNearbyDistance;
+        return Vector3.SqrMagnitude(Locator.GetPlayerTransform().position - transform.position) < _playerNearbySquareDistance;
     }
 }
