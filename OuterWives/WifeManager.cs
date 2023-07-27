@@ -34,6 +34,8 @@ public class WifeManager: MonoBehaviour
         Instance = new GameObject(nameof(WifeManager)).AddComponent<WifeManager>();
     }
 
+    private readonly string _runtimeAnimatorName = "Villager_Arkose";
+
     private void Start()
     {
         var characters = ThingFinder.Instance.GetCharacters();
@@ -63,6 +65,10 @@ public class WifeManager: MonoBehaviour
             .GroupBy(character => character._characterName)
             .Select(group => group.Last()).ToArray();
 
+        var animatorController = characters
+            .Select(character => character.transform.parent.GetComponentInChildren<Animator>()?.runtimeAnimatorController)
+            .First(animatorController => animatorController.name == _runtimeAnimatorName);
+
         for (var guestIndex = 0; guestIndex < guests.childCount; guestIndex++)
         {
             if (guestIndex >= _wives.Count) break;
@@ -73,17 +79,15 @@ public class WifeManager: MonoBehaviour
 
             var guestSpot = guests.GetChild(guestIndex);
 
-            var clone = CloneCharacter(character, timberHearth, guestSpot);
+            var clone = CloneCharacter(character, timberHearth, guestSpot, animatorController);
             if (!clone) continue;
         }
 
-        CloneCharacter(wife.Character, timberHearth, characterSlots.Find("WifeA"));
+        CloneCharacter(wife.Character, timberHearth, characterSlots.Find("WifeA"), animatorController);
     }
 
-    private GameObject CloneCharacter(CharacterDialogueTree character, AstroObject astroObject, Transform spot)
+    private GameObject CloneCharacter(CharacterDialogueTree character, AstroObject astroObject, Transform spot, RuntimeAnimatorController animatorController)
     {
-        spot.DestroyAllChildren();
-
         var parent = character.transform.parent;
         var animator = parent.GetComponentInChildren<Animator>();
         if (!animator)
@@ -107,6 +111,7 @@ public class WifeManager: MonoBehaviour
         };
 
         var clone = DetailBuilder.Make(astroObject.gameObject, astroObject.GetRootSector(), animator.gameObject, detailInfo);
+        clone.GetComponent<Animator>().runtimeAnimatorController = animatorController;
         astroObject.GetRootSector().OnOccupantEnterSector.Invoke(Locator.GetPlayerSectorDetector());
         clone.transform.SetParent(spot);
 
