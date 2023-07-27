@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using NewHorizons.Handlers;
+using OuterWives.Extensions;
 
 namespace OuterWives;
 
@@ -46,20 +47,11 @@ public class WifeManager: MonoBehaviour
         OuterWives.Helper.Events.Unity.FireInNUpdates(() =>
         {
             LogWives();
-            SetUpStage();
         }, 100);
     }
 
-    private void SetUpStage()
+    public void GetMarried(Wifey wife)
     {
-        var nh = new NewHorizonsApi();
-//        nh.CreatePlanet(@$"{{
-//    ""name"": ""TimberHearth"",
-//    ""Props"": {{
-        
-//    }}
-//}}", OuterWives.Instance);
-
         var prefab = OuterWives.Assets.LoadAsset<GameObject>("OuterWives");
         var timberHearth = Locator.GetAstroObject(AstroObject.Name.TimberHearth);
 
@@ -67,61 +59,60 @@ public class WifeManager: MonoBehaviour
         var characterSlots = instance.transform.Find("CharacterSlots");
         var stage = instance.transform.Find("Stage/Cylinder");
         var guests = characterSlots.Find("Guests");
-        var wives = _wives.Values.ToArray();
+        var characters = ThingFinder.Instance.GetCharacters().Array
+            .GroupBy(character => character._characterName)
+            .Select(group => group.Last()).ToArray();
+
         for (var guestIndex = 0; guestIndex < guests.childCount; guestIndex++)
         {
             if (guestIndex >= _wives.Count) break;
 
-            var wife = wives[guestIndex].transform.parent;
+            var character = characters[guestIndex];
+
+            if (character == wife.Character) continue;
+
             var guestSpot = guests.GetChild(guestIndex);
 
-            var animator = wife.GetComponentInChildren<Animator>();
-            if (!animator)
-            {
-                OuterWives.Error($"No Animator for {wives[guestIndex].DisplayName}");
-                continue;
-            }
-
-            var hit = Physics.Raycast(guestSpot.position, -guestSpot.up, out var hitInfo);
-            if (!hit)
-            {
-                OuterWives.Error($"Failed to find floor for {guestSpot.name}");
-                continue;
-            }
-
-            var detailInfo = new DetailInfo()
-            {
-                position = timberHearth.transform.InverseTransformPoint(hitInfo.point),
-                rotation = guestSpot.localEulerAngles,
-                scale = animator.transform.lossyScale.x,
-            };
-
-            //wife.gameObject.SetActive(false);
-
-            //var prop = GeneralPropBuilder.MakeFromExisting(wife.gameObject, timberHearth.gameObject, timberHearth.GetRootSector(), detailInfo);
-            //StreamingHandler.SetUpStreaming(prop, timberHearth.GetRootSector());
-
-            var clone = DetailBuilder.Make(timberHearth.gameObject, timberHearth.GetRootSector(), animator.gameObject, detailInfo);
-            timberHearth.GetRootSector().OnOccupantEnterSector.Invoke(Locator.GetPlayerSectorDetector());
-
-
-
-            //Destroy(clone.GetComponentInChildren<Wifey>());
-            //clone.SetActive(true);
-
-            wife.gameObject.SetActive(true);
-
-            //wife.SetParent(guests.GetChild(guestIndex));
-            //wife.localPosition = Vector3.zero;
-            //wife.localRotation = Quaternion.identity;
-
-            //wife.LookAt(stage, -stage.up);
+            var clone = CloneCharacter(character, timberHearth, guestSpot);
+            if (!clone) continue;
         }
 
-        //foreach (var streamingGroup in Resources.FindObjectsOfTypeAll<StreamingGroup>())
-        //{
-        //    streamingGroup.LoadGeneralAssets();
-        //}
+        CloneCharacter(wife.Character, timberHearth, characterSlots.Find("WifeA"));
+    }
+
+    private GameObject CloneCharacter(CharacterDialogueTree character, AstroObject astroObject, Transform spot)
+    {
+        spot.DestroyAllChildren();
+
+        var parent = character.transform.parent;
+        var animator = parent.GetComponentInChildren<Animator>();
+        if (!animator)
+        {
+            OuterWives.Error($"No Animator for {character._characterName}");
+            return null;
+        }
+
+        var hit = Physics.Raycast(spot.position, -spot.up, out var hitInfo);
+        if (!hit)
+        {
+            OuterWives.Error($"Failed to find floor for {spot.name}");
+            return null;
+        }
+
+        var detailInfo = new DetailInfo()
+        {
+            position = astroObject.transform.InverseTransformPoint(hitInfo.point),
+            rotation = spot.localEulerAngles,
+            scale = animator.transform.lossyScale.x,
+        };
+
+        var clone = DetailBuilder.Make(astroObject.gameObject, astroObject.GetRootSector(), animator.gameObject, detailInfo);
+        astroObject.GetRootSector().OnOccupantEnterSector.Invoke(Locator.GetPlayerSectorDetector());
+        clone.transform.SetParent(spot);
+
+        parent.gameObject.SetActive(false);
+
+        return clone;
     }
 
     private void CreateWife(CharacterDialogueTree character, int characterIndex)

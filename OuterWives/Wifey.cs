@@ -59,7 +59,7 @@ public class Wifey: MonoBehaviour
 
     private void GetMarried()
     {
-        NotificationManager.SharedInstance.PostNotification(new NotificationData($"You got married to {Id}"), false);
+        WifeManager.Instance.GetMarried(this);
     }
 
     private void CreateDesires()
