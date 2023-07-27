@@ -44,7 +44,12 @@ public class WifeManager: MonoBehaviour
         for (var characterIndex = 0; characterIndex < characters.Array.Count; characterIndex++)
         {
             var character = characters.Array[characterIndex];
-            if (_characterBlockList.Contains(character._characterName)) continue;
+
+            if (_characterBlockList.Contains(character._characterName)
+                || character.transform.parent.GetComponent<Sector>())
+            {
+                continue;
+            }
 
             CreateWife(character, characterIndex);
         }
@@ -64,6 +69,7 @@ public class WifeManager: MonoBehaviour
         var stage = instance.transform.Find("Stage/Cylinder");
         var guests = characterSlots.Find("Guests");
         var characters = ThingFinder.Instance.GetCharacters().Array
+            .Where(character => !character.transform.parent.GetComponent<Sector>())
             .GroupBy(character => character._characterName)
             .Select(group => group.Last()).ToArray();
 
@@ -142,8 +148,6 @@ public class WifeManager: MonoBehaviour
         foreach (var childComponent in obj.GetComponentsInChildren<MonoBehaviour>())
         {
             if (_allowedTypes.Any(type => type.IsAssignableFrom(childComponent.GetType()))) continue;
-
-            OuterWives.Log($"Destroying component {childComponent}");
             Destroy(childComponent);
         }
     }

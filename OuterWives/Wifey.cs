@@ -10,7 +10,7 @@ namespace OuterWives;
 
 public class Wifey: MonoBehaviour
 {
-    public List<IDesire> Desires { get; private set; } = new();
+    public readonly List<IDesire> Desires = new();
     public int Index { get; private set; }
 
     public CharacterDialogueTree Character { get; private set; }
