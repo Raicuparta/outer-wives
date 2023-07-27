@@ -1,8 +1,10 @@
 ﻿using OuterWives.Desires;
 using OuterWives.Extensions;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace OuterWives;
 
@@ -54,12 +56,7 @@ public class Wifey: MonoBehaviour
     {
         if (!WifeConditions.Get(TextIds.Conditions.GettingMarried, this)) return;
 
-        GetMarried();
-    }
-
-    private void GetMarried()
-    {
-        WifeManager.Instance.GetMarried(this);
+        StartGetMarriedCoroutine();
     }
 
     private void CreateDesires()
@@ -163,5 +160,19 @@ public class Wifey: MonoBehaviour
     public override string ToString()
     {
         return $"{Id} ({DisplayName}): {string.Join(", ", Desires.Select(desire => $"{desire.TextId}={desire.DisplayName}"))}";
+    }
+
+    private void StartGetMarriedCoroutine()
+    {
+        StartCoroutine(GetMarried());
+    }
+
+    private IEnumerator GetMarried()
+    {
+        var effectController = Locator.GetPlayerCamera().GetComponent<PlayerCameraEffectController>();
+        effectController.CloseEyes(1f);
+        yield return new WaitForSeconds(1f);
+        WifeManager.Instance.GetMarried(this);
+        effectController.OpenEyes(1f);
     }
 }

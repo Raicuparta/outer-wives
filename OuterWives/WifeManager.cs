@@ -12,6 +12,8 @@ using System.Linq;
 using UnityEngine;
 using NewHorizons.Handlers;
 using OuterWives.Extensions;
+using UnityEngine.InputSystem.HID;
+using System;
 
 namespace OuterWives;
 
@@ -110,7 +112,15 @@ public class WifeManager: MonoBehaviour
             scale = animator.transform.lossyScale.x,
         };
 
+        animator.gameObject.SetActive(false);
         var clone = DetailBuilder.Make(astroObject.gameObject, astroObject.GetRootSector(), animator.gameObject, detailInfo);
+        DestroyComponents(clone);
+        foreach (Transform child in clone.transform)
+        {
+            DestroyComponents(child.gameObject);
+        }
+        clone.SetActive(true);
+
         clone.GetComponent<Animator>().runtimeAnimatorController = animatorController;
         astroObject.GetRootSector().OnOccupantEnterSector.Invoke(Locator.GetPlayerSectorDetector());
         clone.transform.SetParent(spot);
@@ -118,6 +128,24 @@ public class WifeManager: MonoBehaviour
         parent.gameObject.SetActive(false);
 
         return clone;
+    }
+
+    private readonly Type[] _allowedTypes = new[]
+    {
+        typeof(StreamingMeshHandle),
+        typeof(OWRenderer),
+        typeof(CullGroup),
+    };
+
+    private void DestroyComponents(GameObject obj)
+    {
+        foreach (var childComponent in obj.GetComponentsInChildren<MonoBehaviour>())
+        {
+            if (_allowedTypes.Any(type => type.IsAssignableFrom(childComponent.GetType()))) continue;
+
+            OuterWives.Log($"Destroying component {childComponent}");
+            Destroy(childComponent);
+        }
     }
 
     private void CreateWife(CharacterDialogueTree character, int characterIndex)
