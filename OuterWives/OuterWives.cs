@@ -1,14 +1,17 @@
 ﻿using System.Reflection;
 using HarmonyLib;
+using NewHorizons.Utility;
 using OWML.Common;
 using OWML.ModHelper;
+using UnityEngine;
 
 namespace OuterWives;
 
 public class OuterWives : ModBehaviour
 {
-
-    public static IModHelper Helper;
+    public static IModHelper Helper { get; private set; }
+    public static AssetBundle Assets { get; private set; }
+    public static OuterWives Instance { get; internal set; }
 
     public static void Log(string text)
     {
@@ -22,9 +25,7 @@ public class OuterWives : ModBehaviour
 
     protected void Awake()
     {
-        // You won't be able to access OWML's mod helper in Awake.
-        // So you probably don't want to do anything here.
-        // Use Start() instead.
+        Instance = this;
     }
 
     protected void Start()
@@ -32,6 +33,8 @@ public class OuterWives : ModBehaviour
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
 
         Helper = ModHelper;
+
+        Assets = ModHelper.Assets.LoadBundle("Assets/outer-wives");
 
         LoadManager.OnCompleteSceneLoad += (scene, loadScene) =>
         {
