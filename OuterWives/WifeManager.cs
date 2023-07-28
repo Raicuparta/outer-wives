@@ -80,15 +80,17 @@ public class WifeManager: MonoBehaviour
 
         var guestIndex = 0;
 
-        var wifeClone = CloneCharacter(wife.Character, timberHearth, characterSlots.Find("WifeA"), animatorControllers.Get(0));
-
         for (var characterIndex = 0; characterIndex < characters.Length; characterIndex++)
         {
             var character = characters[characterIndex];
+            var animatorController = animatorControllers.Get(characterIndex);
+            if (character == wife.Character)
+            {
+                CloneCharacter(character, timberHearth, characterSlots.Find("WifeA"), animatorController, stage);
+                continue;
+            }
             var guestSlot = guests.GetChild(guestIndex);
-
-            if (character == wife.Character) continue;
-            var clone = CloneCharacter(character, timberHearth, guestSlot, animatorControllers.Get(characterIndex), stage);
+            CloneCharacter(character, timberHearth, guestSlot, animatorController, stage);
 
             guestIndex++;
             if (guestIndex >= guests.childCount)
@@ -140,6 +142,11 @@ public class WifeManager: MonoBehaviour
         DestroyComponents(clone);
         foreach (Transform child in clone.transform)
         {
+            // Remove character chairs, stand up you lazy bastards.
+            if (child.name.EndsWith("_Rocker"))
+            {
+                child.gameObject.SetActive(false);
+            }
             DestroyComponents(child.gameObject);
         }
         clone.SetActive(true);
