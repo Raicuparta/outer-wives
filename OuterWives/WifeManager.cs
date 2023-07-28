@@ -68,12 +68,15 @@ public class WifeManager: MonoBehaviour
             .First(animatorController => animatorController.name == _runtimeAnimatorName);
 
         var guestIndex = 0;
+
+        var wifeClone = CloneCharacter(wife.Character, timberHearth, characterSlots.Find("WifeA"), animatorController);
+
         foreach (var character in characters)
         {
             var guestSlot = guests.GetChild(guestIndex);
 
             if (character == wife.Character) continue;
-            var clone = CloneCharacter(character, timberHearth, guestSlot, animatorController);
+            var clone = CloneCharacter(character, timberHearth, guestSlot, animatorController, stage);
 
             guestIndex++;
             if (guestIndex >= guests.childCount)
@@ -81,11 +84,9 @@ public class WifeManager: MonoBehaviour
                 break;
             };
         }
-
-        CloneCharacter(wife.Character, timberHearth, characterSlots.Find("WifeA"), animatorController);
     }
 
-    private GameObject CloneCharacter(CharacterDialogueTree character, AstroObject astroObject, Transform slot, RuntimeAnimatorController animatorController)
+    private GameObject CloneCharacter(CharacterDialogueTree character, AstroObject astroObject, Transform slot, RuntimeAnimatorController animatorController, Transform lookAt = null)
     {
         var parent = character.transform.parent;
         var animator = parent.GetComponentInChildren<Animator>();
@@ -103,6 +104,11 @@ public class WifeManager: MonoBehaviour
         }
 
         slot.position = hitInfo.point;
+        if (lookAt)
+        {
+            var forward = Vector3.ProjectOnPlane(lookAt.position - slot.position, hitInfo.normal);
+            slot.rotation = Quaternion.LookRotation(forward, hitInfo.normal);
+        }
 
         var detailInfo = new DetailInfo()
         {
