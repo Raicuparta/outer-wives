@@ -30,7 +30,7 @@ public abstract class Desire<TBehaviour> : MonoBehaviour, IDesire where TBehavio
         return GetId(otherObject) == GetId(ObjectBehaviour);
     }
 
-    protected void Start()
+    protected virtual void Start()
     {
         ObjectBehaviour = GetObjectBehaviour();
         ObjectBehaviour.gameObject.GetAddComponent<WarpTarget>();
