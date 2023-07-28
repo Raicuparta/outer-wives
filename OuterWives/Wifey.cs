@@ -115,7 +115,7 @@ public class Wifey: MonoBehaviour
         {
             foreach (var optionDesire in Desires)
             {
-                if (Desires == Desires) continue;
+                if (nodeDesire == optionDesire) continue;
                 desireNodes[nodeDesire.TextId].AddOption(desireOptions[optionDesire.TextId]);
             }
         }
