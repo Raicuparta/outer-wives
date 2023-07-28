@@ -23,9 +23,9 @@
   "ACCEPT_STONE_1": "Obrigado! Este desenho de $STONE_PREFERENCE$ é realmente bonito.",
   "ACCEPT_MUSIC_1": "Que música linda! Eu sempre amo ouvir música de $MUSIC_PREFERENCE$.",
 
-  "INFORMATION_PHOTO": "$CHARACTER_NAME$ fotografado(a)",
-  "INFORMATION_MUSIC": "$CHARACTER_NAME$ ouviu música $MUSIC_PREFERENCE$",
-  "INFORMATION_MARRIED": "$CHARACTER_NAME$ se casou",
+  "INFORMATION_PHOTO": "$CHARACTER_NAME$ fotografado",
+  "INFORMATION_MUSIC": "Você tocou música de $MUSIC_PREFERENCE$ para $CHARACTER_NAME$",
+  "INFORMATION_MARRIED": "Você se casou com $CHARACTER_NAME$",
 
   "INSTRUMENT_FLUTE": "Flauta",
   "INSTRUMENT_BANJO": "Banjo",
