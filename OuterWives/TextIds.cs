@@ -30,6 +30,8 @@ public static class TextIds
         public const string Photo = "PHOTO";
         public const string Stone = "STONE";
         public const string Music = "MUSIC";
+        public static string Item = "ITEM";
+
         public static string Instrument(MusicDesire musicDesire) => Join("INSTRUMENT", musicDesire.ObjectId.ToUpperInvariant());
     }
 

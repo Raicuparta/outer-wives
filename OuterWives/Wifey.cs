@@ -63,6 +63,7 @@ public class Wifey: MonoBehaviour
         Desires.Add(PhotoDesire.Create<PhotoDesire>(this));
         Desires.Add(StoneDesire.Create<StoneDesire>(this));
         Desires.Add(MusicDesire.Create<MusicDesire>(this));
+        Desires.Add(ItemDesire.Create<ItemDesire>(this));
     }
 
     private void SetUpAnimator()

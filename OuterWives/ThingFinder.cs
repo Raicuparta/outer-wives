@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using OuterWives.Extensions;
 using UnityEngine;
 using UnityEngine.InputSystem.Utilities;
@@ -23,9 +24,18 @@ public class ThingFinder: MonoBehaviour
         CharacterDialogueTree.SIGN_NAME,
     };
 
+    private readonly ItemType[] _allowedItemTypes = new[]
+    {
+        ItemType.WarpCore,
+        ItemType.SlideReel,
+        ItemType.Scroll,
+        ItemType.Lantern,
+    };
+
     private ShuffledArray<SharedStone> _stones;
     private ShuffledArray<AudioSignal> _musicSignals;
     private ShuffledArray<CharacterDialogueTree> _characters;
+    private ShuffledArray<OWItem> _items;
 
     public static void Create()
     {
@@ -78,5 +88,22 @@ public class ThingFinder: MonoBehaviour
     {
         InitializeCharacters();
         return _characters;
+    }
+
+    private void InitializeItems()
+    {
+        if (_items != null) return;
+
+        _items = Resources.FindObjectsOfTypeAll<OWItem>()
+            .Where(item => _allowedItemTypes.Any(allowedType => allowedType == item.GetItemType()))
+            .GroupBy(item => item.GetItemType().ToString())
+            .Select(group => group.First())
+            .ToShuffledArray();
+    }
+
+    public ShuffledArray<OWItem> GetItems()
+    {
+        InitializeItems();
+        return _items;
     }
 }

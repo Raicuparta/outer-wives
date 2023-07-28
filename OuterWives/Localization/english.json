@@ -10,18 +10,22 @@
   "PROPOSE_PHOTO": "What if I bring you a nice picture?",
   "PROPOSE_STONE": "What if I bring you a nice stone with a drawing on it?",
   "PROPOSE_MUSIC": "What if I play some nice music for you?",
+  "PROPOSE_ITEM": "What if I bring you some other cool gift?",
 
   "REQUEST_PHOTO_1": "Yes, that could work. I would love to see a picture of my beloved $PHOTO_PREFERENCE$",
   "REQUEST_STONE_1": "Yes, that could work. I would love to have a stone with a drawing of $STONE_PREFERENCE$",
   "REQUEST_MUSIC_1": "Yes, that could work. I would love to hear some $MUSIC_PREFERENCE$ music",
+  "REQUEST_ITEMa_1": "Yes, that could work. I would love to have a $ITEM_PREFERENCE$",
 
   "PRESENT_PHOTO": "I got that picture you wanted.",
   "PRESENT_STONE": "What do you think of this cool rock I found?",
   "PRESENT_MUSIC": "Did you hear the music from my signal scope?",
+  "PRESENT_ITEM": "I have a gift for you!",
 
   "ACCEPT_PHOTO_1": "This is exactly what I wanted! $PHOTO_PREFERENCE$ looks so cute in this one!",
   "ACCEPT_STONE_1": "Thank you! This drawing of $STONE_PREFERENCE$ is really nice.",
   "ACCEPT_MUSIC_1": "What a beautiful song! I always love to hear some $MUSIC_PREFERENCE$.",
+  "ACCEPT_ITEM_1": "Wow thanks! I love this $ITEM_PREFERENCE$",
 
   "INFORMATION_PHOTO": "Photographed $CHARACTER_NAME$",
   "INFORMATION_MUSIC": "Played $MUSIC_PREFERENCE$ music for $CHARACTER_NAME$",
