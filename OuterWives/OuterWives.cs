@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using HarmonyLib;
-using NewHorizons.Utility;
 using OWML.Common;
 using OWML.ModHelper;
 using UnityEngine;
@@ -48,34 +47,15 @@ public class OuterWives : ModBehaviour
             }, 100); // TODO ewww
         };
     }
+
+    public static void Notify(string text)
+    {
+        if (NotificationManager.SharedInstance == null)
+        {
+            Error("Tried to send notification, but notification manager instance is null.");
+            return;
+        }
+
+        NotificationManager.SharedInstance.PostNotification(new NotificationData(text));
+    }
 }
-
-
-/*
-
-Items
-
-- Slide Reel (specify by slide?).
-- Scroll (specify by text?).
-- Projection Stone (specify by picture?).
-- Solanum stones: (PROBLEM: they unload once you leave QM?)
-	- Me (self's helmet)
-	- Identify (nomai without mask)
-	- Explain (nomai with mask)
-	- You (nomai mask)
-	- Eye of the Universe
-	- Quantum Moon
-- Owlk artifact (normal vs broken?).
-- Owlk lantern.
-- Owlk vision torch (PROBLEM: can't get it out in normal game)
-- Warp core (small ones? big ones? what's the difference).
-
-Picture
-
-Characters could have a favorite thing/location/person, and you need to take a picture of it with the scout and show them.
-
-Music
-
-Characters could have a favorite instrument, and you have to use the signal scope to make them hear it.
-
-*/

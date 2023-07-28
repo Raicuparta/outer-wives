@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace OuterWives;
 
@@ -193,9 +192,11 @@ public class Wifey: MonoBehaviour
 
         var gameOverController = FindObjectOfType<GameOverController>();
 
-        // TODO translate
+        gameOverController._deathText.text = TranslationManager.Instance.GetText(TextIds.Information.Married, new()
+        {
+            { TextIds.Tokens.CharacterName, DisplayName }
         // This has to be upper case because this font doesn't support accented characters in lowercase for some reason.
-        gameOverController._deathText.text = $"You got married to {DisplayName}".ToUpper();
+        }).ToUpper();
         gameOverController.SetupGameOverScreen(5f);
         gameOverController._loading = true;
 

@@ -5,8 +5,6 @@ using System.Linq;
 using UnityEngine;
 using System;
 using OuterWives.Extensions;
-using UnityEngine.SceneManagement;
-using System.Collections;
 
 namespace OuterWives;
 

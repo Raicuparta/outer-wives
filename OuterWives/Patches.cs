@@ -1,14 +1,21 @@
 ﻿using HarmonyLib;
 using OuterWives.Desires;
+using System.Collections.Generic;
 
 namespace OuterWives;
 
 [HarmonyPatch]
 public static class Patches
 {
-    private static void SetPreferenceText(ref string original, IDesire desire)
+    private static string ReplaceDesireTokens(string text, List<IDesire> desires)
     {
-        original = original.Replace(TextIds.Tokens.Preference(desire), $"<color=orange>{desire.DisplayName}</color>");
+        var tokenToValue = new Dictionary<string, string>();
+        foreach (var desire in desires)
+        {
+            tokenToValue[TextIds.Tokens.Preference(desire)] = $"<color=orange>{desire.DisplayName}</color>";
+        }
+
+        return TranslationManager.ReplaceTokens(text, tokenToValue);
     }
 
     [HarmonyPrefix, HarmonyPatch(typeof(TextTranslation), nameof(TextTranslation.Translate))]
@@ -36,10 +43,7 @@ public static class Patches
                 return true;
             }
 
-            foreach (var desire in wife.Desires)
-            {
-                SetPreferenceText(ref __result, desire);
-            }
+            __result = ReplaceDesireTokens(__result, wife.Desires);
         }
 
         return false;

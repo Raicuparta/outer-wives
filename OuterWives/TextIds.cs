@@ -22,6 +22,7 @@ public static class TextIds
     public static class Tokens
     {
         public static string Preference(IDesire desire) => $"${Join(desire.TextId, "PREFERENCE")}$";
+        public const string CharacterName = "$CHARACTER_NAME$";
     }
 
     public static class Desires
@@ -46,6 +47,14 @@ public static class TextIds
 
         public const string ReadyToMarry = "READY_TO_MARRY";
         public const string GettingMarried = "GETTING_MARRIED";
+    }
+
+    public static class Information
+    {
+        private const string Base = "INFORMATION";
+        public static string Music => Join(Base, Desires.Music);
+        public static string Photo => Join(Base, Desires.Photo);
+        public static string Married => Join(Base, "MARRIED");
     }
 
     private static string Join(params string[] ids)

@@ -56,7 +56,6 @@ public class PhotoManager : MonoBehaviour
     private void OnProbeSnapshot(ProbeCamera camera)
     {
         Reset();
-        string notificationText = null;
         foreach (var character in _characters.Array)
         {
             if (character.IsInShot(camera))
@@ -67,9 +66,10 @@ public class PhotoManager : MonoBehaviour
 
         if (_charactersInShot.Count == 0) return;
 
-        // TODO: Localize "photographed".
-        notificationText = $"Photographed {string.Join(", ", _charactersInShot.Select(character => character.DisplayName))}";
-        NotificationManager.SharedInstance.PostNotification(new NotificationData(notificationText), false);
+        OuterWives.Notify(TranslationManager.Instance.GetText(TextIds.Information.Photo, new()
+        {
+            { TextIds.Tokens.CharacterName, string.Join(", ", _charactersInShot.Select(character => character.DisplayName)) },
+        }));
     }
 
     private void Reset()

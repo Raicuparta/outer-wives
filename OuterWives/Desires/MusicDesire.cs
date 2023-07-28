@@ -41,8 +41,11 @@ public class MusicDesire : Desire<AudioSignal>
         if (Wife.Active && IsMusicPreferencePlaying() && IsNearPlayer())
         {
             WifeConditions.Set(condition, true, Wife);
-            // TODO translate
-            NotificationManager.SharedInstance.PostNotification(new NotificationData($"Played {DisplayName} music near {Wife.DisplayName}"));
+            OuterWives.Notify(TranslationManager.Instance.GetText(TextIds.Information.Music, new()
+            {
+                { TextIds.Tokens.Preference(this), DisplayName },
+                { TextIds.Tokens.CharacterName, Wife.DisplayName },
+            }));
         }
     }
 

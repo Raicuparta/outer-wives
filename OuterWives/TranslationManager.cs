@@ -30,15 +30,29 @@ public class TranslationManager: MonoBehaviour
         return OuterWives.Helper.Storage.Load<Dictionary<string, string>>($"Localization/{language}.json");
     }
 
+    public string GetText(string key, Dictionary<string, string> tokenToValue)
+    {
+        return ReplaceTokens(GetText(key), tokenToValue);
+    }
+
     public string GetText(string key)
     {
         if (_translation == null) InitializeTranslation();
 
         _translation.TryGetValue(key, out var text);
 
-        if (text == null)
-        _defaultTranslation.TryGetValue(key, out text);
+        if (text == null) _defaultTranslation.TryGetValue(key, out text);
 
         return text;
+    }
+
+    public static string ReplaceTokens(string text, Dictionary<string, string> tokenToValue)
+    {
+        var result = text;
+        foreach (var entry in tokenToValue)
+        {
+            result = result.Replace(entry.Key, entry.Value);
+        }
+        return result;
     }
 }
