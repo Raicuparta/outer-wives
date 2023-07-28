@@ -27,12 +27,28 @@ public class MusicDesire : Desire<AudioSignal>
         var signalscope = Locator.GetToolModeSwapper().GetSignalScope();
         signalscope.UpdateAudioSignals();
         signalscope.SelectFrequency(SignalFrequency.Traveler);
-        var travelerSignal = signalscope.GetStrongestSignal();
-        if (travelerSignal == null || !travelerSignal.CanBePickedUpByScope())
+
+        if (!CanPickUpSignal())
         {
             // Can't get signals in some places, so if we're in there, we'll skip this desire.
             WifeConditions.Set(TextIds.Conditions.Accepted(this), true, Wife);
         }
+    }
+
+    private bool CanPickUpSignal()
+    {
+        if (ObjectBehaviour.CanBePickedUpByScope()) return true;
+
+        // There are multiple copies of the same signal, so we need to check them all.
+        foreach (var signal in Resources.FindObjectsOfTypeAll<AudioSignal>())
+        {
+            if (signal.GetName() == ObjectBehaviour.GetName() && signal.CanBePickedUpByScope())
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     protected void Update()
