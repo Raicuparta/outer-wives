@@ -12,7 +12,8 @@ public class PhotoManager : MonoBehaviour
     private readonly List<PhotogenicCharacter> _charactersInShot = new();
     private readonly string[] _characterBlockList = new[]
     {
-        "the Prisoner"
+        "the Prisoner", // Can't really get to them and come back out alive without cheating.
+        "Self" // Because the dialog can be confusing, especially in some languages other than english.
     };
     private ShuffledArray<PhotogenicCharacter> _characters;
 
