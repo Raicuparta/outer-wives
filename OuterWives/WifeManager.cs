@@ -5,6 +5,8 @@ using System.Linq;
 using UnityEngine;
 using System;
 using OuterWives.Extensions;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 namespace OuterWives;
 
@@ -56,11 +58,11 @@ public class WifeManager: MonoBehaviour
         OuterWives.Helper.Events.Unity.FireInNUpdates(() =>
         {
             LogWives();
-            GetMarried(_wives.First().Value);
+            SetUpAltar(_wives.First().Value);
         }, 100);
     }
 
-    public void GetMarried(Wifey wife)
+    public void SetUpAltar(Wifey wife)
     {
         var prefab = OuterWives.Assets.LoadAsset<GameObject>("OuterWives");
         var timberHearth = Locator.GetAstroObject(AstroObject.Name.TimberHearth);
@@ -86,7 +88,15 @@ public class WifeManager: MonoBehaviour
             var animatorController = animatorControllers.Get(characterIndex);
             if (character == wife.Character)
             {
-                CloneCharacter(character, timberHearth, characterSlots.Find("WifeA"), animatorController, stage);
+                var wifeSlot = characterSlots.Find("WifeA");
+                var wifeClone = CloneCharacter(character, timberHearth, characterSlots.Find("WifeA"), animatorController, stage);
+                wifeClone.layer = LayerMask.NameToLayer("Interactible");
+                var interactReceiver = wifeSlot.GetComponentInChildren<Collider>().gameObject.GetAddComponent<InteractReceiver>();
+                interactReceiver.OnPressInteract += () =>
+                {
+                    StartCoroutine(wife.Marry());
+                };
+                interactReceiver.SetPromptText(UITextType.TalkPrompt);
                 continue;
             }
             var guestSlot = guests.GetChild(guestIndex);

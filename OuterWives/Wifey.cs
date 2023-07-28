@@ -164,15 +164,42 @@ public class Wifey: MonoBehaviour
 
     private void StartGetMarriedCoroutine()
     {
-        StartCoroutine(GetMarried());
+        StartCoroutine(GoToAltar());
     }
 
-    private IEnumerator GetMarried()
+    private IEnumerator GoToAltar()
     {
         var effectController = Locator.GetPlayerCamera().GetComponent<PlayerCameraEffectController>();
         effectController.CloseEyes(1f);
         yield return new WaitForSeconds(1f);
-        WifeManager.Instance.GetMarried(this);
+        WifeManager.Instance.SetUpAltar(this);
         effectController.OpenEyes(1f);
+    }
+
+    public IEnumerator Marry()
+    {
+        OWInput.ChangeInputMode(InputMode.None);
+        ReticleController.Hide();
+        Locator.GetPromptManager().SetPromptsVisible(false);
+        Locator.GetPauseCommandListener().AddPauseCommandLock();
+
+        Locator.GetDeathManager()._isDead = true;
+
+        var playerCameraEffectController = Locator.GetPlayerCameraController().GetComponent<PlayerCameraEffectController>();
+
+        playerCameraEffectController.OnPlayerDeath(DeathType.Meditation);
+
+        yield return new WaitForSeconds(playerCameraEffectController._deathFadeLength);
+
+        var gameOverController = FindObjectOfType<GameOverController>();
+
+        // TODO translate
+        gameOverController._deathText.text = $"You got married to {DisplayName}";
+        gameOverController.SetupGameOverScreen(5f);
+        gameOverController._loading = true;
+
+        yield return new WaitUntil(() => gameOverController._fadedOutText && gameOverController._textAnimator.IsComplete());
+
+        LoadManager.LoadScene(LoadManager.GetCurrentScene());
     }
 }
