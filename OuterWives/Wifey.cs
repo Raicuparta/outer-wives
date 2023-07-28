@@ -196,7 +196,7 @@ public class Wifey: MonoBehaviour
         {
             { TextIds.Tokens.CharacterName, DisplayName }
         // This has to be upper case because this font doesn't support accented characters in lowercase for some reason.
-        }).ToUpper();
+        }).ToUpperInvariant();
         gameOverController.SetupGameOverScreen(5f);
         gameOverController._loading = true;
 

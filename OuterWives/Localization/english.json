@@ -27,5 +27,11 @@
   "INFORMATION_MUSIC": "Played $MUSIC_PREFERENCE$ music for $CHARACTER_NAME$",
   "INFORMATION_MARRIED": "You have married $CHARACTER_NAME$",
 
+  "INSTRUMENT_FLUTE": "Flute",
+  "INSTRUMENT_BANJO": "Banjo",
+  "INSTRUMENT_WHISTELING": "Whisteling",
+  "INSTRUMENT_HARMONICA": "Harmonica",
+  "INSTRUMENT_DRUMS": "Drums",
+
   "OK": "k bye"
 }

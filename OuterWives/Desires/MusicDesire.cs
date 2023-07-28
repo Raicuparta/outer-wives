@@ -5,15 +5,13 @@ namespace OuterWives.Desires;
 public class MusicDesire : Desire<AudioSignal>
 {
     public override string TextId => TextIds.Desires.Music;
-    // TODO this is not localized, but I doubt there's anywhere in the game that translates just the instrument.
-    // Might need to add it to the translation files.
-    public override string DisplayName => ObjectBehaviour.name.Replace("Signal_", "");
+    public override string DisplayName => TranslationManager.Instance.GetText(TextIds.Desires.Instrument(this));
 
     private readonly float _playerNearbySquareDistance = 25f;
 
     protected override string GetId(AudioSignal signal)
     {
-        return signal.name;
+        return signal.name.Replace("Signal_", "");
     }
 
     protected override AudioSignal GetObjectBehaviour()
