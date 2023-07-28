@@ -13,7 +13,7 @@ public class ShuffledArray<TObject> where TObject: Object
     private static Random.State _randomState;
 
     public readonly ReadOnlyArray<TObject> Array;
-    private readonly Dictionary<int, int> _wifeToIndexMap = new();
+    private readonly Dictionary<int, int> _indexToRandom = new();
 
     private int _index;
 
@@ -35,20 +35,20 @@ public class ShuffledArray<TObject> where TObject: Object
         Random.state = _randomState;
     }
 
-    private int GetNextIndex()
+    private int GetNextRandomIndex()
     {
         var index = _index;
         _index = (_index + 1) % Array.Count;
         return index;
     }
 
-    public TObject Get(int wifeIndex)
+    public TObject Get(int index)
     {
-        var hasValue = _wifeToIndexMap.TryGetValue(wifeIndex, out var index);
+        var hasValue = _indexToRandom.TryGetValue(index, out var randomIndex);
         if (!hasValue)
         {
-            index = _wifeToIndexMap[wifeIndex] = GetNextIndex();
+            randomIndex = _indexToRandom[index] = GetNextRandomIndex();
         }
-        return Array[index];
+        return Array[randomIndex];
     }
 }

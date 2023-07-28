@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using System;
+using OuterWives.Extensions;
 
 namespace OuterWives;
 
@@ -13,20 +14,29 @@ public class WifeManager: MonoBehaviour
 
     private readonly Dictionary<string, Wifey> _wives = new();
     private readonly string[] _characterBlockList = new[]
-{
+    {
         "Tephra",
         "Arkose",
         "Galena",
         "Moraine",
         "Mica",
     };
+    private readonly string[] _guestAnimatorControllers = new[]
+    {
+        "Villager_Tektite",
+        "Villager_Arkose",
+        "Villager_Marl",
+        "Villager_Galena",
+        "Villager_Hal_Museum",
+        "Villager_Mica",
+        "Villager_Spinel",
+    };
+    private GameObject _weddingAssetInstance;
 
     public static void Create()
     {
         Instance = new GameObject(nameof(WifeManager)).AddComponent<WifeManager>();
     }
-
-    private readonly string _runtimeAnimatorName = "Villager_Arkose";
 
     private void Start()
     {
@@ -46,6 +56,7 @@ public class WifeManager: MonoBehaviour
         OuterWives.Helper.Events.Unity.FireInNUpdates(() =>
         {
             LogWives();
+            GetMarried(_wives.First().Value);
         }, 100);
     }
 
@@ -54,29 +65,30 @@ public class WifeManager: MonoBehaviour
         var prefab = OuterWives.Assets.LoadAsset<GameObject>("OuterWives");
         var timberHearth = Locator.GetAstroObject(AstroObject.Name.TimberHearth);
 
-        var instance = Instantiate(prefab, timberHearth.transform);
-        var characterSlots = instance.transform.Find("CharacterSlots");
-        var stage = instance.transform.Find("Stage/Cylinder");
+        _weddingAssetInstance = Instantiate(prefab, timberHearth.transform);
+        var characterSlots = _weddingAssetInstance.transform.Find("CharacterSlots");
+        var stage = _weddingAssetInstance.transform.Find("Stage/Cylinder");
         var guests = characterSlots.Find("Guests");
         var characters = ThingFinder.Instance.GetCharacters().Array
             .Where(character => !character.transform.parent.GetComponent<Sector>())
             .GroupBy(character => character._characterName)
             .Select(group => group.Last()).ToArray();
 
-        var animatorController = characters
+        var animatorControllers = characters
             .Select(character => character.transform.parent.GetComponentInChildren<Animator>()?.runtimeAnimatorController)
-            .First(animatorController => animatorController.name == _runtimeAnimatorName);
+            .Where(animatorController => _guestAnimatorControllers.Contains(animatorController.name)).ToShuffledArray();
 
         var guestIndex = 0;
 
-        var wifeClone = CloneCharacter(wife.Character, timberHearth, characterSlots.Find("WifeA"), animatorController);
+        var wifeClone = CloneCharacter(wife.Character, timberHearth, characterSlots.Find("WifeA"), animatorControllers.Get(0));
 
-        foreach (var character in characters)
+        for (var characterIndex = 0; characterIndex < characters.Length; characterIndex++)
         {
+            var character = characters[characterIndex];
             var guestSlot = guests.GetChild(guestIndex);
 
             if (character == wife.Character) continue;
-            var clone = CloneCharacter(character, timberHearth, guestSlot, animatorController, stage);
+            var clone = CloneCharacter(character, timberHearth, guestSlot, animatorControllers.Get(characterIndex), stage);
 
             guestIndex++;
             if (guestIndex >= guests.childCount)
@@ -133,6 +145,7 @@ public class WifeManager: MonoBehaviour
         clone.SetActive(true);
 
         clone.GetComponent<Animator>().runtimeAnimatorController = animatorController;
+
         astroObject.GetRootSector().OnOccupantEnterSector.Invoke(Locator.GetPlayerSectorDetector());
         clone.transform.SetParent(slot);
 
@@ -178,4 +191,29 @@ public class WifeManager: MonoBehaviour
         }
         OuterWives.Log("## End Logging Wives ##");
     }
+
+    private void DebugAnimations(string runtimeAnimatorName)
+    {
+        var characters = ThingFinder.Instance.GetCharacters();
+
+        var animatorController = characters.Array
+            .Select(character => character.transform.parent.GetComponentInChildren<Animator>(true)?.runtimeAnimatorController)
+            .First(animatorController => animatorController.name == runtimeAnimatorName);
+
+        foreach (var animator in _weddingAssetInstance.GetComponentsInChildren<Animator>())
+        {
+            animator.runtimeAnimatorController = animatorController;
+        }
+    }
 }
+
+/*
+ * Villager_Tektite 
+ * Villager_Arkose
+ * Villager_Marl
+ * Villager_Galena
+ * Villager_Gossan
+ * Villager_Hal_Museum
+ * Villager_Mica
+ * Villager_Spinel
+ */
