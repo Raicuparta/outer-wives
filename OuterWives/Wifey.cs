@@ -194,7 +194,8 @@ public class Wifey: MonoBehaviour
         var gameOverController = FindObjectOfType<GameOverController>();
 
         // TODO translate
-        gameOverController._deathText.text = $"You got married to {DisplayName}";
+        // This has to be upper case because this font doesn't support accented characters in lowercase for some reason.
+        gameOverController._deathText.text = $"You got married to {DisplayName}".ToUpper();
         gameOverController.SetupGameOverScreen(5f);
         gameOverController._loading = true;
 
