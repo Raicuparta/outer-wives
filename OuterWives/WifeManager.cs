@@ -55,11 +55,11 @@ public class WifeManager: MonoBehaviour
 
             CreateWife(character, characterIndex);
         }
-        OuterWives.Helper.Events.Unity.FireInNUpdates(() =>
-        {
-            LogWives();
-            SetUpAltar(_wives.First().Value);
-        }, 100);
+        //OuterWives.Helper.Events.Unity.FireInNUpdates(() =>
+        //{
+        //    LogWives();
+        //    SetUpAltar(_wives.First().Value);
+        //}, 100);
     }
 
     public void SetUpAltar(Wifey wife)
