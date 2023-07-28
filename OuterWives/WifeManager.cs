@@ -1,18 +1,8 @@
-﻿using Epic.OnlineServices;
-using NewHorizons;
-using NewHorizons.Builder.Props;
-using NewHorizons.External.Modules;
+﻿using NewHorizons.Builder.Props;
 using NewHorizons.External.Modules.Props;
-using NewHorizons.External.SerializableData;
-using NewHorizons.Utility.OuterWilds;
-using NewHorizons.Utility.OWML;
-using NewHorizons.Utility;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using NewHorizons.Handlers;
-using OuterWives.Extensions;
-using UnityEngine.InputSystem.HID;
 using System;
 
 namespace OuterWives;
@@ -77,24 +67,25 @@ public class WifeManager: MonoBehaviour
             .Select(character => character.transform.parent.GetComponentInChildren<Animator>()?.runtimeAnimatorController)
             .First(animatorController => animatorController.name == _runtimeAnimatorName);
 
-        for (var guestIndex = 0; guestIndex < guests.childCount; guestIndex++)
+        var guestIndex = 0;
+        foreach (var character in characters)
         {
-            if (guestIndex >= _wives.Count) break;
-
-            var character = characters[guestIndex];
+            var guestSlot = guests.GetChild(guestIndex);
 
             if (character == wife.Character) continue;
+            var clone = CloneCharacter(character, timberHearth, guestSlot, animatorController);
 
-            var guestSpot = guests.GetChild(guestIndex);
-
-            var clone = CloneCharacter(character, timberHearth, guestSpot, animatorController);
-            if (!clone) continue;
+            guestIndex++;
+            if (guestIndex >= guests.childCount)
+            {
+                break;
+            };
         }
 
         CloneCharacter(wife.Character, timberHearth, characterSlots.Find("WifeA"), animatorController);
     }
 
-    private GameObject CloneCharacter(CharacterDialogueTree character, AstroObject astroObject, Transform spot, RuntimeAnimatorController animatorController)
+    private GameObject CloneCharacter(CharacterDialogueTree character, AstroObject astroObject, Transform slot, RuntimeAnimatorController animatorController)
     {
         var parent = character.transform.parent;
         var animator = parent.GetComponentInChildren<Animator>();
@@ -104,19 +95,27 @@ public class WifeManager: MonoBehaviour
             return null;
         }
 
-        var hit = Physics.Raycast(spot.position, -spot.up, out var hitInfo);
+        var hit = Physics.Raycast(slot.position, -slot.up, out var hitInfo);
         if (!hit)
         {
-            OuterWives.Error($"Failed to find floor for {spot.name}");
+            OuterWives.Error($"Failed to find floor for {slot.name}");
             return null;
         }
 
+        slot.position = hitInfo.point;
+
         var detailInfo = new DetailInfo()
         {
-            position = astroObject.transform.InverseTransformPoint(hitInfo.point),
-            rotation = spot.localEulerAngles,
+            position = slot.localPosition,
+            rotation = slot.localEulerAngles,
             scale = animator.transform.lossyScale.x,
         };
+
+        var collider = slot.GetComponentInChildren<Collider>();
+        if (collider)
+        {
+            collider.enabled = true;
+        }
 
         animator.gameObject.SetActive(false);
         var clone = DetailBuilder.Make(astroObject.gameObject, astroObject.GetRootSector(), animator.gameObject, detailInfo);
@@ -129,7 +128,7 @@ public class WifeManager: MonoBehaviour
 
         clone.GetComponent<Animator>().runtimeAnimatorController = animatorController;
         astroObject.GetRootSector().OnOccupantEnterSector.Invoke(Locator.GetPlayerSectorDetector());
-        clone.transform.SetParent(spot);
+        clone.transform.SetParent(slot);
 
         parent.gameObject.SetActive(false);
 

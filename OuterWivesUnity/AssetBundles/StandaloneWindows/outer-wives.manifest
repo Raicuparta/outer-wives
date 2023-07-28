@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 786893582
+CRC: 854835652
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 430c35c207f2f99019aab04cad86be0b
+    Hash: 5aa530bb07ac9511de35aeb64f94c68e
   TypeTreeHash:
     serializedVersion: 2
-    Hash: d3ad2cc8b7ec9a741e86c5ed55d2e1fb
+    Hash: d9685ac43c922d12943250a7f047d0d7
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -16,6 +16,8 @@ ClassTypes:
 - Class: 21
   Script: {instanceID: 0}
 - Class: 23
+  Script: {instanceID: 0}
+- Class: 28
   Script: {instanceID: 0}
 - Class: 33
   Script: {instanceID: 0}
@@ -29,5 +31,5 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/OuterWives.prefab
+- Assets/OuterWives/OuterWives.prefab
 Dependencies: []
