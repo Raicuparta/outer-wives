@@ -42,13 +42,21 @@ public class ShuffledArray<TObject> where TObject: Object
         return index;
     }
 
-    public TObject Get(int index)
+    public TObject Get(int index, TObject avoid = null)
     {
         var hasValue = _indexToRandom.TryGetValue(index, out var randomIndex);
         if (!hasValue)
         {
             randomIndex = _indexToRandom[index] = GetNextRandomIndex();
         }
-        return Array[randomIndex];
+
+        var value = Array[randomIndex];
+        if (value == avoid)
+        {
+            var avoidedIndex = _indexToRandom[index] = GetNextRandomIndex();
+            value = Array[avoidedIndex];
+        }
+
+        return value;
     }
 }

@@ -43,6 +43,8 @@ public class TranslationManager: MonoBehaviour
 
         if (text == null) _defaultTranslation.TryGetValue(key, out text);
 
+        if (text == null) return key;
+
         return text;
     }
 
