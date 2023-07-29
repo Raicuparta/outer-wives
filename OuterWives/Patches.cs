@@ -12,7 +12,7 @@ public static class Patches
         var tokenToValue = new Dictionary<string, string>();
         foreach (var desire in desires)
         {
-            tokenToValue[TextIds.Tokens.Preference(desire)] = $"<color=orange>{desire.DisplayName}</color>";
+            tokenToValue[TextIds.Tokens.Desire(desire)] = $"<color=orange>{desire.DisplayName}</color>";
         }
 
         return TranslationManager.ReplaceTokens(text, tokenToValue);

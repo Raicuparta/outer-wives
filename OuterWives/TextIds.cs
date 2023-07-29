@@ -21,7 +21,7 @@ public static class TextIds
 
     public static class Tokens
     {
-        public static string Preference(IDesire desire) => $"${Join(desire.TextId, "PREFERENCE")}$";
+        public static string Desire(IDesire desire) => $"${Join(desire.TextId, "DESIRE")}$";
         public const string CharacterName = "$CHARACTER_NAME$";
     }
 

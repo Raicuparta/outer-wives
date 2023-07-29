@@ -55,18 +55,18 @@ public class MusicDesire : Desire<AudioSignal>
     {
         var condition = TextIds.Conditions.Presented(this);
         if (WifeConditions.Get(condition, Wife)) return;
-        if (Wife.Active && IsMusicPreferencePlaying() && IsNearPlayer())
+        if (Wife.Active && IsMusicDesirePlaying() && IsNearPlayer())
         {
             WifeConditions.Set(condition, true, Wife);
             OuterWives.Notify(TranslationManager.Instance.GetText(TextIds.Information.Music, new()
             {
-                { TextIds.Tokens.Preference(this), DisplayName },
+                { TextIds.Tokens.Desire(this), DisplayName },
                 { TextIds.Tokens.CharacterName, Wife.DisplayName },
             }));
         }
     }
 
-    private bool IsMusicPreferencePlaying()
+    private bool IsMusicDesirePlaying()
     {
         var signalScope = Locator.GetToolModeSwapper().GetSignalScope();
         var signalStrength = signalScope.GetStrongestSignalStrength(AudioSignal.FrequencyToIndex(SignalFrequency.Traveler));

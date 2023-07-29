@@ -11,20 +11,20 @@
   "PROPOSE_STONE": "E se eu te trouxer uma pedra legal com um desenho nela?",
   "PROPOSE_MUSIC": "E se eu tocar uma música legal para você?",
 
-  "REQUEST_PHOTO_1": "Sim, isso pode funcionar. Eu adoraria ver uma foto do meu amado $PHOTO_PREFERENCE$",
-  "REQUEST_STONE_1": "Sim, isso pode funcionar. Eu adoraria ter uma pedra com um desenho de $STONE_PREFERENCE$",
-  "REQUEST_MUSIC_1": "Sim, isso pode funcionar. Eu adoraria ouvir música de $MUSIC_PREFERENCE$",
+  "REQUEST_PHOTO_1": "Sim, isso pode funcionar. Eu adoraria ver uma foto do meu amado $PHOTO_DESIRE$",
+  "REQUEST_STONE_1": "Sim, isso pode funcionar. Eu adoraria ter uma pedra com um desenho de $STONE_DESIRE$",
+  "REQUEST_MUSIC_1": "Sim, isso pode funcionar. Eu adoraria ouvir música de $MUSIC_DESIRE$",
 
   "PRESENT_PHOTO": "Eu consegui aquela foto que você queria.",
   "PRESENT_STONE": "O que você acha dessa pedra legal que eu encontrei?",
   "PRESENT_MUSIC": "Você ouviu a música do meu escopo de sinal?",
 
-  "ACCEPT_PHOTO_1": "Isso é exatamente o que eu queria! $PHOTO_PREFERENCE$ parece tão fofo nesta foto!",
-  "ACCEPT_STONE_1": "Obrigado! Este desenho de $STONE_PREFERENCE$ é realmente bonito.",
-  "ACCEPT_MUSIC_1": "Que música linda! Eu sempre amo ouvir música de $MUSIC_PREFERENCE$.",
+  "ACCEPT_PHOTO_1": "Isso é exatamente o que eu queria! $PHOTO_DESIRE$ parece tão fofo nesta foto!",
+  "ACCEPT_STONE_1": "Obrigado! Este desenho de $STONE_DESIRE$ é realmente bonito.",
+  "ACCEPT_MUSIC_1": "Que música linda! Eu sempre amo ouvir música de $MUSIC_DESIRE$.",
 
   "INFORMATION_PHOTO": "$CHARACTER_NAME$ fotografado",
-  "INFORMATION_MUSIC": "Você tocou música de $MUSIC_PREFERENCE$ para $CHARACTER_NAME$",
+  "INFORMATION_MUSIC": "Você tocou música de $MUSIC_DESIRE$ para $CHARACTER_NAME$",
   "INFORMATION_MARRIED": "Você se casou com $CHARACTER_NAME$",
 
   "INSTRUMENT_FLUTE": "Flauta",
