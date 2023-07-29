@@ -15,7 +15,8 @@ public class PhotoManager : MonoBehaviour
         "the Prisoner", // Can't really get to them and come back out alive without cheating.
         "Self" // Because the dialog can be confusing, especially in some languages other than english.
     };
-    private ShuffledArray<PhotogenicCharacter> _characters;
+    private PhotogenicCharacter[] _allCharacters;
+    private ShuffledArray<PhotogenicCharacter> _uniqueCharacters;
 
     public static void Create()
     {
@@ -24,10 +25,13 @@ public class PhotoManager : MonoBehaviour
 
     private void Start()
     {
-        _characters = ThingFinder.Instance.GetCharacters().Array
+        var characters = ThingFinder.Instance.GetCharacters().Array
             .Where(character => !_characterBlockList.Contains(character._characterName))
-            .Select(PhotogenicCharacter.Create) // Create PhotoGenicCharacter components for all including clones,
-            .GroupBy(character => character.Id) // but merge clones into one in the stored array.
+            .Select(PhotogenicCharacter.Create);
+
+        _allCharacters = characters.ToArray();
+        _uniqueCharacters = characters
+            .GroupBy(character => character.Id)
             .Select(group => group.First())
             .ToShuffledArray();
     }
@@ -57,7 +61,7 @@ public class PhotoManager : MonoBehaviour
     private void OnProbeSnapshot(ProbeCamera camera)
     {
         Reset();
-        foreach (var character in _characters.Array)
+        foreach (var character in _allCharacters)
         {
             if (character.IsInShot(camera))
             {
@@ -80,7 +84,7 @@ public class PhotoManager : MonoBehaviour
 
     public PhotogenicCharacter GetRandomCharacter(Wifey wife)
     {
-        return _characters.Get(wife.Index);
+        return _uniqueCharacters.Get(wife.Index);
     }
 
     public bool IsCharacterInShot(string characterId)
