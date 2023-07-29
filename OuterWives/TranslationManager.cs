@@ -6,23 +6,37 @@ namespace OuterWives;
 
 public class TranslationManager: MonoBehaviour
 {
+    public bool ModSupportsCurrentLanguage => _preferedTranslation != null;
+
     private static TranslationManager _instance;
     public static TranslationManager Instance => _instance == null ? _instance = Create() : _instance;
 
-    private Dictionary<string, string> _translation;
+    private Dictionary<string, string> _preferedTranslation;
     private Dictionary<string, string> _defaultTranslation;
     private const string DefaultLanguage = "english";
+    private bool _isInitialized;
 
     private static TranslationManager Create()
     {
         return new GameObject(nameof(TranslationManager)).AddComponent<TranslationManager>();
     }
 
+    private void Awake()
+    {
+        InitializeTranslation();
+        TextTranslation.Get().OnLanguageChanged += InitializeTranslation;
+    }
+
+    private void OnDestroy()
+    {
+        TextTranslation.Get().OnLanguageChanged -= InitializeTranslation;
+    }
+
     private void InitializeTranslation()
     {
         _defaultTranslation = LoadTranslation(DefaultLanguage);
-        var language = TextTranslation.Get().GetLanguage().GetName().ToLower();
-        _translation = LoadTranslation(language) ?? _defaultTranslation;
+        _preferedTranslation = LoadTranslation(GetCurrentLanguage());
+        _isInitialized = true;
     }
 
     private Dictionary<string, string> LoadTranslation(string language)
@@ -37,9 +51,11 @@ public class TranslationManager: MonoBehaviour
 
     public string GetText(string key)
     {
-        if (_translation == null) InitializeTranslation();
+        if (!_isInitialized) InitializeTranslation();
 
-        _translation.TryGetValue(key, out var text);
+        var translation = _preferedTranslation ?? _defaultTranslation;
+
+        translation.TryGetValue(key, out var text);
 
         if (text == null) _defaultTranslation.TryGetValue(key, out text);
 
@@ -56,5 +72,10 @@ public class TranslationManager: MonoBehaviour
             result = result.Replace(entry.Key, entry.Value);
         }
         return result;
+    }
+
+    public string GetCurrentLanguage()
+    {
+        return TextTranslation.Get().GetLanguage().GetName().ToLower();
     }
 }
