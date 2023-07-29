@@ -31,7 +31,7 @@ public class MusicDesire : Desire<AudioSignal>
         if (!CanPickUpSignal())
         {
             // Can't get signals in some places, so if we're in there, we'll skip this desire.
-            WifeConditions.Set(TextIds.Conditions.Accepted(this), true, Wife);
+            SetAccepted(true);
         }
     }
 
@@ -53,11 +53,10 @@ public class MusicDesire : Desire<AudioSignal>
 
     protected void Update()
     {
-        var condition = TextIds.Conditions.Presented(this);
-        if (WifeConditions.Get(condition, Wife)) return;
+        if (IsPresented) return;
         if (Wife.Active && IsMusicDesirePlaying() && IsNearPlayer())
         {
-            WifeConditions.Set(condition, true, Wife);
+            SetPresented(true);
             OuterWives.Notify(TranslationManager.Instance.GetText(TextIds.Information.Music, new()
             {
                 { TextIds.Tokens.Desire(this), DisplayName },

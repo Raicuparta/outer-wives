@@ -5,7 +5,8 @@ namespace OuterWives.Desires;
 public abstract class Desire<TBehaviour> : MonoBehaviour, IDesire where TBehaviour : MonoBehaviour
 {
     public string ObjectId => GetId(ObjectBehaviour);
-    public bool IsFulfilled => WifeConditions.Get(TextIds.Conditions.Accepted(this), Wife);
+    public bool IsAccepted => WifeConditions.Get(TextIds.Conditions.Accepted(this), Wife);
+    public bool IsPresented => WifeConditions.Get(TextIds.Conditions.Presented(this), Wife);
 
     protected TBehaviour ObjectBehaviour;
     protected Wifey Wife;
@@ -34,5 +35,15 @@ public abstract class Desire<TBehaviour> : MonoBehaviour, IDesire where TBehavio
     {
         ObjectBehaviour = GetObjectBehaviour();
         ObjectBehaviour.gameObject.GetAddComponent<WarpTarget>();
+    }
+
+    protected void SetPresented(bool presented)
+    {
+        WifeConditions.Set(TextIds.Conditions.Presented(this), presented, Wife);
+    }
+
+    protected void SetAccepted(bool accepted)
+    {
+        WifeConditions.Set(TextIds.Conditions.Accepted(this), accepted, Wife);
     }
 }

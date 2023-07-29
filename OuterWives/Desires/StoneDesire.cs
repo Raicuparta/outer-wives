@@ -30,7 +30,7 @@ public class StoneDesire : Desire<SharedStone>
 
     public override void Present()
     {
-        WifeConditions.Set(TextIds.Conditions.Presented(this), GetHeldStone() != null, Wife);
+        SetPresented(GetHeldStone() != null);
     }
 
     private SharedStone GetHeldStone()
@@ -45,7 +45,7 @@ public class StoneDesire : Desire<SharedStone>
 
     private void ConsumeStone() // yummy
     {
-        if (!WifeConditions.Get(TextIds.Conditions.Accepted(this), Wife)) return;
+        if (!IsAccepted) return;
 
         Destroy(GetHeldStone().gameObject);
     }

@@ -152,7 +152,7 @@ public class Wifey: MonoBehaviour
     {
         foreach (var desire in Desires)
         {
-            if (!desire.IsFulfilled) return false;
+            if (!desire.IsAccepted) return false;
         }
         return true;
     }

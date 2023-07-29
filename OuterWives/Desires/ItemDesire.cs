@@ -20,8 +20,7 @@ public class ItemDesire : Desire<OWItem>
     public override void Present()
     {
         var heldItem = GetHeldItem();
-        if (heldItem == null) return;
-        WifeConditions.Set(TextIds.Conditions.Presented(this), IsMatch(heldItem), Wife);
+        SetPresented(heldItem != null && IsMatch(heldItem));
         Destroy(heldItem);
     }
 
@@ -42,7 +41,7 @@ public class ItemDesire : Desire<OWItem>
 
     private void ConsumeItem() // yummy
     {
-        if (!WifeConditions.Get(TextIds.Conditions.Accepted(this), Wife)) return;
+        if (!IsAccepted) return;
 
         Destroy(GetHeldItem().gameObject);
     }

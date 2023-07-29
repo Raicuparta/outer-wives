@@ -17,8 +17,6 @@ public class PhotoDesire : Desire<PhotogenicCharacter>
 
     public override void Present()
     {
-        var condition = TextIds.Conditions.Presented(this);
-
-        WifeConditions.Set(condition, PhotoManager.Instance.IsCharacterInShot(ObjectId), Wife);
+        SetPresented(PhotoManager.Instance.IsCharacterInShot(ObjectId));
     }
 }
