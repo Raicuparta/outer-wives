@@ -12,7 +12,7 @@ public static class WifeConditions
         DialogueConditionManager.SharedInstance
             .SetConditionState(GetFullConditionId(conditionId, wife), conditionState);
 
-        if (wife.HasFulfilledEnoughDesires())
+        if (wife.HasAcceptedEnoughDesires())
         {
             DialogueConditionManager.SharedInstance
             .SetConditionState(GetFullConditionId(TextIds.Conditions.ReadyToMarry, wife), true);
