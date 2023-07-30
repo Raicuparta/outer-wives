@@ -29,7 +29,7 @@
 
   "INFORMATION_PHOTO": "Photographed $CHARACTER_NAME$",
   "INFORMATION_MUSIC": "Played $MUSIC_DESIRE$ music for $CHARACTER_NAME$",
-  "INFORMATION_MARRIED": "You have married $CHARACTER_NAME$",
+  "INFORMATION_MARRIED": "You got married to $CHARACTER_NAME$",
 
   "INSTRUMENT_FLUTE": "Flute",
   "INSTRUMENT_BANJO": "Banjo",

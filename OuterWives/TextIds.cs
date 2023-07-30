@@ -48,6 +48,7 @@ public static class TextIds
         public static string Presented(IDesire desire) => Join("PRESENTED", desire.TextId);
         public static string Accepted(IDesire desire) => Join("ACCEPTED", desire.TextId);
         public static string Consumed(IDesire desire) => Join("CONSUMED", desire.TextId);
+        public static string Skipped(IDesire desire) => Join("SKIPPED", desire.TextId);
 
         public const string ReadyToMarry = "READY_TO_MARRY";
         public const string GettingMarried = "GETTING_MARRIED";

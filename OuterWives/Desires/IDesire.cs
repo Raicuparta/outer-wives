@@ -6,6 +6,8 @@ public interface IDesire
     string TextId { get; }
     string DisplayName { get; }
     bool IsAccepted { get; }
+    bool IsConsumed { get; }
+    bool IsSkipped { get; }
 
     void Present();
 }

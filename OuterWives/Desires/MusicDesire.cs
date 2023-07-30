@@ -31,7 +31,7 @@ public class MusicDesire : Desire<AudioSignal>
         if (!CanPickUpSignal())
         {
             // Can't get signals in some places, so if we're in there, we'll skip this desire.
-            SetAccepted(true);
+            SetSkipped(true);
         }
     }
 

@@ -1,13 +1,15 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace OuterWives.Desires;
 
 public abstract class Desire<TBehaviour> : MonoBehaviour, IDesire where TBehaviour : MonoBehaviour
 {
     public string ObjectId => GetId(ObjectBehaviour);
-    public bool IsAccepted => WifeConditions.Get(TextIds.Conditions.Accepted(this), Wife);
-    public bool IsPresented => WifeConditions.Get(TextIds.Conditions.Presented(this), Wife);
-    public bool IsConsumed => WifeConditions.Get(TextIds.Conditions.Consumed(this), Wife);
+    public bool IsAccepted => GetCondition(TextIds.Conditions.Accepted);
+    public bool IsPresented => GetCondition(TextIds.Conditions.Presented);
+    public bool IsConsumed => GetCondition(TextIds.Conditions.Consumed);
+    public bool IsSkipped => GetCondition(TextIds.Conditions.Skipped);
 
     protected TBehaviour ObjectBehaviour;
     protected Wifey Wife;
@@ -28,7 +30,7 @@ public abstract class Desire<TBehaviour> : MonoBehaviour, IDesire where TBehavio
         return instance;
     }
 
-    public bool IsMatch(TBehaviour otherObject)
+    protected bool IsMatch(TBehaviour otherObject)
     {
         if (otherObject == null) return false;
 
@@ -49,17 +51,33 @@ public abstract class Desire<TBehaviour> : MonoBehaviour, IDesire where TBehavio
 
     protected void SetPresented(bool presented)
     {
-        WifeConditions.Set(TextIds.Conditions.Presented(this), presented, Wife);
+        SetCondition(TextIds.Conditions.Presented, presented);
     }
 
     protected void SetAccepted(bool accepted)
     {
-        WifeConditions.Set(TextIds.Conditions.Accepted(this), accepted, Wife);
+        SetCondition(TextIds.Conditions.Accepted, accepted);
     }
 
     protected void SetConsumed(bool consumed)
     {
-        WifeConditions.Set(TextIds.Conditions.Consumed(this), consumed, Wife);
+        SetCondition(TextIds.Conditions.Consumed, consumed);
+    }
+
+    protected void SetSkipped(bool skipped)
+    {
+        if (skipped) SetAccepted(true);
+        SetCondition(TextIds.Conditions.Skipped, skipped);
+    }
+
+    private void SetCondition(Func<IDesire, string> condition, bool conditionValue)
+    {
+        WifeConditions.Set(condition(this), conditionValue, Wife);
+    }
+
+    private bool GetCondition(Func<IDesire, string> condition)
+    {
+        return WifeConditions.Get(condition(this), Wife);
     }
 
     private void OnEndConversation()

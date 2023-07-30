@@ -17,7 +17,7 @@ public class Wifey: MonoBehaviour
     public string DisplayName => TextTranslation.Translate(Character._characterName);
     public bool Active => !_animator || _animator.enabled;
 
-    private const int MinimumAcceptedDesires = 4;
+    private const int MinimumAcceptedDesires = 3;
 
     private Animator _animator;
 
@@ -152,7 +152,7 @@ public class Wifey: MonoBehaviour
 
     public bool HasAcceptedEnoughDesires()
     {
-        return Desires.Where(desire => desire.IsAccepted).Count() >= MinimumAcceptedDesires;
+        return Desires.Where(desire => desire.IsAccepted && !desire.IsSkipped).Count() >= MinimumAcceptedDesires;
     }
 
     public override string ToString()
