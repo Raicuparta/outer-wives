@@ -30,6 +30,7 @@ public class ThingFinder: MonoBehaviour
         ItemType.SlideReel,
         ItemType.Scroll,
         ItemType.Lantern,
+        ItemType.DreamLantern,
     };
 
     private ShuffledArray<SharedStone> _stones;
