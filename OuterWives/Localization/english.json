@@ -12,7 +12,7 @@
   "PROPOSE_MUSIC": "What if I used my Signalscope to play some music for you?",
   "PROPOSE_ITEM": "What if I brought you some other cool gift?",
 
-  "REQUEST_PHOTO_1": "Uh I guess that would be nice? I would love to see a picture of my beloved $PHOTO_DESIRE$.",
+  "REQUEST_PHOTO_1": "Uh I guess? Could be nice to see a picture of $PHOTO_DESIRE$, I haven't seen them in a while.",
   "REQUEST_STONE_1": "Sure, why not. I would love to have a stone with a drawing of $STONE_DESIRE$.",
   "REQUEST_MUSIC_1": "Music would be nice yeah. I'm a big fan of $MUSIC_DESIRE$ music.",
   "REQUEST_ITEM_1": "Well, I would like to expand my $ITEM_DESIRE$ collection. Can you help with that?",
@@ -22,7 +22,7 @@
   "PRESENT_MUSIC": "Did you hear the music from my signal scope?",
   "PRESENT_ITEM": "I have a gift for you!",
 
-  "ACCEPT_PHOTO_1": "Oh! $PHOTO_DESIRE$ looks so cute in this one!",
+  "ACCEPT_PHOTO_1": "That's a cute picture of $PHOTO_DESIRE$! Thanks for showing it to me.",
   "ACCEPT_STONE_1": "Thank you! This drawing of $STONE_DESIRE$ is really nice.",
   "ACCEPT_MUSIC_1": "What a beautiful song! I always love to hear some $MUSIC_DESIRE$.",
   "ACCEPT_ITEM_1": "Nice, thanks! This $ITEM_DESIRE$ will make a fine addition to my collection.",
@@ -33,7 +33,7 @@
 
   "INSTRUMENT_FLUTE": "Flute",
   "INSTRUMENT_BANJO": "Banjo",
-  "INSTRUMENT_WHISTLING": "Whisteling",
+  "INSTRUMENT_WHISTLING": "Whistling",
   "INSTRUMENT_HARMONICA": "Harmonica",
   "INSTRUMENT_DRUMS": "Drums",
 
