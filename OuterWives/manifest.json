@@ -5,7 +5,7 @@
   "name": "OuterWives",
   "uniqueName": "Raicuparta.OuterWives",
   "version": "0.1.0",
-  "owmlVersion": "2.9.0",
+  "owmlVersion": "2.9.3",
   "dependencies": [
     "xen.NewHorizons",
     "_nebula.MenuFramework"
