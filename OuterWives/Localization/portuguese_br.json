@@ -1,35 +1,3 @@
 {
-  "PROPOSE_MARRIAGE": "Case comigo já!",
-  "CONFIRM_MARRIAGE": "OK, você quer se casar comigo agora?",
-
-  "REJECT_MARRIAGE_1": "Não, eu realmente preferiria não me casar com você.",
-  "REJECT_MARRIAGE_2": "A menos que você possa me conquistar de alguma forma.",
-
-  "ACCEPT_MARRIAGE_1": "Tudo bem, podemos nos casar! O casamento será na <color=orange>vila</color> em <color=orange>Timber Hearth</color>",
-
-  "PROPOSE_PHOTO": "E se eu te trouxer uma foto legal?",
-  "PROPOSE_STONE": "E se eu te trouxer uma pedra legal com um desenho nela?",
-  "PROPOSE_MUSIC": "E se eu tocar uma música legal para você?",
-
-  "REQUEST_PHOTO_1": "Sim, isso pode funcionar. Eu adoraria ver uma foto do meu amado $PHOTO_DESIRE$",
-  "REQUEST_STONE_1": "Sim, isso pode funcionar. Eu adoraria ter uma pedra com um desenho de $STONE_DESIRE$",
-  "REQUEST_MUSIC_1": "Sim, isso pode funcionar. Eu adoraria ouvir música de $MUSIC_DESIRE$",
-
-  "PRESENT_PHOTO": "Eu consegui aquela foto que você queria.",
-  "PRESENT_STONE": "O que você acha dessa pedra legal que eu encontrei?",
-  "PRESENT_MUSIC": "Você ouviu a música do meu escopo de sinal?",
-
-  "ACCEPT_PHOTO_1": "Isso é exatamente o que eu queria! $PHOTO_DESIRE$ parece tão fofo nesta foto!",
-  "ACCEPT_STONE_1": "Obrigado! Este desenho de $STONE_DESIRE$ é realmente bonito.",
-  "ACCEPT_MUSIC_1": "Que música linda! Eu sempre amo ouvir música de $MUSIC_DESIRE$.",
-
-  "INFORMATION_PHOTO": "$CHARACTER_NAME$ fotografado",
-  "INFORMATION_MUSIC": "Você tocou música de $MUSIC_DESIRE$ para $CHARACTER_NAME$",
-  "INFORMATION_MARRIED": "Você se casou com $CHARACTER_NAME$",
-
-  "INSTRUMENT_FLUTE": "Flauta",
-  "INSTRUMENT_BANJO": "Banjo",
-  "INSTRUMENT_WHISTLING": "Assobio",
-  "INSTRUMENT_HARMONICA": "Gaita",
-  "INSTRUMENT_DRUMS": "Bateria"
+  "PROPOSE_MARRIAGE": "Case comigo já!"
 }
