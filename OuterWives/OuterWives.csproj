@@ -36,9 +36,6 @@
     <Content Include="OuterWives.csproj.user" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="Localization\portuguese_br.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Localization\english.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
