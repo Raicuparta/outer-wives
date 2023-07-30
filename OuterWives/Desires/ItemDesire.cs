@@ -21,7 +21,6 @@ public class ItemDesire : Desire<OWItem>
     {
         var heldItem = GetHeldItem();
         SetPresented(heldItem != null && IsMatch(heldItem));
-        Destroy(heldItem);
     }
 
     private OWItem GetHeldItem()
