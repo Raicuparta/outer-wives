@@ -17,6 +17,8 @@ public class Wifey: MonoBehaviour
     public string DisplayName => TextTranslation.Translate(Character._characterName);
     public bool Active => !_animator || _animator.enabled;
 
+    private const int MinimumFulfilledDesires = 4;
+
     private Animator _animator;
 
     public static Wifey Create(CharacterDialogueTree character, int index)
@@ -148,13 +150,9 @@ public class Wifey: MonoBehaviour
         }
     }
 
-    public bool HasFulfilledAllDesires()
+    public bool HasFulfilledEnoughDesires()
     {
-        foreach (var desire in Desires)
-        {
-            if (!desire.IsAccepted) return false;
-        }
-        return true;
+        return Desires.Where(desire => desire.IsAccepted).Count() >= MinimumFulfilledDesires;
     }
 
     public override string ToString()
