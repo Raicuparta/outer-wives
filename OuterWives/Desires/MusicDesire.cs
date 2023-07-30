@@ -77,4 +77,8 @@ public class MusicDesire : Desire<AudioSignal>
     {
         return Vector3.SqrMagnitude(Locator.GetPlayerTransform().position - transform.position) < _playerNearbySquareDistance;
     }
+
+    protected override void Consume()
+    {
+    }
 }

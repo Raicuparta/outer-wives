@@ -19,4 +19,9 @@ public class PhotoDesire : Desire<PhotogenicCharacter>
     {
         SetPresented(PhotoManager.Instance.IsCharacterInShot(ObjectId));
     }
+
+    protected override void Consume()
+    {
+        Locator.GetToolModeSwapper().UnequipTool();
+    }
 }

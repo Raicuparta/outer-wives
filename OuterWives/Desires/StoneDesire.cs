@@ -5,17 +5,6 @@ public class StoneDesire : Desire<SharedStone>
     public override string TextId => TextIds.Desires.Stone;
     public override string DisplayName => NomaiRemoteCameraPlatform.IDToPlanetString(ObjectBehaviour._connectedPlatform);
 
-    protected override void Start()
-    {
-        base.Start();
-        Wife.Character.OnEndConversation += ConsumeStone;
-    }
-
-    protected void OnDestroy()
-    {
-        Wife.Character.OnEndConversation -= ConsumeStone;
-    }
-
     protected override SharedStone GetObjectBehaviour()
     {
         return ThingFinder.Instance.GetStones().Get(Wife.Index);
@@ -43,10 +32,8 @@ public class StoneDesire : Desire<SharedStone>
         return null;
     }
 
-    private void ConsumeStone() // yummy
+    protected override void Consume()
     {
-        if (!IsAccepted) return;
-
-        Destroy(GetHeldStone().gameObject);
+        Destroy(GetHeldStone()?.gameObject);
     }
 }
