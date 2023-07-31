@@ -91,4 +91,15 @@ public static class Patches
     {
         __instance._characterDialogueTree.GetInteractVolume().EnableInteraction();
     }
+
+    [HarmonyPrefix, HarmonyPatch(typeof(QuantumMoon), nameof(QuantumMoon.IsProbeInside))]
+    public static bool ForceDetectProbeWithPlayerInQM(ref bool __result, QuantumMoon __instance)
+    {
+        if (!__instance.IsPlayerInside()) return true;
+
+        // Make the game think the probe is inside QM, if the player is also inside QM.
+        // This will prevent interference, and allow taking pictures of photo desires while in QM.
+        __result = true;
+        return false;
+    }
 }
