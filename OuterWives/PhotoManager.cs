@@ -87,6 +87,11 @@ public class PhotoManager : MonoBehaviour
         return _uniqueCharacters.Get(wife.Index);
     }
 
+    public PhotogenicCharacter GetCharacter(string id)
+    {
+        return _uniqueCharacters.Array.FirstOrDefault(character => character.Id == id);
+    }
+
     public bool IsCharacterInShot(string characterId)
     {
         return _charactersInShot.Any(character => character.Id == characterId);
