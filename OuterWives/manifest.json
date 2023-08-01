@@ -4,7 +4,7 @@
   "author": "Raicuparta",
   "name": "OuterWives",
   "uniqueName": "Raicuparta.OuterWives",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "owmlVersion": "2.9.3",
   "dependencies": [
     "xen.NewHorizons",
