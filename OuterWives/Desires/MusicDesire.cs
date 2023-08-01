@@ -17,7 +17,7 @@ public class MusicDesire : Desire<AudioSignal>
     protected override AudioSignal GetObjectBehaviour()
     {
         // We don't want travelers to requets their own music because that would be silly and this is a SERIOUS mod.
-        var travelerSignal = transform.parent.GetComponent<TravelerController>()?._audioSource.GetComponent<AudioSignal>();
+        var travelerSignal = transform.parent.GetComponent<TravelerController>()?._audioSource?.GetComponent<AudioSignal>();
 
         return ThingFinder.Instance.GetMusicSignals().Get(Wife.Index, travelerSignal);
     }
