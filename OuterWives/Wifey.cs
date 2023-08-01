@@ -55,9 +55,10 @@ public class Wifey: MonoBehaviour
 
     private void OnExitConversation()
     {
-        if (!WifeConditions.Get(TextIds.Conditions.GettingMarried, this)) return;
+        // Since we're removing all the original dialogue, let's just teach the launch codes here.
+        if (Id == "Hornfels") PlayerData.LearnLaunchCodes();
 
-        StartGetMarriedCoroutine();
+        GoToAltarIfReady();
     }
 
     private void CreateDesires()
@@ -160,12 +161,19 @@ public class Wifey: MonoBehaviour
         return $"{Id} ({DisplayName}): {string.Join(", ", Desires.Select(desire => $"{desire.TextId}={desire.DisplayName}"))}";
     }
 
-    private void StartGetMarriedCoroutine()
+    private void GoToAltarIfReady()
     {
-        StartCoroutine(GoToAltar());
+        if (!WifeConditions.Get(TextIds.Conditions.GettingMarried, this)) return;
+
+        StartGoToAltarCoroutine();
     }
 
-    private IEnumerator GoToAltar()
+    private void StartGoToAltarCoroutine()
+    {
+        StartCoroutine(GoToAlterCoroutine());
+    }
+
+    private IEnumerator GoToAlterCoroutine()
     {
         var effectController = Locator.GetPlayerCamera().GetComponent<PlayerCameraEffectController>();
         effectController.CloseEyes(1f);
