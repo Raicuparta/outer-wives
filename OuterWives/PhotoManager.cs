@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using OuterWives.Extensions;
+using OWML.ModHelper;
 using UnityEngine;
 
 namespace OuterWives;
@@ -55,6 +56,8 @@ public class PhotoManager : MonoBehaviour
 
     private void OnProbeSnapshotRemoved()
     {
+        if (OuterWives.Helper.Interaction.TryGetMod("Raicuparta.NomaiVR") != null) return;
+
         Reset();
     }
 
