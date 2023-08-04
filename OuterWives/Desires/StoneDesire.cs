@@ -14,7 +14,7 @@ public class StoneDesire : Desire<SharedStone>
     {
         // Using translated display name as the ID,
         // which should be fine since you need to go back to the main menu to change the language I think.
-        return DisplayName;
+        return NomaiRemoteCameraPlatform.IDToPlanetString(stone._connectedPlatform);
     }
 
     public override void Present()
