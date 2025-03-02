@@ -69,9 +69,7 @@ public class OuterWives : ModBehaviour
         {
             if (TranslationManager.Instance.ModSupportsCurrentLanguage || _languageWarningPopup != null) return;
 
-            var menuApi = ModHelper.Interaction.TryGetModApi<IMenuAPI>("_nebula.MenuFramework");
-
-            _languageWarningPopup = menuApi.MakeInfoPopup($"Outer Wives hasn't been translated for your current language ({TranslationManager.Instance.GetCurrentLanguage()}). This will cause the character dialogue to be a mix of English and your selected language. It is recommended that you change the Outer Wilds language to English, or wait for someone to translate Outer Wives to your prefered language.", "OK");
+            _languageWarningPopup = ModHelper.MenuHelper.PopupMenuManager.CreateInfoPopup($"Outer Wives hasn't been translated for your current language ({TranslationManager.Instance.GetCurrentLanguage()}). This will cause the character dialogue to be a mix of English and your selected language. It is recommended that you change the Outer Wilds language to English, or wait for someone to translate Outer Wives to your prefered language.", "OK");
             _languageWarningPopup._rootCanvas = Locator.GetPromptManager().GetComponent<Canvas>();
             _languageWarningPopup.EnableMenu(true);
             _languageWarningPopup.OnPopupConfirm += () =>
